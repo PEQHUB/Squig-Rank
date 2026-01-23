@@ -1,6 +1,6 @@
 import { calculateSimilarity } from '../src/utils/correlationCalculator';
 import { alignToR40 } from '../src/utils/frequencyAlignment';
-import { scrapeAllDomains } from '../src/utils/scraper';
+import { scanAllDomains } from '../src/utils/scraper';
 import { loadTargetCurve } from '../src/utils/targetParser';
 import { getIEMPrice } from '../src/utils/priceScraper';
 import { CalculationResult } from '../src/types';
@@ -18,7 +18,7 @@ export default async function handler(req: any, res: any) {
     }))
   );
 
-  const allIEMs = await scrapeAllDomains();
+  const allIEMs = await scanAllDomains();
 
   const results = await Promise.all(
     targetCurves.map(async (target) => {

@@ -2,13 +2,13 @@ import { SQUIGLINK_DOMAINS } from '../config/domains';
 import { isHighQualityDomain } from '../config/quality';
 import type { IEM, ErrorEntry } from '../types';
 
-async function scrapeAllDomains(): Promise<IEM[]> {
+async function scanAllDomains(): Promise<IEM[]> {
   const allIEMs: IEM[] = [];
   const errorLog: ErrorEntry[] = [];
 
   const domainPromises = SQUIGLINK_DOMAINS.map(async (domain) => {
     try {
-      const domainIEMs = await scrapeDomain(domain);
+      const domainIEMs = await scanDomain(domain);
       return { success: true, data: domainIEMs, domain };
     } catch (error: any) {
       errorLog.push({
@@ -40,7 +40,7 @@ async function scrapeAllDomains(): Promise<IEM[]> {
   return uniqueIEMs;
 }
 
-async function scrapeDomain(domain: string): Promise<any[]> {
+async function scanDomain(domain: string): Promise<any[]> {
   const response = await fetch(`https://${domain}`, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -119,4 +119,4 @@ async function saveErrorLog(errorLog: ErrorEntry[]): Promise<void> {
   }
 }
 
-export { scrapeAllDomains };
+export { scanAllDomains };

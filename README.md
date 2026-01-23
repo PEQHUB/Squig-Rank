@@ -5,7 +5,7 @@ Minimal, zen-like scanner for IEM frequency response similarity scores.
 ## Features
 
 - Auto-loads all 2 custom targets on page load
-- Scrapes all squig.link subdomains (17+ domains)
+- Scans all squig.link subdomains (17+ domains)
 - Calculates weighted Pearson correlation similarity on-the-fly
 - Displays top 25 IEMs per target in 2 columns (desktop) / 1 column with swipe (mobile)
 - Filters by measurement quality (high/low) per target
@@ -19,6 +19,7 @@ Minimal, zen-like scanner for IEM frequency response similarity scores.
 High quality measurements from:
 - crinacle.squig.link
 - earphonesarchive.squig.link
+- sai.squig.link (all IEMs under [IEMs] brand)
 
 All other domains are considered low quality.
 
@@ -67,32 +68,3 @@ GitHub Actions runs daily at 3 AM UTC to trigger data refresh.
 ## License
 
 MIT
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
