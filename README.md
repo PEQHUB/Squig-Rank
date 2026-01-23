@@ -1,6 +1,6 @@
 # Squiglink Scanner
 
-Minimal, zen-like scanner for IEM frequency response similarity scores.
+Scannerfor IEM frequency response similarity scores.
 
 ## Features
 
