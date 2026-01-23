@@ -4,10 +4,10 @@ Minimal, zen-like scanner for IEM frequency response similarity scores.
 
 ## Features
 
-- Auto-loads all 5 custom targets on page load
+- Auto-loads all 2 custom targets on page load
 - Scrapes all squig.link subdomains (17+ domains)
 - Calculates weighted Pearson correlation similarity on-the-fly
-- Displays top 25 IEMs per target in 4 columns (desktop) / 1 column with swipe (mobile)
+- Displays top 25 IEMs per target in 2 columns (desktop) / 1 column with swipe (mobile)
 - Filters by measurement quality (high/low) per target
 - Tracks errors in local JSON file
 - Sorts ties by price

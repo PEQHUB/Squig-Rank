@@ -8,7 +8,7 @@ import { CalculationResult } from '../src/types';
 export const config = { maxDuration: 5 };
 
 export default async function handler(req: any, res: any) {
-  const targets = req.query.targets || 'target1,target2,target3,target4';
+  const targets = req.query.targets || 'target1,target2';
   const targetList = targets.toString().split(',');
 
   const targetCurves = await Promise.all(
