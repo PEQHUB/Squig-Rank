@@ -1,0 +1,20 @@
+export const SQUIGLINK_DOMAINS = [
+  'squig.link',
+  'crinacle.squig.link',
+  'earphonesarchive.squig.link',
+  'superreview.squig.link',
+  'bryaudio.squig.link',
+  'afteraudio.squig.link',
+  'bedrockreviews.squig.link',
+  'bregar.squig.link',
+  'eliseaudio.squig.link',
+  'eplv.squig.link',
+  'hiendportable.squig.link',
+  'paulwasabi.squig.link',
+  'precogvision.squig.link',
+  'recode.squig.link',
+  'rikudougoku.squig.link',
+  'tgx78.squig.link',
+  'vortexreviews.squig.link',
+  'vsg.squig.link'
+];
