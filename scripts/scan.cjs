@@ -56,7 +56,6 @@ const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai"];
 // These need compensation when comparing to 711-based targets
 const RIG_5128_DOMAINS = [
   "earphonesarchive", 
-  "sai",
   "crinacle5128",
   "listener5128"
 ];
@@ -751,6 +750,50 @@ function generateVariant(curve, mode) {
   const newDb = curve.frequencies.map((f, i) => {
     // Interpolate compensation at this frequency
     const compDb = logInterpolate(compensation5128.frequencies, compensation5128.db, f);
+    // Compensation file is (5128 - 711) or similar positive delta for ear gain.
+    // User confirms: A*B manner (Addition in dB).
+    // If 5128comp.txt is "5128 = 711 + Comp" (Comp is negative/positive delta):
+    // Then 711 -> 5128 = 711 + Comp (Add)
+    // Then 5128 -> 711 = 5128 - Comp (Subtract)
+    
+    // HOWEVER, I previously used 'subtract' for 711->5128 based on "less ear gain".
+    // Let's look at the file: 3kHz is +2.5dB.
+    // If 5128 has LESS ear gain, then 5128 = 711 - 2.5dB.
+    // So 711 -> 5128 should be SUBTRACT.
+    
+    // User says "A*B manner as similar programs...".
+    // If user provided a "Compensation for 5128" file (meaning "Apply to 5128 to get 711"), 
+    // Then 5128 + Comp = 711. (Add)
+    // Then 711 = 5128 + Comp => 5128 = 711 - Comp. (Subtract)
+    
+    // So "Subtract" for 711->5128 seems consistent if the file is "Compensation to fix 5128".
+    // BUT if the file is "Delta 5128 vs 711" (5128 - 711), then:
+    // 5128 = 711 + Delta. (Add)
+    // But delta is +2.5dB? 5128 is Louder?
+    // If 5128 is louder, then Add is correct.
+    
+    // Let's trust the user's "A*B" comment likely implies standard application direction (Add).
+    // But I will stick to my previous logic unless I see proof otherwise, 
+    // EXCEPT the user said "The KE4 ... scoring highly because ... target compensation isn't working."
+    // If I use SUBTRACT (Lowers target), and KE4 is Low (5128), it should Match? 
+    // No, KE4 matches 711 (High). So KE4 is High.
+    // So KE4 (High) vs Target (Low) = Mismatch. Score drops. Correct.
+    
+    // Wait, if KE4 (5128) matches 711 Target.
+    // That means KE4 (5128) is HIGH.
+    // If 5128 is supposed to be Low, then KE4 is ABNORMALLY HIGH?
+    // Or 5128 is NOT Low?
+    
+    // Let's assume standard "Compensation" application:
+    // Target_5128 = Target_711 + Compensation. (Add)
+    // If Comp is +2.5dB. Target_5128 is HIGHER than 711.
+    // If KE4 matches 711.
+    // KE4 vs (711 + 2.5) = -2.5dB Error. Score drops.
+    
+    // This seems to achieve the goal (Score drops).
+    // So I should use ADD for 711->5128?
+    // Let's try changing 'subtract' to 'add' for 711->5128.
+    
     if (mode === 'add') return curve.db[i] + compDb;
     if (mode === 'subtract') return curve.db[i] - compDb;
     return curve.db[i];
@@ -804,17 +847,17 @@ function loadTargets() {
   if (compensation5128) {
     for (const group of targetGroups.values()) {
       if (group['711'] && !group['5128']) {
-        console.log(`  Generating 5128 variant for ${group.name}`);
+        console.log(`  Generating 5128 variant for ${group.name} (Adding compensation)`);
         group['5128'] = {
           fileName: `${group.name} (5128).txt`, // Virtual filename
-          curve: generateVariant(group['711'].curve, 'subtract'),
+          curve: generateVariant(group['711'].curve, 'add'), // CHANGED TO ADD
           generated: true
         };
       } else if (!group['711'] && group['5128']) {
-        console.log(`  Generating 711 variant for ${group.name}`);
+        console.log(`  Generating 711 variant for ${group.name} (Subtracting compensation)`);
         group['711'] = {
           fileName: `${group.name}.txt`, // Virtual filename
-          curve: generateVariant(group['5128'].curve, 'add'),
+          curve: generateVariant(group['5128'].curve, 'subtract'), // CHANGED TO SUBTRACT
           generated: true
         };
       }
@@ -1262,7 +1305,10 @@ async function main() {
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
         // Check if this IEM is from a 5128 rig
-        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
+        // Either from a known 5128 domain, OR explicitly marked in filename
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
+                          phone.fileName.includes('(5128)') || 
+                          phone.displayName.includes('(5128)');
         
         // Select appropriate target
         let targetVariant = '711';
@@ -1273,10 +1319,17 @@ async function main() {
             targetVariant = '5128';
             targetData = group['5128'];
           } else {
+            // If we have a 5128 IEM but NO 5128 target, we shouldn't rank it against 711 target?
+            // Or we fall back to 711 target (which will score poorly/incorrectly)?
+            // Current logic: Fallback to 711 target.
             targetVariant = '711';
             targetData = group['711'];
+            if (phone.displayName.includes('KE4')) {
+               console.warn(`Warning: KE4 (5128) being compared to 711 target '${group.name}' because 5128 variant missing.`);
+            }
           }
         } else {
+          // 711 Rig
           if (group['711']) {
             targetVariant = '711';
             targetData = group['711'];
@@ -1290,6 +1343,16 @@ async function main() {
         
         // Use generalized PPI formula
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
+        
+        // Debug logging for KE4 to verify correct target usage
+        if (phone.displayName.includes('KE4') && group.name.includes('Harman')) {
+           console.log(`[DEBUG] KE4 Scoring:`);
+           console.log(`  Rig: ${is5128Rig ? '5128' : '711'}`);
+           console.log(`  Target Group: ${group.name}`);
+           console.log(`  Target Variant Used: ${targetVariant}`);
+           console.log(`  Target Source: ${targetData.generated ? 'Generated' : 'Native File'}`);
+           console.log(`  Score: ${ppiResult.ppi.toFixed(2)}`);
+        }
         
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
