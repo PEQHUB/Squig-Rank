@@ -115,11 +115,25 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
   return (
     <div className="target-column">
       <h2>{data.targetName}</h2>
-      {data.targetFileName && (
-        <div className="target-filename" title={data.targetFileName}>
-          {data.targetFileName}
-        </div>
-      )}
+      
+      <div className="target-downloads">
+        {data.targetFiles && data.targetFiles['711'] && (
+          <a href={`targets/${data.targetFiles['711']}`} download className="target-download-btn" title="Download 711 Target">
+            711 Target
+          </a>
+        )}
+        {data.targetFiles && data.targetFiles['5128'] && (
+          <a href={`targets/${data.targetFiles['5128']}`} download className="target-download-btn" title="Download 5128 Target">
+            5128 Target
+          </a>
+        )}
+        {!data.targetFiles && data.targetFileName && (
+           <a href={`targets/${data.targetFileName}`} download className="target-download-btn">
+             Download Target
+           </a>
+        )}
+      </div>
+
       <label className="quality-filter">
         <input
           type="checkbox"
@@ -133,6 +147,11 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
           <li key={iem.id} className={`quality-${iem.quality}`}>
             <span className="rank">{index + 1}.</span>
             <span className="iem-name">{iem.name}</span>
+            {iem.rig && (
+              <span className={`rig-badge rig-${iem.rig}`}>
+                {iem.rig}
+              </span>
+            )}
             <span className={`score ${getScoreClass(iem.similarity)}`}>
               {iem.similarity.toFixed(1)}
             </span>

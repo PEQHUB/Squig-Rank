@@ -6,6 +6,7 @@ export function TargetSubmission() {
   const [error, setError] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [targetRig, setTargetRig] = useState<'711' | '5128'>('711');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -26,7 +27,16 @@ export function TargetSubmission() {
         }
 
         setFileContent(text);
-        setFileName(file.name.replace('.txt', ''));
+        
+        // Auto-detect 5128 from filename
+        const name = file.name.replace('.txt', '');
+        if (name.toLowerCase().includes('5128')) {
+          setTargetRig('5128');
+        } else {
+          setTargetRig('711');
+        }
+        
+        setFileName(name);
         setError(null);
       } catch (err) {
         setError('Failed to parse frequency response file');
@@ -68,9 +78,19 @@ export function TargetSubmission() {
   const handleSubmit = () => {
     if (!fileContent || !fileName) return;
 
+    // Construct final filename based on rig
+    let finalName = fileName;
+    
+    // Remove existing (5128) suffix if present to avoid duplication
+    finalName = finalName.replace(/\s*\(5128\)/i, '');
+    
+    if (targetRig === '5128') {
+      finalName = `${finalName} (5128)`;
+    }
+
     // Format the issue body
-    const body = `Please add this target to the ranking database.\n\n\`\`\`text\n${fileContent}\n\`\`\``;
-    const title = `Add Target: ${fileName}`;
+    const body = `Please add this target to the ranking database.\nRig: ${targetRig}\n\n\`\`\`text\n${fileContent}\n\`\`\``;
+    const title = `Add Target: ${finalName}`;
     
     // Create GitHub Issue URL
     const repoUrl = "https://github.com/PEQHUB/Squig-Rank/issues/new";
@@ -112,11 +132,64 @@ export function TargetSubmission() {
       ) : (
         <div className="submission-preview">
           <div className="preview-header">
-            <span className="file-name">{fileName}</span>
+            <span className="file-name">
+              {fileName}
+              {targetRig === '5128' && !fileName?.includes('(5128)') ? ' (5128)' : ''}
+              .txt
+            </span>
             <button className="reset-btn" onClick={() => {
               setFileContent(null);
               setFileName(null);
             }}>Change File</button>
+          </div>
+          
+          <div className="rig-selector" style={{ marginBottom: '20px', textAlign: 'center' }}>
+            <p style={{ marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Target Rig Type:</p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <label style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                cursor: 'pointer',
+                padding: '8px 16px',
+                background: targetRig === '711' ? 'var(--glass-2)' : 'transparent',
+                border: `1px solid ${targetRig === '711' ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
+                borderRadius: '8px',
+                color: targetRig === '711' ? 'var(--text-primary)' : 'var(--text-muted)'
+              }}>
+                <input 
+                  type="radio" 
+                  name="rig" 
+                  value="711" 
+                  checked={targetRig === '711'} 
+                  onChange={() => setTargetRig('711')}
+                  style={{ accentColor: 'var(--accent-primary)' }}
+                />
+                Standard (711)
+              </label>
+              
+              <label style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                cursor: 'pointer',
+                padding: '8px 16px',
+                background: targetRig === '5128' ? 'var(--glass-2)' : 'transparent',
+                border: `1px solid ${targetRig === '5128' ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
+                borderRadius: '8px',
+                color: targetRig === '5128' ? 'var(--text-primary)' : 'var(--text-muted)'
+              }}>
+                <input 
+                  type="radio" 
+                  name="rig" 
+                  value="5128" 
+                  checked={targetRig === '5128'} 
+                  onChange={() => setTargetRig('5128')}
+                  style={{ accentColor: 'var(--accent-primary)' }}
+                />
+                B&K 5128
+              </label>
+            </div>
           </div>
           
           <div className="submission-actions">

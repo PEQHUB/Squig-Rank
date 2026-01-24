@@ -44,6 +44,7 @@ export interface IEM {
   sourceDomain: string;
   quality: 'high' | 'low';
   price: number | null;
+  rig?: '711' | '5128';
 }
 
 // IEM with similarity score
@@ -54,6 +55,7 @@ export interface ScoredIEM extends IEM {
   slope?: number;
   avgError?: number;
   rig?: '711' | '5128';
+  targetVariant?: '711' | '5128';
 }
 
 // Error tracking
@@ -72,7 +74,10 @@ export interface ErrorLog {
 // API response
 export interface CalculationResult {
   targetName: string;
-  targetFileName?: string;  // Original .txt file name
+  targetFiles?: {
+    '711': string | null;
+    '5128': string | null;
+  };
   scoringMethod?: 'ppi' | 'rms';  // Now always PPI
   ranked: ScoredIEM[];  // All ranked IEMs for pagination
 }

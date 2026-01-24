@@ -698,14 +698,70 @@ async function scanDomain(subdomain, manifest) {
 }
 
 // ============================================================================
-// TARGET LOADING
+// TARGET LOADING & COMPENSATION
 // ============================================================================
 
+let compensation5128 = null;
+
+function loadCompensation() {
+  // Try multiple locations for compensation file
+  const candidates = [
+    path.join(__dirname, '..', 'compensation', '5128comp.txt'),
+    path.join(TARGETS_DIR, '5128comp.txt')
+  ];
+  
+  for (const compPath of candidates) {
+    if (fs.existsSync(compPath)) {
+      try {
+        const text = fs.readFileSync(compPath, 'utf-8');
+        // Parse using semi-colon separator if needed (based on file content I saw)
+        // parseFrequencyResponse handles standard formats, but let's ensure it handles ';'
+        // The existing parser splits by /[\s\t;,]+/, so it should work.
+        compensation5128 = parseFrequencyResponse(text);
+        console.log(`Loaded 5128 compensation curve from ${compPath}`);
+        return;
+      } catch (e) {
+        console.warn(`Failed to parse compensation file: ${e.message}`);
+      }
+    }
+  }
+  
+  console.warn('Warning: 5128 compensation file not found');
+}
+
+/**
+ * Generate a target variant by applying compensation
+ * mode: 'add' (711 -> 5128 if comp is positive delta? No, wait.)
+ * Compensation file 5128comp.txt:
+ * Values are around -0.2 to +4.0. 
+ * Assumption: 5128 = 711 - Compensation (because 5128 has less ear gain, comp is positive in ear gain region).
+ * So:
+ * 711 -> 5128: Subtract compensation
+ * 5128 -> 711: Add compensation
+ */
+function generateVariant(curve, mode) {
+  if (!compensation5128 || !curve) return null;
+  
+  const newDb = curve.frequencies.map((f, i) => {
+    // Interpolate compensation at this frequency
+    const compDb = logInterpolate(compensation5128.frequencies, compensation5128.db, f);
+    if (mode === 'add') return curve.db[i] + compDb;
+    if (mode === 'subtract') return curve.db[i] - compDb;
+    return curve.db[i];
+  });
+  
+  return { frequencies: [...curve.frequencies], db: newDb };
+}
+
 function loadTargets() {
-  const targets = [];
+  loadCompensation();
+  
+  const targetGroups = new Map(); // name -> { name, 711: {curve, fileName, generated}, 5128: {curve, fileName, generated} }
   
   // Load all .txt files from targets directory
-  const targetFiles = fs.readdirSync(TARGETS_DIR).filter(f => f.endsWith('.txt') && f !== '5128comp.txt');
+  if (!fs.existsSync(TARGETS_DIR)) return [];
+  
+  const targetFiles = fs.readdirSync(TARGETS_DIR).filter(f => f.endsWith('.txt') && !f.includes('5128comp'));
   
   for (const fileName of targetFiles) {
     const filePath = path.join(TARGETS_DIR, fileName);
@@ -714,67 +770,52 @@ function loadTargets() {
       const curve = parseFrequencyResponse(text);
       
       if (curve.frequencies.length >= 10) {
-        targets.push({
-          name: fileName.replace('.txt', ''),  // Display name without extension
-          fileName: fileName,                   // Full file name for display
-          curve: curve
-        });
-        console.log(`  Loaded target: ${fileName}`);
+        const is5128 = fileName.toLowerCase().includes('5128');
+        // Base name: remove " (5128)" and ".txt"
+        const baseName = fileName.replace(/\s*\(5128\)/i, '').replace('.txt', '').trim();
+        
+        if (!targetGroups.has(baseName)) {
+          targetGroups.set(baseName, { name: baseName, '711': null, '5128': null });
+        }
+        
+        const group = targetGroups.get(baseName);
+        const type = is5128 ? '5128' : '711';
+        
+        group[type] = {
+          fileName: fileName,
+          curve: curve,
+          generated: false
+        };
+        
+        console.log(`  Loaded target: ${fileName} [${type}] -> Group: ${baseName}`);
       }
     } catch (e) {
       console.warn(`  Failed to load target: ${fileName}`);
     }
   }
   
-  return targets;
-}
-
-// ============================================================================
-// 5128 TO 711 COMPENSATION
-// ============================================================================
-
-let compensation5128to711 = null;
-
-function load5128Compensation() {
-  const compPath = path.join(TARGETS_DIR, '5128comp.txt');
-  if (fs.existsSync(compPath)) {
-    const text = fs.readFileSync(compPath, 'utf-8');
-    const curve = parseFrequencyResponse(text);
-    if (curve.frequencies.length > 0) {
-      // Align to R40 for consistent application
-      compensation5128to711 = alignToR40(curve);
-      console.log(`Loaded 5128 compensation curve (${curve.frequencies.length} points)`);
-      return true;
+  // Generate missing variants
+  if (compensation5128) {
+    for (const group of targetGroups.values()) {
+      if (group['711'] && !group['5128']) {
+        console.log(`  Generating 5128 variant for ${group.name}`);
+        group['5128'] = {
+          fileName: `${group.name} (5128).txt`, // Virtual filename
+          curve: generateVariant(group['711'].curve, 'subtract'),
+          generated: true
+        };
+      } else if (!group['711'] && group['5128']) {
+        console.log(`  Generating 711 variant for ${group.name}`);
+        group['711'] = {
+          fileName: `${group.name}.txt`, // Virtual filename
+          curve: generateVariant(group['5128'].curve, 'add'),
+          generated: true
+        };
+      }
     }
   }
-  console.log('No 5128 compensation file found (public/targets/5128comp.txt)');
-  console.log('5128 measurements will be compared directly without compensation');
-  return false;
-}
-
-function apply5128Compensation(iemCurve) {
-  if (!compensation5128to711) return iemCurve;
   
-  // Align IEM to R40 first
-  const aligned = alignToR40(iemCurve);
-  
-  // Apply compensation: subtract the compensation curve
-  // (compensation curve represents 5128 - 711 difference)
-  const compensated = {
-    frequencies: [...aligned.frequencies],
-    db: aligned.db.map((db, i) => db - compensation5128to711.db[i])
-  };
-  
-  return compensated;
-}
-
-function calculateSimilarityWithCompensation(iemCurve, targetCurve, is5128Rig) {
-  // If IEM is from 5128 rig and we have compensation, apply it
-  const curveToUse = (is5128Rig && compensation5128to711) 
-    ? apply5128Compensation(iemCurve) 
-    : iemCurve;
-  
-  return calculateSimilarity(curveToUse, targetCurve);
+  return Array.from(targetGroups.values());
 }
 
 // ============================================================================
@@ -805,6 +846,259 @@ function savePartialResults() {
     if (!seen.has(key)) {
       seen.set(key, phone);
     }
+  }
+  
+  const uniquePhones = Array.from(seen.values());
+  const results = [];
+  
+  for (const group of targetsGlobal) {
+    const scored = uniquePhones
+      .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
+      .map(phone => {
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
+        
+        // Select appropriate target
+        // If is5128Rig and we have a 5128 target, use it. Otherwise use 711.
+        // If it's a 711 rig, use 711 target.
+        let targetVariant = '711';
+        let targetData = group['711'];
+        
+        if (is5128Rig && group['5128']) {
+          targetVariant = '5128';
+          targetData = group['5128'];
+        } else if (!targetData && group['5128']) {
+           // Fallback if we only have 5128 target but 711 IEM (unlikely but safe)
+           targetVariant = '5128';
+           targetData = group['5128'];
+        }
+
+        if (!targetData) return null;
+
+        // Use generalized PPI formula
+        const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
+        
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: ppiResult.ppi,
+          stdev: ppiResult.stdev,
+          slope: ppiResult.slope,
+          avgError: ppiResult.avgError,
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711',
+          targetVariant: targetVariant
+        };
+      })
+      .filter(x => x !== null);
+    
+    scored.sort((a, b) => b.similarity - a.similarity);
+    
+    results.push({ 
+      targetName: group.name,
+      targetFiles: {
+        '711': group['711'] ? group['711'].fileName : null,
+        '5128': group['5128'] ? group['5128'].fileName : null
+      },
+      scoringMethod: 'ppi', 
+      ranked: scored 
+    });
+  }
+  
+  const output = {
+    generatedAt: new Date().toISOString(),
+    totalIEMs: uniquePhones.length,
+    partial: true,
+    results
+  };
+  
+  fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
+  console.log(`Partial results saved: ${uniquePhones.length} IEMs`);
+}
+
+// Handle graceful shutdown
+process.on('SIGINT', () => {
+  console.log('\nInterrupted! Saving progress...');
+  savePartialResults();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('\nTerminated! Saving progress...');
+  savePartialResults();
+  process.exit(0);
+});
+
+async function main() {
+  console.log('=== Squig.link IEM Scanner ===\n');
+  console.log(`Mode: ${FAST_MODE ? 'FAST (priority domains only)' : 'FULL'}`);
+  console.log(`Concurrency: ${CONCURRENT_DOMAINS} domains, ${CONCURRENT_MEASUREMENTS} measurements\n`);
+  
+  // Ensure data directory exists
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  
+  // Load manifest
+  const manifest = loadManifest();
+  currentManifest = manifest;
+  console.log(`Manifest: ${Object.keys(manifest.iems).length} known IEMs\n`);
+  
+  // Load targets
+  const targets = loadTargets();
+  targetsGlobal = targets;
+  console.log(`Loaded ${targets.length} target groups`);
+  
+  console.log('');
+  
+  if (targets.length === 0) {
+    console.error('No target curves found! Exiting.');
+    process.exit(1);
+  }
+  
+  // Reorder domains: priority first, then rest
+  const prioritySet = new Set(PRIORITY_DOMAINS);
+  const orderedDomains = [
+    ...PRIORITY_DOMAINS.filter(d => SUBDOMAINS.includes(d)),
+    ...SUBDOMAINS.filter(d => !prioritySet.has(d))
+  ];
+  
+  const domainsToScan = FAST_MODE ? PRIORITY_DOMAINS.filter(d => SUBDOMAINS.includes(d)) : orderedDomains;
+  
+  console.log(`Scanning ${domainsToScan.length} domains${FAST_MODE ? ' (FAST MODE)' : ''}...\n`);
+  
+  const allPhones = [];
+  let totalNew = 0;
+  
+  // Process domains in batches with progress saving
+  for (let i = 0; i < domainsToScan.length; i += CONCURRENT_DOMAINS) {
+    const batch = domainsToScan.slice(i, i + CONCURRENT_DOMAINS);
+    const batchNum = Math.floor(i / CONCURRENT_DOMAINS) + 1;
+    const totalBatches = Math.ceil(domainsToScan.length / CONCURRENT_DOMAINS);
+    console.log(`\n--- Batch ${batchNum}/${totalBatches} ---`);
+    
+    const results = await Promise.all(
+      batch.map(subdomain => scanDomain(subdomain, manifest))
+    );
+    
+    for (const result of results) {
+      allPhones.push(...result.phones);
+      currentPhones = allPhones;
+      totalNew += result.newCount;
+    }
+    
+    // Save manifest after each batch to preserve progress
+    saveManifest(manifest);
+    console.log(`  Progress saved: ${Object.keys(manifest.iems).length} IEMs in manifest`);
+  }
+  
+  console.log(`\nTotal IEMs collected: ${allPhones.length}`);
+  console.log(`New IEMs this scan: ${totalNew}\n`);
+  
+  // Remove duplicates (prefer high quality)
+  const seen = new Map();
+  const sortedPhones = [...allPhones].sort((a, b) => {
+    if (a.quality === 'high' && b.quality !== 'high') return -1;
+    if (a.quality !== 'high' && b.quality === 'high') return 1;
+    return 0;
+  });
+  
+  for (const phone of sortedPhones) {
+    const key = phone.displayName.toLowerCase().trim();
+    if (!seen.has(key)) {
+      seen.set(key, phone);
+    }
+  }
+  
+  const uniquePhones = Array.from(seen.values());
+  console.log(`Unique IEMs after dedup: ${uniquePhones.length}\n`);
+  
+  // Calculate PPI scores for each target (using generalized PPI formula for ALL targets)
+  const results = [];
+  
+  for (const group of targets) {
+    console.log(`Calculating PPI for: ${group.name}`);
+    
+    const scored = uniquePhones
+      .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
+      .map(phone => {
+        // Check if this IEM is from a 5128 rig
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
+        
+        // Select appropriate target
+        let targetVariant = '711';
+        let targetData = group['711'];
+        
+        if (is5128Rig && group['5128']) {
+          targetVariant = '5128';
+          targetData = group['5128'];
+        } else if (!targetData && group['5128']) {
+           // Fallback
+           targetVariant = '5128';
+           targetData = group['5128'];
+        }
+
+        if (!targetData) return null;
+        
+        // Use generalized PPI formula
+        const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
+        
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: ppiResult.ppi,
+          stdev: ppiResult.stdev,
+          slope: ppiResult.slope,
+          avgError: ppiResult.avgError,
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711',
+          targetVariant: targetVariant
+        };
+      })
+      .filter(x => x !== null);
+    
+    // Sort by PPI (desc), then price (asc)
+    scored.sort((a, b) => {
+      if (Math.abs(b.similarity - a.similarity) > 0.01) {
+        return b.similarity - a.similarity;
+      }
+      return (a.price ?? Infinity) - (b.price ?? Infinity);
+    });
+    
+    results.push({
+      targetName: group.name,
+      targetFiles: {
+        '711': group['711'] ? group['711'].fileName : null,
+        '5128': group['5128'] ? group['5128'].fileName : null
+      },
+      scoringMethod: 'ppi',
+      ranked: scored
+    });
+    
+    console.log(`  Top match: ${scored[0]?.name} (PPI: ${scored[0]?.similarity.toFixed(1)})`);
+  }
+  
+  // Save results
+  const output = {
+    generatedAt: new Date().toISOString(),
+    totalIEMs: uniquePhones.length,
+    domainsScanned: domainsToScan.length,
+    results
+  };
+  
+  fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
+  console.log(`Results saved to ${RESULTS_PATH}`);
+  
+  // Save updated manifest
+  manifest.lastFullScan = new Date().toISOString();
+  saveManifest(manifest);
+  console.log(`Manifest saved to ${MANIFEST_PATH}`);
+  
+  console.log('\n=== Scan Complete ===');
+}
   }
   
   const uniquePhones = Array.from(seen.values());
@@ -886,10 +1180,8 @@ async function main() {
   // Load targets
   const targets = loadTargets();
   targetsGlobal = targets;
-  console.log(`Loaded ${targets.length} target curves`);
+  console.log(`Loaded ${targets.length} target groups`);
   
-  // Load 5128 compensation if available
-  load5128Compensation();
   console.log('');
   
   if (targets.length === 0) {
@@ -957,8 +1249,8 @@ async function main() {
   // Calculate PPI scores for each target (using generalized PPI formula for ALL targets)
   const results = [];
   
-  for (const target of targets) {
-    console.log(`Calculating PPI for: ${target.name}`);
+  for (const group of targets) {
+    console.log(`Calculating PPI for: ${group.name}`);
     
     const scored = uniquePhones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
@@ -966,13 +1258,32 @@ async function main() {
         // Check if this IEM is from a 5128 rig
         const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
         
-        // Apply 5128 compensation if needed
-        const curveToUse = (is5128Rig && compensation5128to711) 
-          ? apply5128Compensation(phone.frequencyData) 
-          : phone.frequencyData;
+        // Select appropriate target
+        let targetVariant = '711';
+        let targetData = group['711'];
         
-        // Use generalized PPI formula for ALL targets
-        const ppiResult = calculatePPI(curveToUse, target.curve);
+        if (is5128Rig) {
+          if (group['5128']) {
+            targetVariant = '5128';
+            targetData = group['5128'];
+          } else {
+            targetVariant = '711';
+            targetData = group['711'];
+          }
+        } else {
+          if (group['711']) {
+            targetVariant = '711';
+            targetData = group['711'];
+          } else {
+            targetVariant = '5128';
+            targetData = group['5128'];
+          }
+        }
+
+        if (!targetData) return null;
+        
+        // Use generalized PPI formula
+        const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
         
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
@@ -984,9 +1295,11 @@ async function main() {
           price: phone.price,
           quality: phone.quality,
           sourceDomain: `${phone.subdomain}.squig.link`,
-          rig: is5128Rig ? '5128' : '711'
+          rig: is5128Rig ? '5128' : '711',
+          targetVariant: targetVariant
         };
-      });
+      })
+      .filter(x => x !== null);
     
     // Sort by PPI (desc), then price (asc)
     scored.sort((a, b) => {
@@ -997,8 +1310,11 @@ async function main() {
     });
     
     results.push({
-      targetName: target.name,
-      targetFileName: target.fileName,  // Include file name for display
+      targetName: group.name,
+      targetFiles: {
+        '711': group['711'] ? group['711'].fileName : null,
+        '5128': group['5128'] ? group['5128'].fileName : null
+      },
       scoringMethod: 'ppi',
       ranked: scored
     });
