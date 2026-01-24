@@ -150,14 +150,23 @@ function TargetColumn({
         seen.set(key, item);
       } else {
         // If we have an existing one, should we replace it?
-        // Replace if:
-        // 1. Current is High Quality and Existing is Low Quality
-        if (item.quality === 'high' && existing.quality !== 'high') {
-          seen.set(key, item);
+        // Logic: prioritize keeping the highest scoring copy.
+        // Since the list is sorted by score descending, 'existing' (first seen) usually has higher score.
+        // We only replace if 'item' has a strictly higher score (unlikely due to sort)
+        // OR if scores are equal/very close, we prefer High Quality as a tiebreaker.
+        
+        const scoreDiff = item.similarity - existing.similarity;
+        
+        if (scoreDiff > 0.0001) {
+            // New item has higher score (unexpected given sort, but safe to handle)
+            seen.set(key, item);
+        } else if (Math.abs(scoreDiff) < 0.0001) {
+            // Scores are essentially equal
+            // Prefer High Quality if existing is Low Quality
+            if (item.quality === 'high' && existing.quality !== 'high') {
+                seen.set(key, item);
+            }
         }
-        // 2. If both are same quality, maybe prefer the one with higher score?
-        // (The list is already sorted by score descending, so the first one we see is the highest score)
-        // So we don't need to do anything else.
       }
     }
     
