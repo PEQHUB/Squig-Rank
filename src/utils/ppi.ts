@@ -31,7 +31,7 @@ function generateR40Frequencies(): number[] {
 
 const R40_FREQUENCIES = generateR40Frequencies();
 
-function logInterpolate(freqs: number[], dbs: number[], targetFreq: number): number {
+export function logInterpolate(freqs: number[], dbs: number[], targetFreq: number): number {
   if (freqs.length === 0 || dbs.length === 0) return 0;
   if (targetFreq <= freqs[0]) return dbs[0];
   if (targetFreq >= freqs[freqs.length - 1]) return dbs[dbs.length - 1];

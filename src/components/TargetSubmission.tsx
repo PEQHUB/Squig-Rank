@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { parseFrequencyResponse, calculatePPI } from '../utils/ppi';
+import { parseFrequencyResponse, calculatePPI, logInterpolate } from '../utils/ppi';
 import type { CalculationResult, ScoredIEM } from '../types';
 
 interface CurvesData {
-  meta: { frequencies: number[] };
+  meta: { 
+    frequencies: number[];
+    compensation711?: number[];
+  };
   curves: Record<string, number[]>;
 }
 
@@ -12,9 +15,19 @@ interface Props {
   isRanking: boolean;
 }
 
+const RIG_5128_DOMAINS = ["earphonesarchive", "crinacle5128", "listener5128"];
+
+function getIEMRig(id: string): '711' | '5128' {
+  const [subdomain, filename] = id.split('::');
+  if (RIG_5128_DOMAINS.includes(subdomain)) return '5128';
+  if (filename.includes('(5128)')) return '5128';
+  return '711';
+}
+
 export function TargetSubmission({ onCalculate, isRanking }: Props) {
   const [targetText, setTargetText] = useState('');
   const [targetName, setTargetName] = useState('My Custom Target');
+  const [targetType, setTargetType] = useState<'711' | '5128'>('711');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,8 +42,8 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
 
     try {
       // 1. Parse User Target
-      const targetCurve = parseFrequencyResponse(targetText);
-      if (targetCurve.frequencies.length < 10) {
+      const parsedTarget = parseFrequencyResponse(targetText);
+      if (parsedTarget.frequencies.length < 10) {
         throw new Error('Invalid target data (need at least 10 points)');
       }
 
@@ -39,47 +52,74 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
       if (!response.ok) throw new Error('Failed to load measurement data');
       const data: CurvesData = await response.json();
 
+      const freqs = data.meta.frequencies;
+      const comp711 = data.meta.compensation711; // Array matching freqs length
+
+      // Helper to generate compensated target
+      const getCompensatedTarget = (mode: 'add' | 'subtract') => {
+        if (!comp711) return parsedTarget; // Fallback if missing
+        
+        // Align user target to system frequencies first
+        const alignedTarget = freqs.map(f => logInterpolate(parsedTarget.frequencies, parsedTarget.db, f));
+        
+        const newDb = alignedTarget.map((val, i) => {
+          const comp = comp711[i] || 0;
+          return mode === 'add' ? val + comp : val - comp;
+        });
+        
+        return { frequencies: freqs, db: newDb };
+      };
+
+      // Pre-calculate variants
+      const targetBase = parsedTarget; 
+      // Note: calculatePPI aligns input curves anyway, so we can pass raw parsedTarget.
+      // But for compensated, we constructed it aligned to 'freqs'.
+      
+      const targetPlusComp = getCompensatedTarget('add');
+      const targetMinusComp = getCompensatedTarget('subtract');
+
       // 3. Calculate Scores
       const scored: ScoredIEM[] = [];
-      const freqs = data.meta.frequencies;
 
       for (const [id, db] of Object.entries(data.curves)) {
-        // Reconstruct curve object from compact format
         const iemCurve = { frequencies: freqs, db };
+        const iemRig = getIEMRig(id);
         
-        // Calculate PPI
-        const result = calculatePPI(iemCurve, targetCurve);
+        let activeTarget = targetBase;
+
+        if (targetType === '711') {
+          if (iemRig === '5128') activeTarget = targetPlusComp;
+          // else (711) use base
+        } else {
+          // targetType === '5128'
+          if (iemRig === '711') activeTarget = targetMinusComp;
+          // else (5128) use base
+        }
         
-        // Infer metadata from ID (subdomain::filename)
+        const result = calculatePPI(iemCurve, activeTarget);
+        
         const [subdomain, fileName] = id.split('::');
-        // We don't have full metadata (price, display name) here perfectly,
-        // but we can make do or we'd need to fetch results.json to map it back.
-        // Actually, results.json is already loaded in Home.tsx. 
-        // Ideally we'd map this back to the full objects.
-        // For now, let's generate a basic object.
         
         scored.push({
           id,
-          name: fileName, // Fallback name
+          name: fileName,
           similarity: result.ppi,
           stdev: result.stdev,
           slope: result.slope,
           avgError: result.avgError,
-          price: null, // Unknown
-          quality: 'low', // Unknown, default low
-          type: 'iem', // Default to IEM for custom ranking
+          price: null,
+          quality: 'low',
+          type: 'iem',
           sourceDomain: `${subdomain}.squig.link`,
-          rig: '711', // Unknown default
-          frequencyData: iemCurve // Optional but we have it
+          rig: iemRig,
+          frequencyData: iemCurve
         });
       }
 
-      // Sort
       scored.sort((a, b) => b.similarity - a.similarity);
 
-      // 4. Return Result
       onCalculate({
-        targetName: targetName,
+        targetName: `${targetName} (${targetType})`,
         targetFileName: 'custom.txt',
         scoringMethod: 'ppi',
         ranked: scored
@@ -102,17 +142,38 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
     <div className="custom-target-upload">
       <h3>Live Ranking</h3>
       <p className="subtitle" style={{marginBottom: '16px'}}>
-        Paste your custom target curve (Frequency, dB) to instantly rank all IEMs.
+        Paste your custom target curve to instantly rank all IEMs.
       </p>
 
       <div className="input-group">
-        <input 
-          type="text" 
-          value={targetName}
-          onChange={e => setTargetName(e.target.value)}
-          placeholder="Target Name"
-          className="target-name-input"
-        />
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <input 
+            type="text" 
+            value={targetName}
+            onChange={e => setTargetName(e.target.value)}
+            placeholder="Target Name"
+            className="target-name-input"
+            style={{ flex: 1 }}
+          />
+          <div className="rig-selector">
+            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', marginRight: '8px' }}>Target is for:</span>
+            <label className="rig-option">
+              <input 
+                type="radio" 
+                checked={targetType === '711'} 
+                onChange={() => setTargetType('711')}
+              /> 711
+            </label>
+            <label className="rig-option">
+              <input 
+                type="radio" 
+                checked={targetType === '5128'} 
+                onChange={() => setTargetType('5128')}
+              /> 5128
+            </label>
+          </div>
+        </div>
+
         <textarea
           value={targetText}
           onChange={e => setTargetText(e.target.value)}

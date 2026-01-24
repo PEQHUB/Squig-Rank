@@ -702,9 +702,27 @@ async function main() {
 
   // Create curves.json for client-side ranking
   console.log('Generating curves.json for client-side ranking...');
+  
+  // Load compensation curve for frontend usage
+  const compPath = path.join(__dirname, '..', 'compensation', '711comp.txt');
+  let compensationData = [];
+  try {
+    if (fs.existsSync(compPath)) {
+        const { parseFrequencyResponse, alignToR40 } = require('./utils.cjs');
+        const compText = fs.readFileSync(compPath, 'utf-8');
+        const compCurve = parseFrequencyResponse(compText);
+        const alignedComp = alignToR40(compCurve);
+        compensationData = alignedComp.db.map(v => Math.round(v * 100) / 100);
+        console.log('Included 711 compensation curve in metadata');
+    }
+  } catch (e) {
+    console.warn('Failed to include compensation curve:', e.message);
+  }
+
   const curveData = {
     meta: {
-      frequencies: require('./utils.cjs').R40_FREQUENCIES
+      frequencies: require('./utils.cjs').R40_FREQUENCIES,
+      compensation711: compensationData
     },
     curves: {}
   };

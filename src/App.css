@@ -716,26 +716,70 @@ body {
   text-align: center;
 }
 
-.drop-zone {
-  border: 2px dashed var(--glass-border-light);
-  border-radius: 12px;
-  padding: 32px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.target-name-input {
   background: var(--glass-1);
-}
-
-.drop-zone:hover,
-.drop-zone.active {
-  border-color: var(--accent-primary);
-  background: var(--accent-soft);
-}
-
-.drop-zone p {
-  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
   font-size: 14px;
-  margin: 0;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.target-textarea {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-secondary);
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.target-textarea:focus, .target-name-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: var(--glass-2);
+}
+
+.rig-selector {
+  display: flex;
+  align-items: center;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+.rig-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.rig-option:hover {
+  color: var(--text-primary);
+}
+
+.rig-option input {
+  cursor: pointer;
+  accent-color: var(--accent-primary);
 }
 
 .upload-error {
