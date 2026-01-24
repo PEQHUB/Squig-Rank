@@ -2,14 +2,18 @@ import { useState, useRef } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 
 export function TargetSubmission() {
-  const [dragActive, setDragActive] = useState(false);
+  const [dragActive, setDragActive] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // File state
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [targetRig, setTargetRig] = useState<'711' | '5128'>('711');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const fileInputRef711 = useRef<HTMLInputElement>(null);
+  const fileInputRef5128 = useRef<HTMLInputElement>(null);
 
-  const handleFile = (file: File) => {
+  const handleFile = (file: File, rig: '711' | '5128') => {
     if (!file.name.endsWith('.txt')) {
       setError('Please upload a .txt file');
       return;
@@ -27,16 +31,9 @@ export function TargetSubmission() {
         }
 
         setFileContent(text);
-        
-        // Auto-detect 5128 from filename
-        const name = file.name.replace('.txt', '');
-        if (name.toLowerCase().includes('5128')) {
-          setTargetRig('5128');
-        } else {
-          setTargetRig('711');
-        }
-        
+        const name = file.name.replace('.txt', '').replace(/\s*\(5128\)/i, '');
         setFileName(name);
+        setTargetRig(rig);
         setError(null);
       } catch (err) {
         setError('Failed to parse frequency response file');
@@ -45,34 +42,30 @@ export function TargetSubmission() {
     reader.readAsText(file);
   };
 
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDrag = (e: React.DragEvent, rig: '711' | '5128') => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
+      setDragActive(rig);
     } else if (e.type === 'dragleave') {
-      setDragActive(false);
+      setDragActive(null);
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent, rig: '711' | '5128') => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActive(false);
+    setDragActive(null);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0]);
+      handleFile(e.dataTransfer.files[0], rig);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, rig: '711' | '5128') => {
     if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0]);
+      handleFile(e.target.files[0], rig);
     }
-  };
-
-  const handleClick = () => {
-    fileInputRef.current?.click();
   };
 
   const handleSubmit = () => {
@@ -80,10 +73,6 @@ export function TargetSubmission() {
 
     // Construct final filename based on rig
     let finalName = fileName;
-    
-    // Remove existing (5128) suffix if present to avoid duplication
-    finalName = finalName.replace(/\s*\(5128\)/i, '');
-    
     if (targetRig === '5128') {
       finalName = `${finalName} (5128)`;
     }
@@ -107,89 +96,69 @@ export function TargetSubmission() {
   return (
     <div className="custom-target-upload">
       <h3>Submit New Target</h3>
-      <p className="subtitle" style={{marginBottom: '16px'}}>
-        Contribute a target curve to the public database.
+      <p className="subtitle" style={{marginBottom: '24px'}}>
+        Contribute a target curve to the public database. Select the appropriate rig type.
       </p>
       
       {!fileContent ? (
-        <div 
-          className={`drop-zone ${dragActive ? 'active' : ''}`}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          onClick={handleClick}
-        >
-          <input 
-            ref={fileInputRef}
-            type="file" 
-            accept=".txt" 
-            onChange={handleChange}
-            style={{ display: 'none' }}
-          />
-          <p>Drop target .txt file here to contribute</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          {/* 711 Drop Zone */}
+          <div 
+            className={`drop-zone ${dragActive === '711' ? 'active' : ''}`}
+            onDragEnter={(e) => handleDrag(e, '711')}
+            onDragLeave={(e) => handleDrag(e, '711')}
+            onDragOver={(e) => handleDrag(e, '711')}
+            onDrop={(e) => handleDrop(e, '711')}
+            onClick={() => fileInputRef711.current?.click()}
+            style={{ borderColor: 'var(--accent-primary)' }}
+          >
+            <input 
+              ref={fileInputRef711}
+              type="file" 
+              accept=".txt" 
+              onChange={(e) => handleChange(e, '711')}
+              style={{ display: 'none' }}
+            />
+            <div style={{ pointerEvents: 'none' }}>
+              <span className="rig-badge rig-711" style={{ fontSize: '12px', marginBottom: '8px', display: 'inline-block' }}>711</span>
+              <p>Upload 711 Target</p>
+            </div>
+          </div>
+
+          {/* 5128 Drop Zone */}
+          <div 
+            className={`drop-zone ${dragActive === '5128' ? 'active' : ''}`}
+            onDragEnter={(e) => handleDrag(e, '5128')}
+            onDragLeave={(e) => handleDrag(e, '5128')}
+            onDragOver={(e) => handleDrag(e, '5128')}
+            onDrop={(e) => handleDrop(e, '5128')}
+            onClick={() => fileInputRef5128.current?.click()}
+            style={{ borderColor: 'var(--quality-high)' }}
+          >
+            <input 
+              ref={fileInputRef5128}
+              type="file" 
+              accept=".txt" 
+              onChange={(e) => handleChange(e, '5128')}
+              style={{ display: 'none' }}
+            />
+            <div style={{ pointerEvents: 'none' }}>
+              <span className="rig-badge rig-5128" style={{ fontSize: '12px', marginBottom: '8px', display: 'inline-block' }}>5128</span>
+              <p>Upload 5128 Target</p>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="submission-preview">
           <div className="preview-header">
             <span className="file-name">
-              {fileName}
-              {targetRig === '5128' && !fileName?.includes('(5128)') ? ' (5128)' : ''}
-              .txt
+              <span className={`rig-badge rig-${targetRig}`} style={{ marginRight: '10px' }}>{targetRig}</span>
+              {fileName}{targetRig === '5128' ? ' (5128)' : ''}.txt
             </span>
             <button className="reset-btn" onClick={() => {
               setFileContent(null);
               setFileName(null);
             }}>Change File</button>
-          </div>
-          
-          <div className="rig-selector" style={{ marginBottom: '20px', textAlign: 'center' }}>
-            <p style={{ marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>Target Rig Type:</p>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <label style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '6px', 
-                cursor: 'pointer',
-                padding: '8px 16px',
-                background: targetRig === '711' ? 'var(--glass-2)' : 'transparent',
-                border: `1px solid ${targetRig === '711' ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
-                borderRadius: '8px',
-                color: targetRig === '711' ? 'var(--text-primary)' : 'var(--text-muted)'
-              }}>
-                <input 
-                  type="radio" 
-                  name="rig" 
-                  value="711" 
-                  checked={targetRig === '711'} 
-                  onChange={() => setTargetRig('711')}
-                  style={{ accentColor: 'var(--accent-primary)' }}
-                />
-                Standard (711)
-              </label>
-              
-              <label style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '6px', 
-                cursor: 'pointer',
-                padding: '8px 16px',
-                background: targetRig === '5128' ? 'var(--glass-2)' : 'transparent',
-                border: `1px solid ${targetRig === '5128' ? 'var(--accent-primary)' : 'var(--glass-border)'}`,
-                borderRadius: '8px',
-                color: targetRig === '5128' ? 'var(--text-primary)' : 'var(--text-muted)'
-              }}>
-                <input 
-                  type="radio" 
-                  name="rig" 
-                  value="5128" 
-                  checked={targetRig === '5128'} 
-                  onChange={() => setTargetRig('5128')}
-                  style={{ accentColor: 'var(--accent-primary)' }}
-                />
-                B&K 5128
-              </label>
-            </div>
           </div>
           
           <div className="submission-actions">
