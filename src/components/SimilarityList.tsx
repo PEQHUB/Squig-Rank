@@ -192,13 +192,13 @@ function TargetColumn({
       
       <div className="target-downloads">
         {data.targetFiles && data.targetFiles['711'] && (
-          <a href={`targets/${data.targetFiles['711']}`} download className="target-download-btn" title="Download 711 Target">
-            711 Target
+          <a href={`targets/${data.targetFiles['711']}`} download className="target-download-btn" title="Download 711 Target (For 5128 Rigs)">
+            711 Target (Use for 5128)
           </a>
         )}
         {data.targetFiles && data.targetFiles['5128'] && (
-          <a href={`targets/${data.targetFiles['5128']}`} download className="target-download-btn" title="Download 5128 Target">
-            5128 Target
+          <a href={`targets/${data.targetFiles['5128']}`} download className="target-download-btn" title="Download 5128 Target (For 711 Rigs)">
+            5128 Target (Use for 711)
           </a>
         )}
         {!data.targetFiles && data.targetFileName && (

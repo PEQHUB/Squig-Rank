@@ -442,23 +442,24 @@ function savePartialResults() {
         let targetData = group['711'];
         
         if (is5128Rig) {
-          if (group['5128']) {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          } else {
-            targetVariant = '711';
-            targetData = group['711'];
-            console.warn(`[WARNING] No 5128 target found for ${group.name}, falling back to 711 for ${phone.displayName}`);
-          }
-        } else {
-          // 711 Rig
+          // SWAP: Use 711 Target for 5128 Rigs
           if (group['711']) {
             targetVariant = '711';
             targetData = group['711'];
           } else {
+            // Fallback (unlikely)
             targetVariant = '5128';
             targetData = group['5128'];
-            console.warn(`[WARNING] No 711 target found for ${group.name}, falling back to 5128 for ${phone.displayName}`);
+          }
+        } else {
+          // SWAP: Use 5128 Target for 711 Rigs
+          if (group['5128']) {
+            targetVariant = '5128';
+            targetData = group['5128'];
+          } else {
+            // Fallback
+            targetVariant = '711';
+            targetData = group['711'];
           }
         }
 
@@ -603,20 +604,22 @@ async function main() {
         let targetData = group['711'];
         
         if (is5128Rig) {
-          if (group['5128']) {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          } else {
-            targetVariant = '711';
-            targetData = group['711'];
-          }
-        } else {
+          // SWAP: Use 711 Target for 5128 Rigs
           if (group['711']) {
             targetVariant = '711';
             targetData = group['711'];
           } else {
             targetVariant = '5128';
             targetData = group['5128'];
+          }
+        } else {
+          // SWAP: Use 5128 Target for 711 Rigs
+          if (group['5128']) {
+            targetVariant = '5128';
+            targetData = group['5128'];
+          } else {
+            targetVariant = '711';
+            targetData = group['711'];
           }
         }
 
