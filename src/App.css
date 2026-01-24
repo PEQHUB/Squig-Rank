@@ -41,10 +41,51 @@ body {
   text-align: center;
   font-size: 42px;
   font-weight: 600;
-  margin-bottom: 48px;
+  margin-bottom: 16px;
   color: var(--text-primary);
   letter-spacing: -0.5px;
   text-shadow: 0 2px 20px rgba(129, 140, 248, 0.3);
+}
+
+.meta {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.last-update {
+  opacity: 0.7;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+}
+
+.loading {
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+.error {
+  color: var(--text-secondary);
+}
+
+.error p {
+  margin-bottom: 8px;
+}
+
+.error-detail {
+  font-size: 14px;
+  opacity: 0.7;
 }
 
 .similarity-list {

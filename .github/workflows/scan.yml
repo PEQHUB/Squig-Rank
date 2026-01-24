@@ -1,0 +1,48 @@
+name: Scan IEMs
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run scanner
+        run: node scripts/scan.cjs
+      
+      - name: Check for changes
+        id: changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Update IEM scan results [skip ci]"
+          git push
