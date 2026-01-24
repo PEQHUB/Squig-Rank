@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseFrequencyResponse, calculatePPI, logInterpolate } from '../utils/ppi';
 import type { CalculationResult, ScoredIEM } from '../types';
 
@@ -134,9 +134,17 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
   };
 
   const handleReset = () => {
-    setTargetText('');
+    // Keep the text so user can tweak it
     onCalculate(null);
   };
+
+  // Auto-rank when rig changes if we already have rankings or valid text
+  // Actually, let's just make it reactive if results are showing
+  useEffect(() => {
+    if (isRanking && targetText.trim()) {
+      handleRank();
+    }
+  }, [targetType]);
 
   return (
     <div className="custom-target-upload">
@@ -186,19 +194,19 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
       {error && <p className="upload-error">{error}</p>}
 
       <div className="submission-actions">
-        {isRanking ? (
+        {isRanking && (
            <button className="reset-btn" onClick={handleReset}>
              Clear & Show Standard Rankings
            </button>
-        ) : (
-          <button 
-            className="submit-btn" 
-            onClick={handleRank}
-            disabled={loading}
-          >
-            {loading ? 'Ranking...' : 'Rank All IEMs'}
-          </button>
         )}
+        
+        <button 
+          className="submit-btn" 
+          onClick={handleRank}
+          disabled={loading}
+        >
+          {loading ? 'Ranking...' : (isRanking ? 'Update Rankings' : 'Rank All IEMs')}
+        </button>
       </div>
     </div>
   );
