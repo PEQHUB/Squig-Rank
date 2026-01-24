@@ -143,7 +143,12 @@ function TargetColumn({
     // Ideally, we iterate and if we find a better version of an existing key, we replace it.
     
     for (const item of filteredItems) {
-      const key = item.name.toLowerCase().trim();
+      const normalizedName = item.name.toLowerCase().trim();
+      // Default to '711' if rig is undefined to ensure we have a valid key
+      const rigKey = item.rig || '711';
+      // Composite key to allow one entry per rig type per device
+      const key = `${normalizedName}::${rigKey}`;
+      
       const existing = seen.get(key);
       
       if (!existing) {
