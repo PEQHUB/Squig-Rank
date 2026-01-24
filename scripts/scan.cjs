@@ -51,6 +51,10 @@ const OVERRIDES = {
 
 const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai"];
 
+// Domains that use B&K 5128 measurement rig (vs standard 711)
+// These need compensation when comparing to 711-based targets
+const RIG_5128_DOMAINS = ["earphonesarchive", "sai"];
+
 // Exclusion lists for filtering out headphones and TWS
 const NOT_A_HEADPHONE = ["IEM", "In-Ear", "Monitor", "Earphone", "T10", "Planar IEM"];
 const HP_SINGLES = [
@@ -199,7 +203,8 @@ function parseFrequencyResponse(text) {
   for (const line of lines) {
     if (line.startsWith('*') || line.trim() === '') continue;
     
-    const parts = line.trim().split(/[\s\t]+/);
+    // Support multiple separators: whitespace, tab, semicolon, comma
+    const parts = line.trim().split(/[\s\t;,]+/);
     if (parts.length >= 2) {
       const freq = parseFloat(parts[0]);
       const spl = parseFloat(parts[1]);
@@ -266,69 +271,64 @@ function normalizeCurve(curve, refFreq = 1000) {
   };
 }
 
-function mean(arr) {
-  if (!arr.length) return 0;
-  return arr.reduce((a, b) => a + b, 0) / arr.length;
+// ============================================================================
+// SIMILARITY CALCULATION - RMS Deviation Based
+// ============================================================================
+
+// Attempt at frequency weighting using preferred-perceived-index style weighting:
+// - Bass (20-200Hz): Deviations matter but less critical for "accuracy"
+// - Lower mids (200-1kHz): Important for tonality
+// - Upper mids (1k-4kHz): Most critical - ear canal resonance region
+// - Presence (4k-8kHz): Important for clarity
+// - Treble (8k-20kHz): Less critical, high variability in measurements
+
+function getFrequencyWeight(freq) {
+  // Weight by perceptual importance (loosely based on ISO 226 equal-loudness)
+  if (freq < 200) return 0.6;        // Sub-bass/bass - less critical
+  if (freq < 1000) return 1.0;       // Lower mids - important
+  if (freq < 4000) return 1.2;       // Upper mids - most critical (ear gain region)  
+  if (freq < 8000) return 1.0;       // Presence - important
+  return 0.5;                        // Treble - high measurement variance
 }
 
-function pearsonCorrelation(x, y) {
-  const n = Math.min(x.length, y.length);
-  if (n < 2) return 0;
-  
-  const xSlice = x.slice(0, n);
-  const ySlice = y.slice(0, n);
-  const meanX = mean(xSlice);
-  const meanY = mean(ySlice);
-  
-  let num = 0, denomX = 0, denomY = 0;
-  for (let i = 0; i < n; i++) {
-    const dx = xSlice[i] - meanX;
-    const dy = ySlice[i] - meanY;
-    num += dx * dy;
-    denomX += dx * dx;
-    denomY += dy * dy;
-  }
-  
-  const denom = Math.sqrt(denomX * denomY);
-  return denom === 0 ? 0 : num / denom;
-}
-
-const FREQUENCY_BANDS = [
-  { name: "Bass", min: 20, max: 100, weight: 0.10 },
-  { name: "Mids", min: 100, max: 10000, weight: 0.80 },
-  { name: "Treble", min: 10000, max: 20000, weight: 0.10 }
-];
-
-function extractBand(curve, minFreq, maxFreq) {
-  const values = [];
-  for (let i = 0; i < curve.frequencies.length; i++) {
-    if (curve.frequencies[i] >= minFreq && curve.frequencies[i] < maxFreq) {
-      values.push(curve.db[i]);
-    }
-  }
-  return values;
-}
-
-function calculateSimilarity(iemCurve, targetCurve) {
+function calculateRMSDeviation(iemCurve, targetCurve) {
+  // Align both to R40 and normalize at 1kHz
   const iem = normalizeCurve(alignToR40(iemCurve));
   const target = normalizeCurve(alignToR40(targetCurve));
   
-  let weightedSum = 0;
+  let weightedSumSquares = 0;
   let totalWeight = 0;
   
-  for (const band of FREQUENCY_BANDS) {
-    const iemBand = extractBand(iem, band.min, band.max);
-    const targetBand = extractBand(target, band.min, band.max);
+  for (let i = 0; i < R40_FREQUENCIES.length; i++) {
+    const freq = R40_FREQUENCIES[i];
+    const iemDb = iem.db[i];
+    const targetDb = target.db[i];
     
-    if (iemBand.length < 3 || targetBand.length < 3) continue;
+    if (isNaN(iemDb) || isNaN(targetDb)) continue;
     
-    const correlation = pearsonCorrelation(iemBand, targetBand);
-    weightedSum += correlation * band.weight;
-    totalWeight += band.weight;
+    const deviation = iemDb - targetDb;
+    const weight = getFrequencyWeight(freq);
+    
+    weightedSumSquares += (deviation * deviation) * weight;
+    totalWeight += weight;
   }
   
-  if (totalWeight === 0) return 0;
-  return (weightedSum / totalWeight) * 100;
+  if (totalWeight === 0) return Infinity;
+  
+  // Weighted RMS in dB
+  return Math.sqrt(weightedSumSquares / totalWeight);
+}
+
+function calculateSimilarity(iemCurve, targetCurve) {
+  const rmsDeviation = calculateRMSDeviation(iemCurve, targetCurve);
+  
+  // Convert RMS deviation to a 0-100 score
+  // 0 dB RMS = 100 score (perfect match)
+  // 10 dB RMS = 0 score (very poor match)
+  // Using exponential decay for more intuitive scoring
+  const score = Math.max(0, 100 * Math.exp(-rmsDeviation / 4));
+  
+  return score;
 }
 
 // ============================================================================
@@ -513,6 +513,54 @@ function loadTargets() {
 }
 
 // ============================================================================
+// 5128 TO 711 COMPENSATION
+// ============================================================================
+
+let compensation5128to711 = null;
+
+function load5128Compensation() {
+  const compPath = path.join(TARGETS_DIR, '5128comp.txt');
+  if (fs.existsSync(compPath)) {
+    const text = fs.readFileSync(compPath, 'utf-8');
+    const curve = parseFrequencyResponse(text);
+    if (curve.frequencies.length > 0) {
+      // Align to R40 for consistent application
+      compensation5128to711 = alignToR40(curve);
+      console.log(`Loaded 5128 compensation curve (${curve.frequencies.length} points)`);
+      return true;
+    }
+  }
+  console.log('No 5128 compensation file found (public/targets/5128comp.txt)');
+  console.log('5128 measurements will be compared directly without compensation');
+  return false;
+}
+
+function apply5128Compensation(iemCurve) {
+  if (!compensation5128to711) return iemCurve;
+  
+  // Align IEM to R40 first
+  const aligned = alignToR40(iemCurve);
+  
+  // Apply compensation: subtract the compensation curve
+  // (compensation curve represents 5128 - 711 difference)
+  const compensated = {
+    frequencies: [...aligned.frequencies],
+    db: aligned.db.map((db, i) => db - compensation5128to711.db[i])
+  };
+  
+  return compensated;
+}
+
+function calculateSimilarityWithCompensation(iemCurve, targetCurve, is5128Rig) {
+  // If IEM is from 5128 rig and we have compensation, apply it
+  const curveToUse = (is5128Rig && compensation5128to711) 
+    ? apply5128Compensation(iemCurve) 
+    : iemCurve;
+  
+  return calculateSimilarity(curveToUse, targetCurve);
+}
+
+// ============================================================================
 // MAIN
 // ============================================================================
 
@@ -548,14 +596,18 @@ function savePartialResults() {
   for (const target of targetsGlobal) {
     const scored = uniquePhones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
-      .map(phone => ({
-        id: getIemKey(phone.subdomain, phone.fileName),
-        name: phone.displayName,
-        similarity: calculateSimilarity(phone.frequencyData, target.curve),
-        price: phone.price,
-        quality: phone.quality,
-        sourceDomain: `${phone.subdomain}.squig.link`
-      }));
+      .map(phone => {
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: calculateSimilarityWithCompensation(phone.frequencyData, target.curve, is5128Rig),
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711'
+        };
+      });
     
     scored.sort((a, b) => b.similarity - a.similarity);
     results.push({ targetName: target.name, ranked: scored });
@@ -603,7 +655,11 @@ async function main() {
   // Load targets
   const targets = loadTargets();
   targetsGlobal = targets;
-  console.log(`Loaded ${targets.length} target curves\n`);
+  console.log(`Loaded ${targets.length} target curves`);
+  
+  // Load 5128 compensation if available
+  load5128Compensation();
+  console.log('');
   
   if (targets.length === 0) {
     console.error('No target curves found! Exiting.');
@@ -675,14 +731,20 @@ async function main() {
     
     const scored = uniquePhones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
-      .map(phone => ({
-        id: getIemKey(phone.subdomain, phone.fileName),
-        name: phone.displayName,
-        similarity: calculateSimilarity(phone.frequencyData, target.curve),
-        price: phone.price,
-        quality: phone.quality,
-        sourceDomain: `${phone.subdomain}.squig.link`
-      }));
+      .map(phone => {
+        // Check if this IEM is from a 5128 rig
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain);
+        
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: calculateSimilarityWithCompensation(phone.frequencyData, target.curve, is5128Rig),
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711'
+        };
+      });
     
     // Sort by similarity (desc), then price (asc)
     scored.sort((a, b) => {
@@ -697,7 +759,7 @@ async function main() {
       ranked: scored  // Save all scored IEMs for pagination
     });
     
-    console.log(`  Top match: ${scored[0]?.name} (${scored[0]?.similarity.toFixed(1)}%)`);
+    console.log(`  Top match: ${scored[0]?.name} (${scored[0]?.similarity.toFixed(1)})`);
   }
   
   // Save results

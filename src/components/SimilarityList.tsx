@@ -156,9 +156,14 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
 }
 
 function getScoreClass(score: number): string {
-  if (score >= 90) return 'green';
-  if (score >= 80) return 'yellow';
-  if (score >= 70) return 'orange';
+  // RMS-based scoring: higher = closer to target
+  // 70+ = excellent (very close match)
+  // 60+ = good
+  // 50+ = fair
+  // below = poor
+  if (score >= 70) return 'green';
+  if (score >= 60) return 'yellow';
+  if (score >= 50) return 'orange';
   if (score >= 0) return 'red';
   return 'gray';
 }
