@@ -558,7 +558,7 @@ function savePartialResults() {
       }));
     
     scored.sort((a, b) => b.similarity - a.similarity);
-    results.push({ targetName: target.name, top25: scored.slice(0, 25) });
+    results.push({ targetName: target.name, ranked: scored });
   }
   
   const output = {
@@ -694,10 +694,10 @@ async function main() {
     
     results.push({
       targetName: target.name,
-      top25: scored.slice(0, 25)
+      ranked: scored  // Save all scored IEMs for pagination
     });
     
-    console.log(`  Top match: ${scored[0]?.name} (${scored[0]?.similarity.toFixed(1)}%)\n`);
+    console.log(`  Top match: ${scored[0]?.name} (${scored[0]?.similarity.toFixed(1)}%)`);
   }
   
   // Save results

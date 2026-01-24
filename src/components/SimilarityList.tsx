@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import type { CalculationResult } from '../types';
 
+const PAGE_SIZE = 25;
+
 export default function SimilarityList({ results }: { results: CalculationResult[] }) {
   const [activeColumn, setActiveColumn] = useState(0);
   const [qualityFilters, setQualityFilters] = useState(
     results.map(() => true)
+  );
+  // Track how many items to show per column
+  const [showCounts, setShowCounts] = useState(
+    results.map(() => PAGE_SIZE)
   );
 
   const isMobile = window.innerWidth <= 768;
@@ -25,15 +31,13 @@ export default function SimilarityList({ results }: { results: CalculationResult
     });
   };
 
-  const filteredResults = results.map((result, index) => {
-    if (!qualityFilters[index]) {
-      return {
-        ...result,
-        top25: result.top25.filter(iem => iem.quality === 'high')
-      };
-    }
-    return result;
-  });
+  const handleLoadMore = (targetIndex: number) => {
+    setShowCounts(prev => {
+      const newCounts = [...prev];
+      newCounts[targetIndex] += PAGE_SIZE;
+      return newCounts;
+    });
+  };
 
   return (
     <div className="similarity-list">
@@ -41,20 +45,24 @@ export default function SimilarityList({ results }: { results: CalculationResult
         <div className="mobile-view">
           <button onClick={handlePrev} className="nav-button">&#9664;</button>
           <TargetColumn
-            data={filteredResults[activeColumn]}
+            data={results[activeColumn]}
             includeLowQuality={qualityFilters[activeColumn]}
             onQualityToggle={() => handleQualityToggle(activeColumn)}
+            showCount={showCounts[activeColumn]}
+            onLoadMore={() => handleLoadMore(activeColumn)}
           />
           <button onClick={handleNext} className="nav-button">&#9654;</button>
         </div>
       ) : (
         <div className="desktop-view">
-          {filteredResults.map((result, index) => (
+          {results.map((result, index) => (
             <TargetColumn
               key={result.targetName}
               data={result}
               includeLowQuality={qualityFilters[index]}
               onQualityToggle={() => handleQualityToggle(index)}
+              showCount={showCounts[index]}
+              onLoadMore={() => handleLoadMore(index)}
             />
           ))}
         </div>
@@ -84,7 +92,26 @@ function getSquigUrl(iem: any): string {
   return `https://${subdomain}.squig.link/?share=${encodeURIComponent(fileName)}`;
 }
 
-function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
+interface TargetColumnProps {
+  data: CalculationResult;
+  includeLowQuality: boolean;
+  onQualityToggle: () => void;
+  showCount: number;
+  onLoadMore: () => void;
+}
+
+function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onLoadMore }: TargetColumnProps) {
+  // Filter based on quality preference
+  const allItems = data.ranked || [];
+  const filteredItems = includeLowQuality 
+    ? allItems 
+    : allItems.filter(iem => iem.quality === 'high');
+  
+  // Slice to current show count
+  const displayedItems = filteredItems.slice(0, showCount);
+  const hasMore = filteredItems.length > showCount;
+  const totalAvailable = filteredItems.length;
+
   return (
     <div className="target-column">
       <h2>{data.targetName}</h2>
@@ -97,7 +124,7 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
         Show <span className="star-low">&#9734;</span> Low Quality
       </label>
       <ul>
-        {data.top25.map((iem: any, index: number) => (
+        {displayedItems.map((iem: any, index: number) => (
           <li key={iem.id} className={`quality-${iem.quality}`}>
             <span className="rank">{index + 1}.</span>
             <span className="iem-name">{iem.name}</span>
@@ -119,6 +146,11 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
           </li>
         ))}
       </ul>
+      {hasMore && (
+        <button className="load-more-btn" onClick={onLoadMore}>
+          Load More ({showCount} of {totalAvailable})
+        </button>
+      )}
     </div>
   );
 }

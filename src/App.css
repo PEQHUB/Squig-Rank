@@ -43,57 +43,15 @@
   box-sizing: border-box;
 }
 
-/* Animated gradient background */
+/* Solid background */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
   min-height: 100vh;
-  background: var(--bg-deep);
+  background: #0a0a0f;
   color: var(--text-primary);
   line-height: 1.5;
   overflow-x: hidden;
   position: relative;
-}
-
-/* Animated orb backgrounds */
-body::before,
-body::after {
-  content: '';
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.5;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::before {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
-  top: -200px;
-  left: -100px;
-  animation: float-orb-1 20s ease-in-out infinite;
-}
-
-body::after {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
-  bottom: -150px;
-  right: -100px;
-  animation: float-orb-2 25s ease-in-out infinite;
-}
-
-@keyframes float-orb-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(100px, 50px) scale(1.1); }
-  66% { transform: translate(-50px, 100px) scale(0.95); }
-}
-
-@keyframes float-orb-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-80px, -60px) scale(1.05); }
-  66% { transform: translate(60px, -30px) scale(0.9); }
 }
 
 /* Main container */
@@ -524,6 +482,36 @@ body::after {
 }
 
 /* ============================================
+   LOAD MORE BUTTON
+   ============================================ */
+.load-more-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.load-more-btn:hover {
+  background: var(--glass-3);
+  border-color: var(--glass-border-light);
+  color: var(--text-primary);
+}
+
+.load-more-btn:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 1100px) {
@@ -534,10 +522,6 @@ body::after {
 }
 
 @media (max-width: 600px) {
-  body::before, body::after {
-    opacity: 0.3;
-  }
-  
   .home {
     padding: 24px 16px;
   }

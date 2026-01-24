@@ -67,7 +67,7 @@ export interface ErrorLog {
 // API response
 export interface CalculationResult {
   targetName: string;
-  top25: ScoredIEM[];
+  ranked: ScoredIEM[];  // All ranked IEMs for pagination
 }
 
 // Scan progress (for future use)
