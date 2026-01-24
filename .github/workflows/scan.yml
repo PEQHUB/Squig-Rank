@@ -6,6 +6,8 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
     # Allow manual trigger
+  repository_dispatch:
+    types: [run-scan]
 
 permissions:
   contents: write

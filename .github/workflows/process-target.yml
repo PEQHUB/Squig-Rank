@@ -1,0 +1,66 @@
+name: Process Target Submission
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-target:
+    if: github.event.label.name == 'add-target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Process Issue Body
+        id: process
+        run: node scripts/process-issue.cjs
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add public/targets/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add target from Issue #${{ env.ISSUE_NUMBER }}"
+            git push
+          fi
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+
+      - name: Trigger Scan
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          event-type: run-scan
+          
+      - name: Comment on Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "✅ Target processed successfully! The scanner has been triggered and results will update shortly."
+            })
+            
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed'
+            })
