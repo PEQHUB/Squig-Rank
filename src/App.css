@@ -260,6 +260,37 @@ body {
   text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
 }
 
+.view-graph-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent) 0%, #6366f1 100%);
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(129, 140, 248, 0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.view-graph-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(129, 140, 248, 0.5);
+  background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%);
+}
+
+.view-graph-btn:active {
+  transform: translateY(0);
+}
+
 @keyframes pulse-low {
   0%, 100% {
     opacity: 1;

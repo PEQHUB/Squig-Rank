@@ -63,6 +63,27 @@ export default function SimilarityList({ results }: { results: CalculationResult
   );
 }
 
+function getSquigUrl(iem: any): string {
+  // id format is "subdomain::filename"
+  const [subdomain, fileName] = iem.id.split('::');
+  
+  // Handle special domain overrides
+  if (subdomain === 'crinacle') {
+    return `https://graph.hangout.audio/iem/711/?share=${encodeURIComponent(fileName)}`;
+  }
+  if (subdomain === 'superreview') {
+    return `https://squig.link/?share=${encodeURIComponent(fileName)}`;
+  }
+  if (subdomain === 'den-fi') {
+    return `https://ish.squig.link/?share=${encodeURIComponent(fileName)}`;
+  }
+  if (subdomain === 'paulwasabii' || subdomain === 'pw') {
+    return `https://pw.squig.link/?share=${encodeURIComponent(fileName)}`;
+  }
+  
+  return `https://${subdomain}.squig.link/?share=${encodeURIComponent(fileName)}`;
+}
+
 function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
   return (
     <div className="target-column">
@@ -86,6 +107,15 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
             <span className={`quality-indicator ${iem.quality}`}>
               {iem.quality === 'high' ? '\u2605' : '\u2606'}
             </span>
+            <a
+              href={getSquigUrl(iem)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="view-graph-btn"
+              title={`View on ${iem.sourceDomain}`}
+            >
+              View Graph
+            </a>
           </li>
         ))}
       </ul>
