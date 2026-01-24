@@ -3,7 +3,7 @@ import type { CalculationResult } from '../types';
 
 const DEMO_RESULTS: CalculationResult[] = [
   {
-    targetName: 'Target 1',
+    targetName: 'ISO 11904-2 DF',
     top25: [
       { id: '1', name: 'Sony IER-Z1R', similarity: 94.2, price: 1699, quality: 'high', sourceDomain: 'crinacle.squig.link', frequencyData: { frequencies: [], db: [] } },
       { id: '2', name: 'Sennheiser IE 900', similarity: 92.5, price: 1499, quality: 'high', sourceDomain: 'crinacle.squig.link', frequencyData: { frequencies: [], db: [] } },
@@ -33,7 +33,7 @@ const DEMO_RESULTS: CalculationResult[] = [
     ]
   },
   {
-    targetName: 'Target 2',
+    targetName: 'Harman 2019',
     top25: [
       { id: '1', name: 'Truthear Hola', similarity: 91.8, price: 49, quality: 'low', sourceDomain: 'squig.link', frequencyData: { frequencies: [], db: [] } },
       { id: '2', name: 'Moondrop Aria', similarity: 89.3, price: 149, quality: 'low', sourceDomain: 'squig.link', frequencyData: { frequencies: [], db: [] } },
