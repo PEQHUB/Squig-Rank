@@ -250,6 +250,7 @@ async function fetchMeasurement(baseUrl, fileName) {
 
 function extractPhonesFromPhoneBook(phoneBook, subdomain) {
   const phones = [];
+  const seenFiles = new Set();
   
   for (const brand of phoneBook) {
     if (!brand.phones) continue;
@@ -257,6 +258,10 @@ function extractPhonesFromPhoneBook(phoneBook, subdomain) {
     for (const phone of brand.phones) {
       const fileName = Array.isArray(phone.file) ? phone.file[0] : phone.file;
       if (!fileName) continue;
+      
+      // Deduplicate by filename within this subdomain
+      if (seenFiles.has(fileName)) continue;
+      seenFiles.add(fileName);
       
       const displayName = `${brand.name} ${phone.name}`;
       

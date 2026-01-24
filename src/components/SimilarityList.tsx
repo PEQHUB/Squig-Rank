@@ -215,9 +215,8 @@ function TargetColumn({
       </div>
 
       <ul>
-
         {displayedItems.map((iem: ScoredIEM, index: number) => (
-          <li key={iem.id} className={`quality-${iem.quality}`}>
+          <li key={`${iem.id}-${index}`} className={`quality-${iem.quality}`}>
             <span className="rank">{index + 1}.</span>
             <span className="iem-name">{iem.name}</span>
             {iem.rig && (
