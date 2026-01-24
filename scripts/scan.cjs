@@ -1353,14 +1353,13 @@ async function main() {
             targetVariant = '5128';
             targetData = group['5128'];
           } else {
-            // If we have a 5128 IEM but NO 5128 target, we shouldn't rank it against 711 target?
-            // Or we fall back to 711 target (which will score poorly/incorrectly)?
-            // Current logic: Fallback to 711 target.
+            // Fallback: If 5128 target is completely missing (not even generated),
+            // we should probably skip scoring this item or warn.
+            // But since we generate variants now, this block should ideally not be reached
+            // unless something failed critically.
             targetVariant = '711';
             targetData = group['711'];
-            if (phone.displayName.includes('KE4')) {
-               console.warn(`Warning: KE4 (5128) being compared to 711 target '${group.name}' because 5128 variant missing.`);
-            }
+            console.warn(`[WARNING] No 5128 target found for ${group.name}, falling back to 711 for ${phone.displayName}`);
           }
         } else {
           // 711 Rig
@@ -1370,6 +1369,7 @@ async function main() {
           } else {
             targetVariant = '5128';
             targetData = group['5128'];
+            console.warn(`[WARNING] No 711 target found for ${group.name}, falling back to 5128 for ${phone.displayName}`);
           }
         }
 
@@ -1377,16 +1377,6 @@ async function main() {
         
         // Use generalized PPI formula
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
-        
-        // Debug logging for KE4 to verify correct target usage
-        if (phone.displayName.includes('KE4') && group.name.includes('Harman')) {
-           console.log(`[DEBUG] KE4 Scoring:`);
-           console.log(`  Rig: ${is5128Rig ? '5128' : '711'}`);
-           console.log(`  Target Group: ${group.name}`);
-           console.log(`  Target Variant Used: ${targetVariant}`);
-           console.log(`  Target Source: ${targetData.generated ? 'Generated' : 'Native File'}`);
-           console.log(`  Score: ${ppiResult.ppi.toFixed(2)}`);
-        }
         
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
@@ -1405,6 +1395,7 @@ async function main() {
       .filter(x => x !== null);
     
     // Sort by PPI (desc), then price (asc)
+    // This COMBINES all scores regardless of rig type into a single list
     scored.sort((a, b) => {
       if (Math.abs(b.similarity - a.similarity) > 0.01) {
         return b.similarity - a.similarity;
