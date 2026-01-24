@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { parseFrequencyResponse } = require('./utils.cjs');
+const { parseFrequencyResponse, averageCurves } = require('./utils.cjs');
 const { calculatePPI } = require('./ranker.cjs');
 
 // ============================================================================
@@ -225,17 +225,47 @@ function getIemKey(subdomain, fileName) {
 async function fetchMeasurement(baseUrl, fileName) {
   const encodedFile = encodeURIComponent(fileName);
   
-  // Try L channel first
+  // Try L and R channels
   const urlL = `${baseUrl}${encodedFile}%20L.txt`;
+  const urlR = `${baseUrl}${encodedFile}%20R.txt`;
+  
   try {
-    const response = await fetchWithTimeout(urlL, MEASUREMENT_TIMEOUT);
-    if (response.ok) {
-      const text = await response.text();
+    const [respL, respR] = await Promise.all([
+      fetchWithTimeout(urlL, MEASUREMENT_TIMEOUT).catch(() => null),
+      fetchWithTimeout(urlR, MEASUREMENT_TIMEOUT).catch(() => null)
+    ]);
+
+    // If both exist, average them
+    if (respL && respL.ok && respR && respR.ok) {
+      const [textL, textR] = await Promise.all([respL.text(), respR.text()]);
+      const curveL = parseFrequencyResponse(textL);
+      const curveR = parseFrequencyResponse(textR);
+      
+      if (curveL.frequencies.length > 0 && curveR.frequencies.length > 0) {
+        return averageCurves(curveL, curveR);
+      }
+      // Fallback if one is empty
+      if (curveL.frequencies.length > 0) return curveL;
+      if (curveR.frequencies.length > 0) return curveR;
+    }
+
+    // If only L exists
+    if (respL && respL.ok) {
+      const text = await respL.text();
       return parseFrequencyResponse(text);
     }
-  } catch (e) {}
+    
+    // If only R exists (unlikely but possible)
+    if (respR && respR.ok) {
+      const text = await respR.text();
+      return parseFrequencyResponse(text);
+    }
+
+  } catch (e) {
+    // Ignore errors and try fallback
+  }
   
-  // Try without L suffix
+  // Try without suffix (e.g. "Model.txt")
   const url = `${baseUrl}${encodedFile}.txt`;
   try {
     const response = await fetchWithTimeout(url, MEASUREMENT_TIMEOUT);

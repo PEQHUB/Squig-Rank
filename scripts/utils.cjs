@@ -80,11 +80,29 @@ function normalizeCurve(curve, refFreq = 1000) {
   };
 }
 
+function averageCurves(curveA, curveB) {
+  // Use curveA frequencies as base
+  if (!curveA || !curveA.frequencies.length) return curveB;
+  if (!curveB || !curveB.frequencies.length) return curveA;
+
+  const avgDb = curveA.frequencies.map((freq, i) => {
+    const dbA = curveA.db[i];
+    const dbB = logInterpolate(curveB.frequencies, curveB.db, freq);
+    return (dbA + dbB) / 2;
+  });
+
+  return {
+    frequencies: [...curveA.frequencies],
+    db: avgDb
+  };
+}
+
 module.exports = {
   parseFrequencyResponse,
   logInterpolate,
   generateR40Frequencies,
   alignToR40,
   normalizeCurve,
+  averageCurves,
   R40_FREQUENCIES
 };
