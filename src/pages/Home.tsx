@@ -15,6 +15,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [totalIEMs, setTotalIEMs] = useState<number>(0);
+  
+  // Custom Ranking State
+  const [customResult, setCustomResult] = useState<CalculationResult | null>(null);
 
   useEffect(() => {
     async function loadResults() {
@@ -74,9 +77,12 @@ export default function Home() {
         )}
       </div>
       
-      <TargetSubmission />
+      <TargetSubmission 
+        onCalculate={setCustomResult} 
+        isRanking={!!customResult}
+      />
       
-      <SimilarityList results={results} />
+      <SimilarityList results={customResult ? [customResult] : results} />
     </div>
   );
 }

@@ -699,6 +699,34 @@ async function main() {
   
   fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
   console.log(`Results saved to ${RESULTS_PATH}`);
+
+  // Create curves.json for client-side ranking
+  console.log('Generating curves.json for client-side ranking...');
+  const curveData = {
+    meta: {
+      frequencies: require('./utils.cjs').R40_FREQUENCIES
+    },
+    curves: {}
+  };
+
+  // Pre-calculate interpolation to R40 for all valid phones
+  const { alignToR40 } = require('./utils.cjs');
+  
+  let curveCount = 0;
+  for (const phone of phonesToProcess) {
+    if (phone.frequencyData && phone.frequencyData.frequencies.length >= 10) {
+      const id = getIemKey(phone.subdomain, phone.fileName);
+      const aligned = alignToR40(phone.frequencyData);
+      // Store only dB values to save space (frequencies are shared)
+      // Round to 2 decimal places to save space
+      curveData.curves[id] = aligned.db.map(v => Math.round(v * 100) / 100);
+      curveCount++;
+    }
+  }
+  
+  const curvesPath = path.join(DATA_DIR, 'curves.json');
+  fs.writeFileSync(curvesPath, JSON.stringify(curveData));
+  console.log(`Saved ${curveCount} curves to ${curvesPath} (${(fs.statSync(curvesPath).size / 1024 / 1024).toFixed(2)} MB)`);
   
   manifest.lastFullScan = new Date().toISOString();
   saveManifest(manifest);
