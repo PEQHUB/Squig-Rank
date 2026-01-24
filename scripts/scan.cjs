@@ -36,7 +36,8 @@ const SUBDOMAINS = [
   "soundignity", "suporsalad", "tgx78", "therollo9", "scboy", "seanwee", 
   "silicagel", "sl0the", "soundcheck39", "tanchjim", "tedthepraimortis", 
   "treblewellxtended", "vsg", "yanyin", "yoshiultra", "kuulokenurkka", 
-  "sai", "earphonesarchive"
+  "sai", "earphonesarchive",
+  "crinacle5128", "listener5128"
 ];
 
 const OVERRIDES = {
@@ -56,10 +57,6 @@ const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai"];
 const RIG_5128_DOMAINS = [
   "earphonesarchive", 
   "sai",
-  "gadgetrytech",
-  "audioamigo",
-  "practiphile",
-  "listener",
   "crinacle5128",
   "listener5128"
 ];
