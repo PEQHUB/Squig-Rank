@@ -17,6 +17,9 @@ const MAX_CONCURRENT_MEASUREMENTS = 5;  // Limit concurrent fetches per domain
 // Error collection for logging
 let errorLog: ErrorEntry[] = [];
 
+// Paths to probe for standard Squiglink domains
+const PROBE_PATHS = ["", "iems", "headphones", "earbuds", "5128", "headphones/5128"];
+
 /**
  * Fetch with timeout wrapper
  */
@@ -92,7 +95,6 @@ function parsePhoneBook(
 
 /**
  * Parse frequency response text file (REW format)
- * Format: Freq(Hz)\tSPL(dB)\tPhase(degrees)
  */
 function parseFrequencyResponse(text: string): FrequencyCurve {
   const frequencies: number[] = [];
@@ -167,15 +169,15 @@ async function fetchMeasurement(
       return null; // Not enough data points
     }
     
-      return {
-        id: `${phone.domain}-${phone.fileName}`.replace(/\s+/g, '-'),
-        name: phone.displayName,
-        frequencyData,
-        sourceDomain: phone.domain,
-        quality: phone.quality,
-        price: phone.price,
-        type: phone.type,
-      };
+    return {
+      id: `${phone.domain}-${phone.fileName}`.replace(/\s+/g, '-'),
+      name: phone.displayName,
+      frequencyData,
+      sourceDomain: phone.domain,
+      quality: phone.quality,
+      price: phone.price,
+      type: phone.type,
+    };
   } catch (error: any) {
     // Silently fail for individual measurements
     return null;
@@ -208,43 +210,98 @@ async function fetchMeasurementsInBatches(
 }
 
 /**
- * Scan a single domain for all IEMs
+ * Scan a specific URL for phone_book.json and measurements
  */
-async function scanDomain(config: DomainConfig): Promise<IEM[]> {
-  const { domain, quality } = config;
-  const phoneBookUrl = `https://${domain}/phone_book.json`;
-  
+async function scanUrl(
+  url: string, 
+  domainKey: string, 
+  quality: 'high' | 'low',
+  isProbe: boolean = false
+): Promise<IEM[]> {
   try {
-    const response = await fetchWithTimeout(phoneBookUrl, PHONE_BOOK_TIMEOUT);
+    const response = await fetchWithTimeout(url, PHONE_BOOK_TIMEOUT);
     
     if (!response.ok) {
-      errorLog.push({
-        domain,
-        error: `phone_book.json fetch failed: ${response.status}`,
-        timestamp: new Date().toISOString(),
-      });
+      if (!isProbe) {
+        errorLog.push({
+          domain: domainKey,
+          error: `phone_book.json fetch failed: ${response.status}`,
+          timestamp: new Date().toISOString(),
+        });
+      }
       return [];
     }
     
     const brands: PhoneBookBrand[] = await response.json();
-    const phones = parsePhoneBook(brands, domain, quality);
+    const phones = parsePhoneBook(brands, domainKey, quality);
     
-    console.log(`[${domain}] Found ${phones.length} phones in phone_book.json`);
+    console.log(`[${domainKey}] Found ${phones.length} phones at ${url}`);
     
     // Fetch all measurements
     const iems = await fetchMeasurementsInBatches(phones);
     
-    console.log(`[${domain}] Successfully fetched ${iems.length} measurements`);
+    console.log(`[${domainKey}] Successfully fetched ${iems.length} measurements`);
     
     return iems;
   } catch (error: any) {
-    errorLog.push({
-      domain,
-      error: error.message || 'Unknown error',
-      timestamp: new Date().toISOString(),
-    });
+    if (!isProbe) {
+      errorLog.push({
+        domain: domainKey,
+        error: error.message || 'Unknown error',
+        timestamp: new Date().toISOString(),
+      });
+    }
     return [];
   }
+}
+
+/**
+ * Scan a configured target (DomainConfig), potentially probing multiple paths
+ */
+async function scanDomain(config: DomainConfig): Promise<IEM[]> {
+  const { name, domain, fullUrl, quality } = config;
+
+  // Case 1: Override Full URL
+  if (fullUrl) {
+    // Extract base domain for measurement fetching (remove /data/phone_book.json)
+    const baseUrl = fullUrl.replace(/\/data\/phone_book\.json$/, '');
+    // Remove protocol for storage/ID (e.g. "graph.hangout.audio/iem/711")
+    const domainKey = baseUrl.replace(/^https?:\/\//, '');
+    
+    return scanUrl(fullUrl, domainKey, quality);
+  }
+
+  // Case 2: Standard Squiglink Probing
+  if (domain) {
+    for (const path of PROBE_PATHS) {
+      // Construct URL: https://{domain}/{path}/data/phone_book.json
+      // Handle empty path correctly
+      const pathPart = path ? `${path}/` : '';
+      const url = `https://${domain}/${pathPart}data/phone_book.json`;
+      
+      // Domain key for measurements: {domain}/{path} (no protocol)
+      // e.g. "hbb.squig.link" or "hbb.squig.link/iems"
+      const domainKey = `${domain}/${pathPart}`.replace(/\/$/, '');
+      
+      const iems = await scanUrl(url, domainKey, quality, true); // true = silent fail on 404
+      
+      if (iems.length > 0) {
+        // Stop probing this domain if we found a valid DB (matching check.py behavior)
+        // If check.py behavior implies finding ALL DBs, we should not return here.
+        // check.py says: "if data: parse...; break" -> It stops after first find.
+        return iems;
+      }
+    }
+    
+    // If we get here, all probes failed
+    errorLog.push({
+      domain: name,
+      error: `Could not find phone_book.json in any probe path on ${domain}`,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  return [];
 }
 
 /**
@@ -276,7 +333,7 @@ function removeDuplicates(iems: IEM[]): IEM[] {
 async function scanAllDomains(): Promise<IEM[]> {
   errorLog = []; // Reset error log
   
-  console.log(`Starting scan of ${SQUIGLINK_DOMAINS.length} domains...`);
+  console.log(`Starting scan of ${SQUIGLINK_DOMAINS.length} targets...`);
   
   // Scan all domains in parallel
   const results = await Promise.all(
@@ -295,7 +352,7 @@ async function scanAllDomains(): Promise<IEM[]> {
   
   // Log errors if any
   if (errorLog.length > 0) {
-    console.warn(`Errors encountered:`, errorLog);
+    console.warn(`Errors encountered: ${errorLog.length}`);
   }
   
   return uniqueIEMs;
