@@ -8,7 +8,7 @@ export default function SimilarityList({ results }: { results: CalculationResult
   
   // State for filters
   const [showCloneCoupler, setShowCloneCoupler] = useState(results.map(() => true));
-  const [hideDuplicates, setHideDuplicates] = useState(results.map(() => false));
+  const [hideDuplicates, setHideDuplicates] = useState(results.map(() => true));
 
   // Track how many items to show per column
   const [showCounts, setShowCounts] = useState(
