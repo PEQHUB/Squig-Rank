@@ -53,7 +53,16 @@ const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai"];
 
 // Domains that use B&K 5128 measurement rig (vs standard 711)
 // These need compensation when comparing to 711-based targets
-const RIG_5128_DOMAINS = ["earphonesarchive", "sai"];
+const RIG_5128_DOMAINS = [
+  "earphonesarchive", 
+  "sai",
+  "gadgetrytech",
+  "audioamigo",
+  "practiphile",
+  "listener",
+  "crinacle5128",
+  "listener5128"
+];
 
 // Exclusion lists for filtering out headphones and TWS
 const NOT_A_HEADPHONE = ["IEM", "In-Ear", "Monitor", "Earphone", "T10", "Planar IEM"];
