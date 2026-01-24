@@ -428,6 +428,34 @@ body {
   color: var(--text-muted); 
 }
 
+/* Metrics Display */
+.metrics {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  color: var(--text-muted);
+  margin: 0 16px;
+  padding: 4px 8px;
+  background: var(--glass-1);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.metrics span {
+  cursor: help;
+}
+
+.metrics span:hover {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+  .metrics {
+    display: none;
+  }
+}
+
 /* Quality indicator */
 .quality-indicator {
   font-size: 16px;
