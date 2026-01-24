@@ -6,6 +6,7 @@ interface CurvesData {
   meta: { 
     frequencies: number[];
     compensation711?: number[];
+    compensation5128?: number[];
   };
   curves: Record<string, number[]>;
 }
@@ -53,18 +54,19 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
       const data: CurvesData = await response.json();
 
       const freqs = data.meta.frequencies;
-      const comp711 = data.meta.compensation711; // Array matching freqs length
+      const comp711 = data.meta.compensation711;
+      const comp5128 = data.meta.compensation5128;
 
       // Helper to generate compensated target
-      const getCompensatedTarget = (mode: 'add' | 'subtract') => {
-        if (!comp711) return parsedTarget; // Fallback if missing
+      const getCompensatedTarget = (compArray: number[] | undefined) => {
+        if (!compArray) return parsedTarget; // Fallback
         
         // Align user target to system frequencies first
         const alignedTarget = freqs.map(f => logInterpolate(parsedTarget.frequencies, parsedTarget.db, f));
         
         const newDb = alignedTarget.map((val, i) => {
-          const comp = comp711[i] || 0;
-          return mode === 'add' ? val + comp : val - comp;
+          const comp = compArray[i] || 0;
+          return val + comp; // Always ADD the compensation
         });
         
         return { frequencies: freqs, db: newDb };
@@ -72,11 +74,12 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
 
       // Pre-calculate variants
       const targetBase = parsedTarget; 
-      // Note: calculatePPI aligns input curves anyway, so we can pass raw parsedTarget.
-      // But for compensated, we constructed it aligned to 'freqs'.
       
-      const targetPlusComp = getCompensatedTarget('add');
-      const targetMinusComp = getCompensatedTarget('subtract');
+      // Target (711) + Comp711 = Target (5128)
+      const targetPlus711Comp = getCompensatedTarget(comp711);
+      
+      // Target (5128) + Comp5128 = Target (711)
+      const targetPlus5128Comp = getCompensatedTarget(comp5128);
 
       // 3. Calculate Scores
       const scored: ScoredIEM[] = [];
@@ -88,12 +91,19 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
         let activeTarget = targetBase;
 
         if (targetType === '711') {
-          if (iemRig === '5128') activeTarget = targetPlusComp;
-          // else (711) use base
+          // User provided a 711 Target
+          if (iemRig === '5128') {
+            // Need to convert 711 Target -> 5128 Target
+            activeTarget = targetPlus711Comp;
+          }
+          // else (711 IEM) -> Use Base
         } else {
-          // targetType === '5128'
-          if (iemRig === '711') activeTarget = targetMinusComp;
-          // else (5128) use base
+          // User provided a 5128 Target
+          if (iemRig === '711') {
+            // Need to convert 5128 Target -> 711 Target
+            activeTarget = targetPlus5128Comp;
+          }
+          // else (5128 IEM) -> Use Base
         }
         
         const result = calculatePPI(iemCurve, activeTarget);

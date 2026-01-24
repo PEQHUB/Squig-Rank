@@ -703,26 +703,40 @@ async function main() {
   // Create curves.json for client-side ranking
   console.log('Generating curves.json for client-side ranking...');
   
-  // Load compensation curve for frontend usage
-  const compPath = path.join(__dirname, '..', 'compensation', '711comp.txt');
-  let compensationData = [];
+  // Load compensation curves for frontend usage
+  const compPath711 = path.join(__dirname, '..', 'compensation', '711comp.txt');
+  const compPath5128 = path.join(__dirname, '..', 'compensation', '5128comp.txt');
+  
+  let compensation711 = [];
+  let compensation5128 = [];
+  
   try {
-    if (fs.existsSync(compPath)) {
-        const { parseFrequencyResponse, alignToR40 } = require('./utils.cjs');
-        const compText = fs.readFileSync(compPath, 'utf-8');
+    const { parseFrequencyResponse, alignToR40 } = require('./utils.cjs');
+    
+    if (fs.existsSync(compPath711)) {
+        const compText = fs.readFileSync(compPath711, 'utf-8');
         const compCurve = parseFrequencyResponse(compText);
         const alignedComp = alignToR40(compCurve);
-        compensationData = alignedComp.db.map(v => Math.round(v * 100) / 100);
+        compensation711 = alignedComp.db.map(v => Math.round(v * 100) / 100);
         console.log('Included 711 compensation curve in metadata');
     }
+    
+    if (fs.existsSync(compPath5128)) {
+        const compText = fs.readFileSync(compPath5128, 'utf-8');
+        const compCurve = parseFrequencyResponse(compText);
+        const alignedComp = alignToR40(compCurve);
+        compensation5128 = alignedComp.db.map(v => Math.round(v * 100) / 100);
+        console.log('Included 5128 compensation curve in metadata');
+    }
   } catch (e) {
-    console.warn('Failed to include compensation curve:', e.message);
+    console.warn('Failed to include compensation curves:', e.message);
   }
 
   const curveData = {
     meta: {
       frequencies: require('./utils.cjs').R40_FREQUENCIES,
-      compensation711: compensationData
+      compensation711,
+      compensation5128
     },
     curves: {}
   };
