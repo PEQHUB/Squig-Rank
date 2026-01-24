@@ -848,16 +848,50 @@ function loadTargets() {
     for (const group of targetGroups.values()) {
       if (group['711'] && !group['5128']) {
         console.log(`  Generating 5128 variant for ${group.name} (Adding compensation)`);
+        
+        const newCurve = generateVariant(group['711'].curve, 'add');
+        const newFileName = `${group.name} (5128).txt`;
+        const newFilePath = path.join(TARGETS_DIR, newFileName);
+        
+        // Save generated target to disk
+        try {
+          let fileContent = "Frequency\tdB\n";
+          for (let i = 0; i < newCurve.frequencies.length; i++) {
+            fileContent += `${newCurve.frequencies[i].toFixed(2)}\t${newCurve.db[i].toFixed(2)}\n`;
+          }
+          fs.writeFileSync(newFilePath, fileContent);
+          console.log(`  Saved generated target to ${newFileName}`);
+        } catch (err) {
+          console.error(`  Failed to save generated target: ${err.message}`);
+        }
+
         group['5128'] = {
-          fileName: `${group.name} (5128).txt`, // Virtual filename
-          curve: generateVariant(group['711'].curve, 'add'), // CHANGED TO ADD
+          fileName: newFileName,
+          curve: newCurve,
           generated: true
         };
       } else if (!group['711'] && group['5128']) {
         console.log(`  Generating 711 variant for ${group.name} (Subtracting compensation)`);
+        
+        const newCurve = generateVariant(group['5128'].curve, 'subtract');
+        const newFileName = `${group.name}.txt`;
+        const newFilePath = path.join(TARGETS_DIR, newFileName);
+
+        // Save generated target to disk
+        try {
+          let fileContent = "Frequency\tdB\n";
+          for (let i = 0; i < newCurve.frequencies.length; i++) {
+            fileContent += `${newCurve.frequencies[i].toFixed(2)}\t${newCurve.db[i].toFixed(2)}\n`;
+          }
+          fs.writeFileSync(newFilePath, fileContent);
+          console.log(`  Saved generated target to ${newFileName}`);
+        } catch (err) {
+          console.error(`  Failed to save generated target: ${err.message}`);
+        }
+
         group['711'] = {
-          fileName: `${group.name}.txt`, // Virtual filename
-          curve: generateVariant(group['5128'].curve, 'subtract'), // CHANGED TO SUBTRACT
+          fileName: newFileName,
+          curve: newCurve,
           generated: true
         };
       }
