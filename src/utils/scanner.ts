@@ -1,4 +1,5 @@
 import { SQUIGLINK_DOMAINS, type DomainConfig } from '../config/domains';
+import { classifyItem } from './itemClassifier';
 import type { 
   IEM, 
   PhoneBookBrand, 
@@ -74,6 +75,7 @@ function parsePhoneBook(
       if (!fileName) continue;
       
       phones.push({
+        type: classifyItem(`${brand.name} ${phone.name}`, domain),
         brandName: brand.name,
         phoneName: phone.name,
         displayName: `${brand.name} ${phone.name}`,
@@ -154,6 +156,7 @@ async function fetchMeasurement(
         sourceDomain: phone.domain,
         quality: phone.quality,
         price: phone.price,
+        type: phone.type,
       };
     }
     
@@ -164,14 +167,15 @@ async function fetchMeasurement(
       return null; // Not enough data points
     }
     
-    return {
-      id: `${phone.domain}-${phone.fileName}`.replace(/\s+/g, '-'),
-      name: phone.displayName,
-      frequencyData,
-      sourceDomain: phone.domain,
-      quality: phone.quality,
-      price: phone.price,
-    };
+      return {
+        id: `${phone.domain}-${phone.fileName}`.replace(/\s+/g, '-'),
+        name: phone.displayName,
+        frequencyData,
+        sourceDomain: phone.domain,
+        quality: phone.quality,
+        price: phone.price,
+        type: phone.type,
+      };
   } catch (error: any) {
     // Silently fail for individual measurements
     return null;

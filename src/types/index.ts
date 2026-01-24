@@ -23,6 +23,7 @@ export interface ParsedPhone {
   price: number | null;
   domain: string;
   quality: 'high' | 'low';
+  type: 'iem' | 'headphone' | 'tws';
 }
 
 // Frequency response data
@@ -44,6 +45,7 @@ export interface IEM {
   sourceDomain: string;
   quality: 'high' | 'low';
   price: number | null;
+  type: 'iem' | 'headphone' | 'tws';
   rig?: '711' | '5128';
 }
 
