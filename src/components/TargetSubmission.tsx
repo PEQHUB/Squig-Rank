@@ -67,6 +67,7 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
           avgError: result.avgError,
           price: null, // Unknown
           quality: 'low', // Unknown, default low
+          type: 'iem', // Default to IEM for custom ranking
           sourceDomain: `${subdomain}.squig.link`,
           rig: '711', // Unknown default
           frequencyData: iemCurve // Optional but we have it
