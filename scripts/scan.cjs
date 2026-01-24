@@ -16,37 +16,38 @@ const { calculatePPI } = require('./ranker.cjs');
 // ============================================================================
 
 const SUBDOMAINS = [
-  "crinacle", "superreview", "hbb", "precog", "timmyv", "aftersound", 
-  "paulwasabii", "vortexreviews", "tonedeafmonk", "rg", "nymz", 
-  "gadgetrytech", "eliseaudio", "den-fi", "achoreviews", "aden", "adri-n", 
-  "animagus", "ankramutt", "arc", "atechreviews", "arn", "audioamigo", 
-  "theaudiostore", "awsmdanny", "bakkwatan", "banzai1122", "bassyalexander", 
-  "bassaudio", "bedrock", "boizoff", "breampike", "bryaudioreviews", 
-  "bukanaudiophile", "csi-zone", "dchpgall", "dhrme", "dl", "doltonius", 
-  "ducbloke", "ekaudio", "fahryst", "enemyspider", "eplv", "flare", 
-  "foxtoldmeso", "freeryder05", "hadoe", "harpo", "hore", "hu-fi", 
-  "ianfann", "ideru", "iemocean", "iemworld", "isaiahse", "jacstone", 
-  "jaytiss", "joshtbvo", "kazi", "kr0mka", "lestat", "listener", 
-  "loomynarty", "lown-fi", "melatonin", "mmagtech", "musicafe", "obodio", 
-  "practiphile", "pw", "ragnarok", "recode", "regancipher", "riz", "smirk", 
-  "soundignity", "suporsalad", "tgx78", "therollo9", "scboy", "seanwee", 
-  "silicagel", "sl0the", "soundcheck39", "tanchjim", "tedthepraimortis", 
-  "treblewellxtended", "vsg", "yanyin", "yoshiultra", "kuulokenurkka", 
-  "sai", "earphonesarchive",
-  "crinacle5128", "listener5128"
+    "crinacle", "superreview", "hbb", "precog", "timmyv", "aftersound", 
+    "paulwasabii", "vortexreviews", "tonedeafmonk", "rg", "nymz", 
+    "gadgetrytech", "eliseaudio", "den-fi", "achoreviews", "aden", "adri-n", 
+    "animagus", "ankramutt", "arc", "atechreviews", "arn", "audioamigo", 
+    "theaudiostore", "awsmdanny", "bakkwatan", "banzai1122", "bassyalexander", 
+    "bassaudio", "bedrock", "boizoff", "breampike", "bryaudioreviews", 
+    "bukanaudiophile", "csi-zone", "dchpgall", "dhrme", "dl", "doltonius", 
+    "ducbloke", "ekaudio", "fahryst", "enemyspider", "eplv", "flare", 
+    "foxtoldmeso", "freeryder05", "hadoe", "harpo", "hore", "hu-fi", 
+    "ianfann", "ideru", "iemocean", "iemworld", "isaiahse", "jacstone", 
+    "jaytiss", "joshtbvo", "kazi", "kr0mka", "lestat", "listener", 
+    "loomynarty", "lown-fi", "melatonin", "mmagtech", "musicafe", "obodio", 
+    "practiphile", "pw", "ragnarok", "recode", "regancipher", "riz", "smirk", 
+    "soundignity", "suporsalad", "tgx78", "therollo9", "scboy", "seanwee", 
+    "silicagel", "sl0the", "soundcheck39", "tanchjim", "tedthepraimortis", 
+    "treblewellxtended", "vsg", "yanyin", "yoshiultra", "kuulokenurkka", 
+    "sai", "earphonesarchive",
+    // Extras supported by app logic or known
+    "crinacle5128", "listener5128", "crinacleHP"
 ];
 
 const OVERRIDES = {
-  "crinacle": "https://graph.hangout.audio/iem/711/data/phone_book.json",
-  "crinacle5128": "https://graph.hangout.audio/iem/5128/data/phone_book.json",
-  "crinacleHP": "https://graph.hangout.audio/hp/data/phone_book.json",
-  "superreview": "https://squig.link/data/phone_book.json",
-  "den-fi": "https://ish.squig.link/data/phone_book.json",
-  "paulwasabii": "https://pw.squig.link/data/phone_book.json",
-  "listener5128": "https://listener800.github.io/5128/data/phone_book.json"
+    "crinacle": "https://graph.hangout.audio/iem/711/data/phone_book.json",
+    "crinacle5128": "https://graph.hangout.audio/iem/5128/data/phone_book.json",
+    "crinacleHP": "https://graph.hangout.audio/hp/data/phone_book.json",
+    "superreview": "https://squig.link/data/phone_book.json",
+    "den-fi": "https://ish.squig.link/data/phone_book.json",
+    "paulwasabii": "https://pw.squig.link/data/phone_book.json",
+    "listener5128": "https://listener800.github.io/5128/data/phone_book.json"
 };
 
-const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai"];
+const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai", "crinacle5128"];
 
 // Domains that use B&K 5128 measurement rig (vs standard 711)
 const RIG_5128_DOMAINS = [
@@ -111,17 +112,14 @@ async function fetchWithTimeout(url, timeoutMs) {
   }
 }
 
-function getPhoneBookUrl(subdomain) {
-  if (OVERRIDES[subdomain]) return OVERRIDES[subdomain];
-  return `https://${subdomain}.squig.link/data/phone_book.json`;
-}
-
-function getDataBaseUrl(subdomain) {
-  if (subdomain === 'crinacle') return 'https://graph.hangout.audio/iem/711/data/';
-  if (subdomain === 'superreview') return 'https://squig.link/data/';
-  if (subdomain === 'den-fi') return 'https://ish.squig.link/data/';
-  if (subdomain === 'paulwasabii') return 'https://pw.squig.link/data/';
-  return `https://${subdomain}.squig.link/data/`;
+async function fetchJson(url) {
+  try {
+    const response = await fetchWithTimeout(url, PHONE_BOOK_TIMEOUT);
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (e) {
+    return null;
+  }
 }
 
 function parsePrice(priceStr) {
@@ -135,20 +133,52 @@ function parsePrice(priceStr) {
 // FILTERING FUNCTIONS
 // ============================================================================
 
-function isHeadphone(name) {
+function isHeadphone(name, subdomain) {
   const upperName = name.toUpperCase();
+  
+  // Logic from check.py
+  // is_hp_path check
+  const isHpPath = subdomain.includes('5128') || subdomain.toLowerCase().includes('headphone') || subdomain.includes('hp'); // approximate check
+  
+  // has_iem_keyword
+  let hasIemKeyword = false;
   for (const marker of NOT_A_HEADPHONE) {
-    if (upperName.includes(marker.toUpperCase())) return false;
+    if (upperName.includes(marker.toUpperCase())) {
+      hasIemKeyword = true;
+      break;
+    }
   }
+
+  // has_hp_single
+  let hasHpSingle = false;
   for (const keyword of HP_SINGLES) {
-    if (upperName.includes(keyword.toUpperCase())) return true;
+    if (upperName.includes(keyword.toUpperCase())) {
+      hasHpSingle = true;
+      break;
+    }
   }
+
+  // has_hp_pair
+  let hasHpPair = false;
   for (const [brand, models] of Object.entries(HP_PAIRS)) {
     if (upperName.includes(brand.toUpperCase())) {
       for (const model of models) {
-        if (upperName.includes(model.toUpperCase())) return true;
+        if (upperName.includes(model.toUpperCase())) {
+          hasHpPair = true;
+          break;
+        }
       }
     }
+    if (hasHpPair) break;
+  }
+
+  // Final logic
+  // if (is_dedicated_hp or is_hp_path or has_hp_single or has_hp_pair) and not has_iem_keyword:
+  if ((isHpPath || hasHpSingle || hasHpPair) && !hasIemKeyword) {
+      // if "jaytiss" not in link_domain or (has_hp_single or has_hp_pair):
+      if (!subdomain.includes('jaytiss') || hasHpSingle || hasHpPair) {
+          return true;
+      }
   }
   return false;
 }
@@ -161,8 +191,8 @@ function isTWS(name) {
   return false;
 }
 
-function shouldInclude(name) {
-  return !isHeadphone(name) && !isTWS(name);
+function shouldInclude(name, subdomain) {
+  return !isHeadphone(name, subdomain) && !isTWS(name);
 }
 
 // ============================================================================
@@ -192,19 +222,7 @@ function getIemKey(subdomain, fileName) {
 // SCANNING FUNCTIONS
 // ============================================================================
 
-async function fetchPhoneBook(subdomain) {
-  const url = getPhoneBookUrl(subdomain);
-  try {
-    const response = await fetchWithTimeout(url, PHONE_BOOK_TIMEOUT);
-    if (!response.ok) return null;
-    return await response.json();
-  } catch (e) {
-    return null;
-  }
-}
-
-async function fetchMeasurement(subdomain, fileName) {
-  const baseUrl = getDataBaseUrl(subdomain);
+async function fetchMeasurement(baseUrl, fileName) {
   const encodedFile = encodeURIComponent(fileName);
   
   // Try L channel first
@@ -243,7 +261,8 @@ function extractPhonesFromPhoneBook(phoneBook, subdomain) {
       const displayName = `${brand.name} ${phone.name}`;
       
       // Filter out headphones and TWS
-      if (!shouldInclude(displayName)) continue;
+      // Pass subdomain for context-aware filtering
+      if (!shouldInclude(displayName, subdomain)) continue;
       
       phones.push({
         subdomain,
@@ -263,7 +282,35 @@ function extractPhonesFromPhoneBook(phoneBook, subdomain) {
 async function scanDomain(subdomain, manifest) {
   console.log(`  Scanning ${subdomain}...`);
   
-  const phoneBook = await fetchPhoneBook(subdomain);
+  let phoneBook = null;
+  let baseUrl = '';
+
+  // 1. Check Overrides
+  if (OVERRIDES[subdomain]) {
+    const url = OVERRIDES[subdomain];
+    phoneBook = await fetchJson(url);
+    if (phoneBook) {
+      // Remove 'phone_book.json' to get base data URL
+      baseUrl = url.replace('phone_book.json', '');
+    }
+  } 
+  // 2. Probe standard paths
+  else {
+    const paths = ["", "iems", "headphones", "earbuds", "5128", "headphones/5128"];
+    for (const path of paths) {
+      const p = path ? `${path}/` : '';
+      const url = `https://${subdomain}.squig.link/${p}data/phone_book.json`;
+      
+      const pb = await fetchJson(url);
+      if (pb) {
+        phoneBook = pb;
+        baseUrl = `https://${subdomain}.squig.link/${p}data/`;
+        console.log(`    Found DB at /${path}`);
+        break;
+      }
+    }
+  }
+
   if (!phoneBook) {
     console.log(`    Failed to fetch phone_book.json`);
     return { phones: [], newCount: 0 };
@@ -287,7 +334,7 @@ async function scanDomain(subdomain, manifest) {
     const batch = allPhones.slice(i, i + CONCURRENT_MEASUREMENTS);
     const results = await Promise.all(
       batch.map(async (phone) => {
-        const measurement = await fetchMeasurement(subdomain, phone.fileName);
+        const measurement = await fetchMeasurement(baseUrl, phone.fileName);
         if (measurement && measurement.frequencies.length >= 10) {
           return { ...phone, frequencyData: measurement };
         }
