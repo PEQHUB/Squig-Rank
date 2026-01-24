@@ -39,13 +39,13 @@ export default function SimilarityList({ results }: { results: CalculationResult
     <div className="similarity-list">
       {isMobile ? (
         <div className="mobile-view">
-          <button onClick={handlePrev} className="nav-button">◀</button>
+          <button onClick={handlePrev} className="nav-button">&#9664;</button>
           <TargetColumn
             data={filteredResults[activeColumn]}
             includeLowQuality={qualityFilters[activeColumn]}
             onQualityToggle={() => handleQualityToggle(activeColumn)}
           />
-          <button onClick={handleNext} className="nav-button">▶</button>
+          <button onClick={handleNext} className="nav-button">&#9654;</button>
         </div>
       ) : (
         <div className="desktop-view">
@@ -73,7 +73,7 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
           checked={includeLowQuality}
           onChange={onQualityToggle}
         />
-        Include Low Quality
+        Show <span className="star-low">&#9734;</span> Low Quality
       </label>
       <ul>
         {data.top25.map((iem: any, index: number) => (
@@ -83,8 +83,9 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle }: any) {
             <span className={`score ${getScoreClass(iem.similarity)}`}>
               {iem.similarity.toFixed(1)}
             </span>
-            {iem.quality === 'high' && <span className="quality-indicator">★</span>}
-            {iem.quality === 'low' && <span className="quality-indicator">☆</span>}
+            <span className={`quality-indicator ${iem.quality}`}>
+              {iem.quality === 'high' ? '\u2605' : '\u2606'}
+            </span>
           </li>
         ))}
       </ul>
