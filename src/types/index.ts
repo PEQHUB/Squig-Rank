@@ -74,6 +74,7 @@ export interface ErrorLog {
 // API response
 export interface CalculationResult {
   targetName: string;
+  targetFileName?: string;
   targetFiles?: {
     '711': string | null;
     '5128': string | null;
