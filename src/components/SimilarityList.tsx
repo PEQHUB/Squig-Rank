@@ -5,9 +5,11 @@ const PAGE_SIZE = 25;
 
 export default function SimilarityList({ results }: { results: CalculationResult[] }) {
   const [activeColumn, setActiveColumn] = useState(0);
-  const [qualityFilters, setQualityFilters] = useState(
-    results.map(() => true)
-  );
+  
+  // State for filters
+  const [showCloneCoupler, setShowCloneCoupler] = useState(results.map(() => true));
+  const [hideDuplicates, setHideDuplicates] = useState(results.map(() => false));
+
   // Track how many items to show per column
   const [showCounts, setShowCounts] = useState(
     results.map(() => PAGE_SIZE)
@@ -23,8 +25,16 @@ export default function SimilarityList({ results }: { results: CalculationResult
     setActiveColumn((prev) => (prev - 1 + results.length) % results.length);
   };
 
-  const handleQualityToggle = (targetIndex: number) => {
-    setQualityFilters(prev => {
+  const toggleCloneCoupler = (targetIndex: number) => {
+    setShowCloneCoupler(prev => {
+      const newFilters = [...prev];
+      newFilters[targetIndex] = !newFilters[targetIndex];
+      return newFilters;
+    });
+  };
+  
+  const toggleDuplicates = (targetIndex: number) => {
+    setHideDuplicates(prev => {
       const newFilters = [...prev];
       newFilters[targetIndex] = !newFilters[targetIndex];
       return newFilters;
@@ -46,8 +56,10 @@ export default function SimilarityList({ results }: { results: CalculationResult
           <button onClick={handlePrev} className="nav-button">&#9664;</button>
           <TargetColumn
             data={results[activeColumn]}
-            includeLowQuality={qualityFilters[activeColumn]}
-            onQualityToggle={() => handleQualityToggle(activeColumn)}
+            showCloneCoupler={showCloneCoupler[activeColumn]}
+            hideDuplicates={hideDuplicates[activeColumn]}
+            onToggleClone={() => toggleCloneCoupler(activeColumn)}
+            onToggleDupes={() => toggleDuplicates(activeColumn)}
             showCount={showCounts[activeColumn]}
             onLoadMore={() => handleLoadMore(activeColumn)}
           />
@@ -59,8 +71,10 @@ export default function SimilarityList({ results }: { results: CalculationResult
             <TargetColumn
               key={result.targetName}
               data={result}
-              includeLowQuality={qualityFilters[index]}
-              onQualityToggle={() => handleQualityToggle(index)}
+              showCloneCoupler={showCloneCoupler[index]}
+              hideDuplicates={hideDuplicates[index]}
+              onToggleClone={() => toggleCloneCoupler(index)}
+              onToggleDupes={() => toggleDuplicates(index)}
               showCount={showCounts[index]}
               onLoadMore={() => handleLoadMore(index)}
             />
@@ -70,6 +84,7 @@ export default function SimilarityList({ results }: { results: CalculationResult
     </div>
   );
 }
+
 
 function getSquigUrl(iem: ScoredIEM): string {
   // id format is "subdomain::filename"
@@ -94,18 +109,63 @@ function getSquigUrl(iem: ScoredIEM): string {
 
 interface TargetColumnProps {
   data: CalculationResult;
-  includeLowQuality: boolean;
-  onQualityToggle: () => void;
+  showCloneCoupler: boolean;
+  hideDuplicates: boolean;
+  onToggleClone: () => void;
+  onToggleDupes: () => void;
   showCount: number;
   onLoadMore: () => void;
 }
 
-function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onLoadMore }: TargetColumnProps) {
-  // Filter based on quality preference
+function TargetColumn({ 
+  data, 
+  showCloneCoupler, 
+  hideDuplicates,
+  onToggleClone, 
+  onToggleDupes,
+  showCount, 
+  onLoadMore 
+}: TargetColumnProps) {
+  
+  // 1. Filter by Quality (Clone Coupler)
   const allItems = data.ranked || [];
-  const filteredItems = includeLowQuality 
+  let filteredItems = showCloneCoupler 
     ? allItems 
     : allItems.filter(iem => iem.quality === 'high');
+
+  // 2. Filter Duplicates (if enabled)
+  if (hideDuplicates) {
+    const seen = new Map<string, ScoredIEM>();
+    
+    // Sort logic to prioritize High Quality when deduping
+    // We already have them sorted by score from backend, but we want to ensure
+    // we pick the "High Quality" version if scores are similar or identical.
+    // Ideally, we iterate and if we find a better version of an existing key, we replace it.
+    
+    for (const item of filteredItems) {
+      const key = item.name.toLowerCase().trim();
+      const existing = seen.get(key);
+      
+      if (!existing) {
+        seen.set(key, item);
+      } else {
+        // If we have an existing one, should we replace it?
+        // Replace if:
+        // 1. Current is High Quality and Existing is Low Quality
+        if (item.quality === 'high' && existing.quality !== 'high') {
+          seen.set(key, item);
+        }
+        // 2. If both are same quality, maybe prefer the one with higher score?
+        // (The list is already sorted by score descending, so the first one we see is the highest score)
+        // So we don't need to do anything else.
+      }
+    }
+    
+    // Convert back to array (and ensure order is maintained or re-sorted)
+    // Since Map iterates in insertion order, and we inserted in score order,
+    // we should be mostly fine, but let's re-sort to be safe.
+    filteredItems = Array.from(seen.values()).sort((a, b) => b.similarity - a.similarity);
+  }
   
   // Slice to current show count
   const displayedItems = filteredItems.slice(0, showCount);
@@ -134,15 +194,28 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
         )}
       </div>
 
-      <label className="quality-filter">
-        <input
-          type="checkbox"
-          checked={includeLowQuality}
-          onChange={onQualityToggle}
-        />
-        Show <span className="star-low">&#9734;</span> Low Quality
-      </label>
+      <div className="filter-controls">
+        {/* Clone Coupler Toggle */}
+        <div 
+          className={`toggle-pill clone-toggle ${showCloneCoupler ? 'active' : ''}`}
+          onClick={onToggleClone}
+        >
+          <span>{showCloneCoupler ? 'Show' : 'Hide'} Clone Coupler</span>
+          {showCloneCoupler && <span className="toggle-icon">&#10003;</span>}
+        </div>
+
+        {/* Duplicate Toggle */}
+        <div 
+          className={`toggle-pill ${hideDuplicates ? 'active' : ''}`}
+          onClick={onToggleDupes}
+        >
+          <span>Hide Duplicates</span>
+          {hideDuplicates && <span className="toggle-icon">&#10003;</span>}
+        </div>
+      </div>
+
       <ul>
+
         {displayedItems.map((iem: ScoredIEM, index: number) => (
           <li key={iem.id} className={`quality-${iem.quality}`}>
             <span className="rank">{index + 1}.</span>
