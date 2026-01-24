@@ -36,7 +36,11 @@ export function TargetSubmission() {
         setTargetRig(rig);
         setError(null);
       } catch (err) {
-        setError('Failed to parse frequency response file');
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('Failed to parse frequency response file');
+        }
       }
     };
     reader.readAsText(file);

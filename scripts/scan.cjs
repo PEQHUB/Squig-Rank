@@ -421,25 +421,12 @@ function savePartialResults() {
   saveManifest(currentManifest);
   
   // Generate results from what we have
-  const seen = new Map();
-  const sortedPhones = [...currentPhones].sort((a, b) => {
-    if (a.quality === 'high' && b.quality !== 'high') return -1;
-    if (a.quality !== 'high' && b.quality === 'high') return 1;
-    return 0;
-  });
+  const phonesToProcess = [...currentPhones];
   
-  for (const phone of sortedPhones) {
-    const key = phone.displayName.toLowerCase().trim();
-    if (!seen.has(key)) {
-      seen.set(key, phone);
-    }
-  }
-  
-  const uniquePhones = Array.from(seen.values());
   const results = [];
   
   for (const group of targetsGlobal) {
-    const scored = uniquePhones
+    const scored = phonesToProcess
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
         const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
@@ -510,13 +497,13 @@ function savePartialResults() {
   
   const output = {
     generatedAt: new Date().toISOString(),
-    totalIEMs: uniquePhones.length,
+    totalIEMs: phonesToProcess.length,
     partial: true,
     results
   };
   
   fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
-  console.log(`Partial results saved: ${uniquePhones.length} IEMs`);
+  console.log(`Partial results saved: ${phonesToProcess.length} IEMs`);
 }
 
 // Handle graceful shutdown
@@ -592,29 +579,15 @@ async function main() {
   console.log(`\nTotal IEMs collected: ${allPhones.length}`);
   console.log(`New IEMs this scan: ${totalNew}\n`);
   
-  const seen = new Map();
-  const sortedPhones = [...allPhones].sort((a, b) => {
-    if (a.quality === 'high' && b.quality !== 'high') return -1;
-    if (a.quality !== 'high' && b.quality === 'high') return 1;
-    return 0;
-  });
-  
-  for (const phone of sortedPhones) {
-    const key = phone.displayName.toLowerCase().trim();
-    if (!seen.has(key)) {
-      seen.set(key, phone);
-    }
-  }
-  
-  const uniquePhones = Array.from(seen.values());
-  console.log(`Unique IEMs after dedup: ${uniquePhones.length}\n`);
+  const phonesToProcess = [...allPhones];
+  console.log(`Processing ${phonesToProcess.length} measurements (no deduplication)\n`);
   
   const results = [];
   
   for (const group of targets) {
     console.log(`Calculating PPI for: ${group.name}`);
     
-    const scored = uniquePhones
+    const scored = phonesToProcess
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
         const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
@@ -684,7 +657,7 @@ async function main() {
   
   const output = {
     generatedAt: new Date().toISOString(),
-    totalIEMs: uniquePhones.length,
+    totalIEMs: phonesToProcess.length,
     domainsScanned: domainsToScan.length,
     results
   };

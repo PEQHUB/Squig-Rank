@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CalculationResult } from '../types';
+import type { CalculationResult, ScoredIEM } from '../types';
 
 const PAGE_SIZE = 25;
 
@@ -71,7 +71,7 @@ export default function SimilarityList({ results }: { results: CalculationResult
   );
 }
 
-function getSquigUrl(iem: any): string {
+function getSquigUrl(iem: ScoredIEM): string {
   // id format is "subdomain::filename"
   const [subdomain, fileName] = iem.id.split('::');
   
@@ -143,7 +143,7 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
         Show <span className="star-low">&#9734;</span> Low Quality
       </label>
       <ul>
-        {displayedItems.map((iem: any, index: number) => (
+        {displayedItems.map((iem: ScoredIEM, index: number) => (
           <li key={iem.id} className={`quality-${iem.quality}`}>
             <span className="rank">{index + 1}.</span>
             <span className="iem-name">{iem.name}</span>

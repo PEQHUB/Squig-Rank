@@ -27,8 +27,12 @@ export default function Home() {
         setResults(data.results);
         setLastUpdate(data.generatedAt);
         setTotalIEMs(data.totalIEMs);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+            setError(e.message);
+        } else {
+            setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
