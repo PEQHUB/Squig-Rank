@@ -114,7 +114,12 @@ function TargetColumn({ data, includeLowQuality, onQualityToggle, showCount, onL
 
   return (
     <div className="target-column">
-      <h2>{data.targetName}{data.scoringMethod === 'ppi' ? ' (PPI)' : ''}</h2>
+      <h2>{data.targetName}</h2>
+      {data.targetFileName && (
+        <div className="target-filename" title={data.targetFileName}>
+          {data.targetFileName}
+        </div>
+      )}
       <label className="quality-filter">
         <input
           type="checkbox"

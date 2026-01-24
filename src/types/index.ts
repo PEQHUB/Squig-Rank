@@ -72,8 +72,17 @@ export interface ErrorLog {
 // API response
 export interface CalculationResult {
   targetName: string;
-  scoringMethod?: 'ppi' | 'rms';  // PPI for Harman, RMS for others
+  targetFileName?: string;  // Original .txt file name
+  scoringMethod?: 'ppi' | 'rms';  // Now always PPI
   ranked: ScoredIEM[];  // All ranked IEMs for pagination
+}
+
+// Custom target for client-side calculation
+export interface CustomTarget {
+  name: string;
+  fileName: string;
+  curve: FrequencyCurve;
+  addedAt: string;
 }
 
 // Scan progress (for future use)

@@ -591,3 +591,150 @@ body {
     padding: 14px 22px;
   }
 }
+
+/* ============================================
+   SUBTITLE
+   ============================================ */
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+/* ============================================
+   TARGET FILENAME
+   ============================================ */
+.target-filename {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  padding: 6px 12px;
+  background: var(--glass-1);
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ============================================
+   CUSTOM TARGET UPLOAD
+   ============================================ */
+.custom-target-upload {
+  background: var(--glass-2);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--glass-border);
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.custom-target-upload h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.drop-zone {
+  border: 2px dashed var(--glass-border-light);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--glass-1);
+}
+
+.drop-zone:hover,
+.drop-zone.active {
+  border-color: var(--accent-primary);
+  background: var(--accent-soft);
+}
+
+.drop-zone p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.upload-error {
+  color: var(--score-poor);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.custom-targets-list {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.custom-targets-list h4 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.custom-targets-list ul {
+  list-style: none;
+}
+
+.custom-targets-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--glass-1);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.custom-targets-list .target-name {
+  flex: 1;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-targets-list .target-points {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.custom-targets-list .remove-btn {
+  background: none;
+  border: none;
+  color: var(--score-poor);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.custom-targets-list .remove-btn:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.calculating {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 16px;
+  background: var(--glass-1);
+  border-radius: 12px;
+  margin-bottom: 24px;
+}

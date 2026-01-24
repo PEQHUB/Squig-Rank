@@ -332,7 +332,99 @@ function calculateSimilarity(iemCurve, targetCurve) {
 }
 
 // ============================================================================
-// HARMAN 2019 IE PPI SCORING
+// GENERALIZED PPI SCORING (Works with ANY target curve)
+// ============================================================================
+// Based on the Harman IE Preference Prediction model formula:
+// PPI = 100.0795 - (8.5 × STDEV) - (6.796 × |SLOPE|) - (3.475 × AVG_ERROR)
+// This formula can be applied to any target curve, not just Harman.
+
+// Standard PPI frequency points (20Hz - 20kHz, 121 points)
+const PPI_FREQUENCIES = [
+  20, 21.2, 22.4, 23.6, 25, 26.5, 28, 30, 31.5, 33.5, 35.5, 37.5, 40, 42.5, 45,
+  47.5, 50, 53, 56, 60, 63, 67, 71, 75, 80, 85, 90, 95, 100, 106, 112, 118, 125,
+  132, 140, 150, 160, 170, 180, 190, 200, 212, 224, 236, 250, 265, 280, 300, 315,
+  335, 355, 375, 400, 425, 450, 475, 500, 530, 560, 600, 630, 670, 710, 750, 800,
+  850, 900, 950, 1000, 1060, 1120, 1180, 1250, 1320, 1400, 1500, 1600, 1700, 1800,
+  1900, 2000, 2120, 2240, 2360, 2500, 2650, 2800, 3000, 3150, 3350, 3550, 3750,
+  4000, 4250, 4500, 4750, 5000, 5300, 5600, 6000, 6300, 6700, 7100, 7500, 8000,
+  8500, 9000, 9500, 10000, 10600, 11200, 11800, 12500, 13200, 14000, 15000, 16000,
+  17000, 18000, 19000, 20000
+];
+
+/**
+ * Calculate PPI score for an IEM against ANY target curve
+ * @param {Object} iemCurve - IEM frequency response {frequencies: [], db: []}
+ * @param {Object} targetCurve - Target curve {frequencies: [], db: []}
+ * @returns {Object} {ppi, stdev, slope, avgError}
+ */
+function calculatePPI(iemCurve, targetCurve) {
+  // Align both curves to R40 and normalize at 1kHz
+  const iemAligned = alignToR40(iemCurve);
+  const iemNorm = normalizeCurve(iemAligned);
+  
+  const targetAligned = alignToR40(targetCurve);
+  const targetNorm = normalizeCurve(targetAligned);
+  
+  // Calculate error at each PPI frequency point
+  const errors = [];
+  const absErrors = [];
+  const lnFreqs = [];
+  
+  for (const freq of PPI_FREQUENCIES) {
+    const iemDb = logInterpolate(iemNorm.frequencies, iemNorm.db, freq);
+    const targetDb = logInterpolate(targetNorm.frequencies, targetNorm.db, freq);
+    
+    const error = iemDb - targetDb;
+    
+    // For STDEV and SLOPE: use 20Hz - 10kHz
+    if (freq <= 10000) {
+      errors.push(error);
+      lnFreqs.push(Math.log(freq));
+    }
+    
+    // For AVG_ERROR: use 40Hz - 10kHz
+    if (freq >= 40 && freq <= 10000) {
+      absErrors.push(Math.abs(error));
+    }
+  }
+  
+  if (errors.length === 0) {
+    return { ppi: 0, stdev: 0, slope: 0, avgError: 0 };
+  }
+  
+  // Calculate STDEV of error
+  const meanError = errors.reduce((a, b) => a + b, 0) / errors.length;
+  const variance = errors.reduce((a, e) => a + (e - meanError) ** 2, 0) / errors.length;
+  const stdev = Math.sqrt(variance);
+  
+  // Calculate SLOPE of error vs ln(frequency)
+  const meanLnFreq = lnFreqs.reduce((a, b) => a + b, 0) / lnFreqs.length;
+  let numerator = 0;
+  let denominator = 0;
+  for (let i = 0; i < errors.length; i++) {
+    numerator += (lnFreqs[i] - meanLnFreq) * (errors[i] - meanError);
+    denominator += (lnFreqs[i] - meanLnFreq) ** 2;
+  }
+  const slope = denominator !== 0 ? numerator / denominator : 0;
+  
+  // Calculate AVG of absolute error
+  const avgError = absErrors.length > 0 
+    ? absErrors.reduce((a, b) => a + b, 0) / absErrors.length 
+    : 0;
+  
+  // PPI formula (same as Harman)
+  const ppi = 100.0795 - (8.5 * stdev) - (6.796 * Math.abs(slope)) - (3.475 * avgError);
+  
+  return {
+    ppi: Math.max(0, Math.min(100, ppi)),
+    stdev,
+    slope,
+    avgError
+  };
+}
+
+// ============================================================================
+// HARMAN 2019 IE PPI SCORING (Legacy - kept for reference)
 // ============================================================================
 // Based on the Harman IE Preference Prediction model
 // Formula: PPI = 100.0795 - (8.5 × STDEV) - (6.796 × |SLOPE|) - (3.475 × AVG_ERROR)
@@ -612,28 +704,26 @@ async function scanDomain(subdomain, manifest) {
 function loadTargets() {
   const targets = [];
   
-  // ISO 11904-2 DF target
-  const isoPath = path.join(TARGETS_DIR, 'ISO 11904-2 DF (Tilt_ -0.8dB_Oct, B₁₀₅ 3dB)-Compensated.txt');
-  if (fs.existsSync(isoPath)) {
-    const text = fs.readFileSync(isoPath, 'utf-8');
-    targets.push({
-      name: 'ISO 11904-2 DF',
-      curve: parseFrequencyResponse(text)
-    });
-  } else {
-    console.warn('ISO 11904-2 target not found');
-  }
+  // Load all .txt files from targets directory
+  const targetFiles = fs.readdirSync(TARGETS_DIR).filter(f => f.endsWith('.txt') && f !== '5128comp.txt');
   
-  // Harman 2019 target
-  const harmanPath = path.join(TARGETS_DIR, 'Harman 2019 Target.txt');
-  if (fs.existsSync(harmanPath)) {
-    const text = fs.readFileSync(harmanPath, 'utf-8');
-    targets.push({
-      name: 'Harman 2019',
-      curve: parseFrequencyResponse(text)
-    });
-  } else {
-    console.warn('Harman 2019 target not found');
+  for (const fileName of targetFiles) {
+    const filePath = path.join(TARGETS_DIR, fileName);
+    try {
+      const text = fs.readFileSync(filePath, 'utf-8');
+      const curve = parseFrequencyResponse(text);
+      
+      if (curve.frequencies.length >= 10) {
+        targets.push({
+          name: fileName.replace('.txt', ''),  // Display name without extension
+          fileName: fileName,                   // Full file name for display
+          curve: curve
+        });
+        console.log(`  Loaded target: ${fileName}`);
+      }
+    } catch (e) {
+      console.warn(`  Failed to load target: ${fileName}`);
+    }
   }
   
   return targets;
@@ -721,8 +811,6 @@ function savePartialResults() {
   const results = [];
   
   for (const target of targetsGlobal) {
-    const useHarmanPPI = target.name === 'Harman 2019';
-    
     const scored = uniquePhones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
@@ -731,35 +819,29 @@ function savePartialResults() {
           ? apply5128Compensation(phone.frequencyData) 
           : phone.frequencyData;
         
-        if (useHarmanPPI) {
-          const ppiResult = calculateHarmanPPI(curveToUse);
-          return {
-            id: getIemKey(phone.subdomain, phone.fileName),
-            name: phone.displayName,
-            similarity: ppiResult.ppi,
-            stdev: ppiResult.stdev,
-            slope: ppiResult.slope,
-            avgError: ppiResult.avgError,
-            price: phone.price,
-            quality: phone.quality,
-            sourceDomain: `${phone.subdomain}.squig.link`,
-            rig: is5128Rig ? '5128' : '711'
-          };
-        } else {
-          return {
-            id: getIemKey(phone.subdomain, phone.fileName),
-            name: phone.displayName,
-            similarity: calculateSimilarity(curveToUse, target.curve),
-            price: phone.price,
-            quality: phone.quality,
-            sourceDomain: `${phone.subdomain}.squig.link`,
-            rig: is5128Rig ? '5128' : '711'
-          };
-        }
+        // Use generalized PPI for ALL targets
+        const ppiResult = calculatePPI(curveToUse, target.curve);
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: ppiResult.ppi,
+          stdev: ppiResult.stdev,
+          slope: ppiResult.slope,
+          avgError: ppiResult.avgError,
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711'
+        };
       });
     
     scored.sort((a, b) => b.similarity - a.similarity);
-    results.push({ targetName: target.name, scoringMethod: useHarmanPPI ? 'ppi' : 'rms', ranked: scored });
+    results.push({ 
+      targetName: target.name, 
+      targetFileName: target.fileName,
+      scoringMethod: 'ppi', 
+      ranked: scored 
+    });
   }
   
   const output = {
@@ -872,14 +954,11 @@ async function main() {
   const uniquePhones = Array.from(seen.values());
   console.log(`Unique IEMs after dedup: ${uniquePhones.length}\n`);
   
-  // Calculate similarity scores for each target
+  // Calculate PPI scores for each target (using generalized PPI formula for ALL targets)
   const results = [];
   
   for (const target of targets) {
-    console.log(`Calculating similarity for: ${target.name}`);
-    
-    // Use Harman PPI scoring for Harman 2019 target, RMS for others
-    const useHarmanPPI = target.name === 'Harman 2019';
+    console.log(`Calculating PPI for: ${target.name}`);
     
     const scored = uniquePhones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
@@ -892,36 +971,24 @@ async function main() {
           ? apply5128Compensation(phone.frequencyData) 
           : phone.frequencyData;
         
-        if (useHarmanPPI) {
-          // Use official Harman PPI formula
-          const ppiResult = calculateHarmanPPI(curveToUse);
-          return {
-            id: getIemKey(phone.subdomain, phone.fileName),
-            name: phone.displayName,
-            similarity: ppiResult.ppi,
-            stdev: ppiResult.stdev,
-            slope: ppiResult.slope,
-            avgError: ppiResult.avgError,
-            price: phone.price,
-            quality: phone.quality,
-            sourceDomain: `${phone.subdomain}.squig.link`,
-            rig: is5128Rig ? '5128' : '711'
-          };
-        } else {
-          // Use RMS deviation for other targets
-          return {
-            id: getIemKey(phone.subdomain, phone.fileName),
-            name: phone.displayName,
-            similarity: calculateSimilarity(curveToUse, target.curve),
-            price: phone.price,
-            quality: phone.quality,
-            sourceDomain: `${phone.subdomain}.squig.link`,
-            rig: is5128Rig ? '5128' : '711'
-          };
-        }
+        // Use generalized PPI formula for ALL targets
+        const ppiResult = calculatePPI(curveToUse, target.curve);
+        
+        return {
+          id: getIemKey(phone.subdomain, phone.fileName),
+          name: phone.displayName,
+          similarity: ppiResult.ppi,
+          stdev: ppiResult.stdev,
+          slope: ppiResult.slope,
+          avgError: ppiResult.avgError,
+          price: phone.price,
+          quality: phone.quality,
+          sourceDomain: `${phone.subdomain}.squig.link`,
+          rig: is5128Rig ? '5128' : '711'
+        };
       });
     
-    // Sort by similarity/PPI (desc), then price (asc)
+    // Sort by PPI (desc), then price (asc)
     scored.sort((a, b) => {
       if (Math.abs(b.similarity - a.similarity) > 0.01) {
         return b.similarity - a.similarity;
@@ -931,12 +998,12 @@ async function main() {
     
     results.push({
       targetName: target.name,
-      scoringMethod: useHarmanPPI ? 'ppi' : 'rms',
-      ranked: scored  // Save all scored IEMs for pagination
+      targetFileName: target.fileName,  // Include file name for display
+      scoringMethod: 'ppi',
+      ranked: scored
     });
     
-    console.log(`  Scoring method: ${useHarmanPPI ? 'Harman PPI' : 'RMS Deviation'}`);
-    console.log(`  Top match: ${scored[0]?.name} (${scored[0]?.similarity.toFixed(1)})`);
+    console.log(`  Top match: ${scored[0]?.name} (PPI: ${scored[0]?.similarity.toFixed(1)})`);
   }
   
   // Save results
