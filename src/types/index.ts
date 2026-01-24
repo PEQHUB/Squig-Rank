@@ -1,3 +1,31 @@
+// Phone book entry types from squig.link
+export interface PhoneBookBrand {
+  name: string;
+  phones: PhoneBookPhone[];
+}
+
+export interface PhoneBookPhone {
+  name: string;
+  file: string | string[];  // filename(s) without extension
+  suffix?: string | string[];
+  price?: string;  // e.g. "$100", "$1,200"
+  reviewScore?: string;
+  shopLink?: string;
+  amazon?: string;
+}
+
+// Parsed phone entry for internal use
+export interface ParsedPhone {
+  brandName: string;
+  phoneName: string;
+  displayName: string;  // "Brand PhoneName"
+  fileName: string;     // Primary file to fetch (first if array)
+  price: number | null;
+  domain: string;
+  quality: 'high' | 'low';
+}
+
+// Frequency response data
 export interface FrequencyCurve {
   frequencies: number[];
   db: number[];
@@ -8,25 +36,22 @@ export interface R40Curve {
   db: number[];
 }
 
+// IEM with measurement data
 export interface IEM {
   id: string;
   name: string;
   frequencyData: FrequencyCurve;
   sourceDomain: string;
   quality: 'high' | 'low';
-}
-
-export interface TargetCurve {
-  name: string;
-  frequencies: number[];
-  db: number[];
-}
-
-export interface ScoredIEM extends IEM {
-  similarity: number;
   price: number | null;
 }
 
+// IEM with similarity score
+export interface ScoredIEM extends IEM {
+  similarity: number;
+}
+
+// Error tracking
 export interface ErrorEntry {
   domain: string;
   error: string;
@@ -39,7 +64,16 @@ export interface ErrorLog {
   lastUpdated: string;
 }
 
+// API response
 export interface CalculationResult {
   targetName: string;
   top25: ScoredIEM[];
+}
+
+// Scan progress (for future use)
+export interface ScanProgress {
+  totalDomains: number;
+  completedDomains: number;
+  totalIEMs: number;
+  currentDomain?: string;
 }
