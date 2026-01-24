@@ -49,6 +49,11 @@ export interface IEM {
 // IEM with similarity score
 export interface ScoredIEM extends IEM {
   similarity: number;
+  // PPI-specific metrics (only present for Harman PPI scoring)
+  stdev?: number;
+  slope?: number;
+  avgError?: number;
+  rig?: '711' | '5128';
 }
 
 // Error tracking
@@ -67,6 +72,7 @@ export interface ErrorLog {
 // API response
 export interface CalculationResult {
   targetName: string;
+  scoringMethod?: 'ppi' | 'rms';  // PPI for Harman, RMS for others
   ranked: ScoredIEM[];  // All ranked IEMs for pagination
 }
 
