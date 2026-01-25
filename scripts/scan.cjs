@@ -79,10 +79,6 @@ const MEASUREMENT_TIMEOUT = 5000;
 const CONCURRENT_DOMAINS = 15;
 const CONCURRENT_MEASUREMENTS = 25;
 
-// Fast mode
-const FAST_MODE = process.argv.includes('--fast');
-const PRIORITY_DOMAINS = [...HIGH_QUALITY_DOMAINS, "superreview", "hbb", "precog", "timmyv", "aftersound"];
-
 // Paths
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
 const MANIFEST_PATH = path.join(DATA_DIR, 'manifest.json');
@@ -556,6 +552,7 @@ function processType(phones, targets, typeLabel) {
           price: phone.price,
           quality: phone.quality,
           sourceDomain: `${phone.subdomain}.squig.link`,
+          type: phone.type,
           rig: is5128Rig ? '5128' : '711',
           targetVariant: targetVariant,
           pinna: phone.pinna
@@ -629,7 +626,6 @@ process.on('SIGTERM', () => {
 
 async function main() {
   console.log('=== Squig.link IEM Scanner ===\n');
-  console.log(`Mode: ${FAST_MODE ? 'FAST (priority domains only)' : 'FULL'}`);
   console.log(`Concurrency: ${CONCURRENT_DOMAINS} domains, ${CONCURRENT_MEASUREMENTS} measurements\n`);
   
   if (!fs.existsSync(DATA_DIR)) {
@@ -651,15 +647,9 @@ async function main() {
     process.exit(1);
   }
   
-  const prioritySet = new Set(PRIORITY_DOMAINS);
-  const orderedDomains = [
-    ...PRIORITY_DOMAINS.filter(d => SUBDOMAINS.includes(d)),
-    ...SUBDOMAINS.filter(d => !prioritySet.has(d))
-  ];
+  const domainsToScan = SUBDOMAINS;
   
-  const domainsToScan = FAST_MODE ? PRIORITY_DOMAINS.filter(d => SUBDOMAINS.includes(d)) : orderedDomains;
-  
-  console.log(`Scanning ${domainsToScan.length} domains${FAST_MODE ? ' (FAST MODE)' : ''}...\n`);
+  console.log(`Scanning ${domainsToScan.length} domains...\n`);
   
   const allPhones = [];
   let totalNew = 0;
@@ -772,9 +762,15 @@ async function main() {
     if (phone.frequencyData && phone.frequencyData.frequencies.length >= 10) {
       const id = getIemKey(phone.subdomain, phone.fileName);
       const aligned = alignToR40(phone.frequencyData);
-      // Store only dB values to save space (frequencies are shared)
-      // Round to 2 decimal places to save space
-      curveData.curves[id] = aligned.db.map(v => Math.round(v * 100) / 100);
+      // Store dB values and metadata
+      // Using short keys to save space in the JSON file
+      curveData.curves[id] = {
+        d: aligned.db.map(v => Math.round(v * 100) / 100),
+        t: phone.type === 'headphone' ? 1 : 0, // 0: iem, 1: headphone
+        q: phone.quality === 'high' ? 1 : 0,
+        p: phone.price,
+        n: phone.pinna
+      };
       curveCount++;
     }
   }

@@ -60,14 +60,16 @@ export default function Home() {
     setActiveType(type);
     setCustomResult(null); // Reset custom on switch
     
-    if (type === 'headphone' && !hpResults) {
-      setLoading(true);
-      const data = await fetchResults('headphone');
-      if (data) {
-        setHpResults(data.results);
-      }
-      setLoading(false);
+    // Always load if not already loaded, and update total count
+    setLoading(true);
+    const data = await fetchResults(type);
+    if (data) {
+      if (type === 'iem') setResults(data.results);
+      else setHpResults(data.results);
+      setTotalIEMs(data.totalIEMs);
+      setLastUpdate(data.generatedAt);
     }
+    setLoading(false);
   };
 
   if (loading && !results) { // Only full screen load on init
@@ -94,9 +96,9 @@ export default function Home() {
   return (
     <div className="home">
       <h1 className="title">Squig-Rank</h1>
-      <p className="subtitle">IEM Preference Prediction Index Rankings</p>
+      <p className="subtitle">{activeType === 'iem' ? 'IEM' : 'Headphone'} Preference Prediction Index Rankings</p>
       <div className="meta">
-        <span>{totalIEMs.toLocaleString()} IEMs scanned</span>
+        <span>{totalIEMs.toLocaleString()} {activeType === 'iem' ? 'IEMs' : 'Headphones'} scanned</span>
         {lastUpdate && (
           <span className="last-update">
             Updated {new Date(lastUpdate).toLocaleString()}
@@ -122,6 +124,7 @@ export default function Home() {
       <TargetSubmission 
         onCalculate={setCustomResult} 
         isRanking={!!customResult}
+        activeType={activeType}
       />
       
       <SimilarityList 

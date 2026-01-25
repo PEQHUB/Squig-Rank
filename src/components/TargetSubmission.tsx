@@ -2,18 +2,27 @@ import { useState, useEffect } from 'react';
 import { parseFrequencyResponse, calculatePPI, logInterpolate } from '../utils/ppi';
 import type { CalculationResult, ScoredIEM } from '../types';
 
+interface CurveEntry {
+  d: number[];
+  t: number; // 0: iem, 1: headphone
+  q: number; // 1: high quality
+  p: number | null; // price
+  n: string | null; // pinna
+}
+
 interface CurvesData {
   meta: { 
     frequencies: number[];
     compensation711?: number[];
     compensation5128?: number[];
   };
-  curves: Record<string, number[]>;
+  curves: Record<string, CurveEntry | number[]>;
 }
 
 interface Props {
   onCalculate: (results: CalculationResult | null) => void;
   isRanking: boolean;
+  activeType: 'iem' | 'headphone';
 }
 
 const RIG_5128_DOMAINS = ["earphonesarchive", "crinacle5128", "listener5128"];
@@ -25,7 +34,7 @@ function getIEMRig(id: string): '711' | '5128' {
   return '711';
 }
 
-export function TargetSubmission({ onCalculate, isRanking }: Props) {
+export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) {
   const [targetText, setTargetText] = useState('');
   const [targetName, setTargetName] = useState('My Custom Target');
   const [targetType, setTargetType] = useState<'711' | '5128'>('711');
@@ -49,7 +58,6 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
       }
 
       // 2. Fetch Curves Data
-      // Add cache busting to ensure we get fresh metadata (compensation curves)
       const response = await fetch(`./data/curves.json?v=${Date.now()}`);
       if (!response.ok) throw new Error('Failed to load measurement data');
       const data: CurvesData = await response.json();
@@ -60,55 +68,59 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
 
       // Helper to generate compensated target
       const getCompensatedTarget = (compArray: number[] | undefined) => {
-        if (!compArray) return parsedTarget; // Fallback
+        if (!compArray) return parsedTarget;
         
-        // Align user target to system frequencies first
         const alignedTarget = freqs.map(f => logInterpolate(parsedTarget.frequencies, parsedTarget.db, f));
-        
         const newDb = alignedTarget.map((val, i) => {
           const comp = compArray[i] || 0;
-          return val + comp; // Always ADD the compensation
+          return val + comp;
         });
         
         return { frequencies: freqs, db: newDb };
       };
 
-      // Pre-calculate variants
       const targetBase = parsedTarget; 
-      
-      // Target (711) + Comp711 = Target (5128)
       const targetPlus711Comp = getCompensatedTarget(comp711);
-      
-      // Target (5128) + Comp5128 = Target (711)
       const targetPlus5128Comp = getCompensatedTarget(comp5128);
 
       // 3. Calculate Scores
       const scored: ScoredIEM[] = [];
 
-      for (const [id, db] of Object.entries(data.curves)) {
+      for (const [id, entry] of Object.entries(data.curves)) {
+        // Handle both old and new format for robust transition
+        const isNewFormat = typeof entry === 'object' && !Array.isArray(entry);
+        const db = isNewFormat ? (entry as CurveEntry).d : (entry as number[]);
+        const type = isNewFormat ? ((entry as CurveEntry).t === 1 ? 'headphone' : 'iem') : 'iem';
+        const quality = isNewFormat ? ((entry as CurveEntry).q === 1 ? 'high' : 'low') : 'low';
+        const price = isNewFormat ? (entry as CurveEntry).p : null;
+        const pinna = isNewFormat ? (entry as CurveEntry).n : null;
+
+        // Filter by active view
+        if (type !== activeType) continue;
+
         const iemCurve = { frequencies: freqs, db };
-        const iemRig = getIEMRig(id);
+        
+        // Determine rig
+        let iemRig: '711' | '5128' = '711';
+        if (isNewFormat && (entry as CurveEntry).n === '5128') {
+            iemRig = '5128';
+        } else {
+            iemRig = getIEMRig(id);
+        }
         
         let activeTarget = targetBase;
 
         if (targetType === '711') {
-          // User provided a 711 Target
           if (iemRig === '5128') {
-            // Need to convert 711 Target -> 5128 Target
             activeTarget = targetPlus711Comp;
           }
-          // else (711 IEM) -> Use Base
         } else {
-          // User provided a 5128 Target
           if (iemRig === '711') {
-            // Need to convert 5128 Target -> 711 Target
             activeTarget = targetPlus5128Comp;
           }
-          // else (5128 IEM) -> Use Base
         }
         
         const result = calculatePPI(iemCurve, activeTarget);
-        
         const [subdomain, fileName] = id.split('::');
         
         scored.push({
@@ -118,11 +130,12 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
           stdev: result.stdev,
           slope: result.slope,
           avgError: result.avgError,
-          price: null,
-          quality: 'low',
-          type: 'iem',
+          price,
+          quality,
+          type,
           sourceDomain: `${subdomain}.squig.link`,
           rig: iemRig,
+          pinna: pinna as any,
           frequencyData: iemCurve
         });
       }
@@ -145,23 +158,20 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
   };
 
   const handleReset = () => {
-    // Keep the text so user can tweak it
     onCalculate(null);
   };
 
-  // Auto-rank when rig changes if we already have rankings or valid text
-  // Actually, let's just make it reactive if results are showing
   useEffect(() => {
     if (isRanking && targetText.trim()) {
       handleRank();
     }
-  }, [targetType]);
+  }, [targetType, activeType]); // Also re-rank when view changes
 
   return (
     <div className="custom-target-upload">
       <h3>Live Ranking</h3>
       <p className="subtitle" style={{marginBottom: '16px'}}>
-        Paste your custom target curve to instantly rank all IEMs.
+        Paste your custom target curve to instantly rank all {activeType === 'iem' ? 'IEMs' : 'Headphones'}.
       </p>
 
       <div className="input-group">
@@ -216,7 +226,7 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
           onClick={handleRank}
           disabled={loading}
         >
-          {loading ? 'Ranking...' : (isRanking ? 'Update Rankings' : 'Rank All IEMs')}
+          {loading ? 'Ranking...' : (isRanking ? 'Update Rankings' : `Rank All ${activeType === 'iem' ? 'IEMs' : 'Headphones'}`)}
         </button>
       </div>
     </div>
