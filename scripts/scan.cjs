@@ -550,7 +550,9 @@ function loadInternalAssets(manifest) {
        const curve = parseFrequencyResponse(text);
        
        if (curve.frequencies.length >= 10) {
-          const type = isHeadphone(info.n, info.s) ? 'headphone' : 'iem';
+          let type = isHeadphone(info.n, info.s) ? 'headphone' : 'iem';
+          if (info.t === 'hp') type = 'headphone';
+
           const pinna = type === 'headphone' ? detectPinna(info.n, info.s) : null;
           
           phones.push({
