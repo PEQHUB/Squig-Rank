@@ -75,7 +75,6 @@ export default function Home() {
   if (loading && !results) { // Only full screen load on init
     return (
       <div className="home">
-        <h1 className="title">Squig-Rank</h1>
         <div className="loading">Loading...</div>
       </div>
     );
@@ -84,7 +83,6 @@ export default function Home() {
   if (error || !results) {
     return (
       <div className="home">
-        <h1 className="title">Squig-Rank</h1>
         <div className="error">
           <p>No scan results available yet.</p>
           <p className="error-detail">The scanner runs every 30 minutes. Check back soon!</p>
@@ -95,7 +93,6 @@ export default function Home() {
 
   return (
     <div className="home">
-      <h1 className="title">Squig-Rank</h1>
       <p className="subtitle">{activeType === 'iem' ? 'IEM' : 'Headphone'} Preference Prediction Index Rankings</p>
       <div className="meta">
         <span>{totalIEMs.toLocaleString()} {activeType === 'iem' ? 'IEMs' : 'Headphones'} scanned</span>
