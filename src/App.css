@@ -1054,9 +1054,12 @@ body {
   border-radius: 6px;
   letter-spacing: 0.5px;
   margin-left: 12px;
-  min-width: 60px;
+  width: 75px; /* Fixed width to prevent layout shifts */
   text-align: center;
   border: 1px solid transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tag.genuine {
