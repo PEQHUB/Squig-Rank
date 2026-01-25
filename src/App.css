@@ -1042,3 +1042,33 @@ body {
   border-color: var(--accent-primary);
   background-color: var(--glass-2);
 }
+
+/* ============================================
+   TAGS (Genuine vs Clone)
+   ============================================ */
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  margin-left: 12px;
+  min-width: 60px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.tag.genuine {
+  background: rgba(245, 158, 11, 0.15); /* Gold/Orange tint */
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.1);
+}
+
+.tag.clone {
+  background: rgba(255, 255, 255, 0.05); /* Gray tint */
+  color: var(--text-muted);
+  border-color: var(--glass-border);
+}
+

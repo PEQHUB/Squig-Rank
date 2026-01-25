@@ -328,15 +328,8 @@ function TargetColumn({
               {iem.similarity.toFixed(1)}
             </span>
             
-            {/* Desktop-only Metrics */}
-            <div className="metrics">
-              <span title="Standard Deviation (Lower is better)">SD: {iem.stdev?.toFixed(2)}</span>
-              <span title="Slope (Lower is better)">SL: {Math.abs(iem.slope || 0).toFixed(2)}</span>
-              <span title="Average Error (Lower is better)">AE: {iem.avgError?.toFixed(2)}</span>
-            </div>
-
-            <span className={`quality-indicator ${iem.quality}`}>
-              {iem.quality === 'high' ? '\u2605' : '\u2606'}
+            <span className={`tag ${iem.quality === 'high' ? 'genuine' : 'clone'}`}>
+              {iem.quality === 'high' ? 'Genuine' : 'Clone'}
             </span>
             <a
               href={getSquigUrl(iem)}
