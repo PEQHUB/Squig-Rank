@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 const { parseFrequencyResponse, averageCurves } = require('./utils.cjs');
 const { calculatePPI } = require('./ranker.cjs');
 
@@ -41,11 +42,11 @@ const SUBDOMAINS = [
 const OVERRIDES = {
     "crinacle": "https://graph.hangout.audio/iem/711/data/phone_book.json",
     "crinacle5128": "https://graph.hangout.audio/iem/5128/data/phone_book.json",
-    "crinacleHP": "https://graph.hangout.audio/hp/data/phone_book.json",
+    "crinacleHP": "https://graph.hangout.audio/headphones/data/phone_book.json",
     "superreview": "https://squig.link/data/phone_book.json",
     "den-fi": "https://ish.squig.link/data/phone_book.json",
     "paulwasabii": "https://pw.squig.link/data/phone_book.json",
-    "listener5128": "https://listener800.github.io/5128/data/phone_book.json"
+    "listener5128": "https://listener.squig.link/5128/data/phone_book.json"
 };
 
 const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai", "crinacle5128"];
@@ -516,6 +517,62 @@ function loadTargets() {
   return Array.from(targetGroups.values());
 }
 
+function loadInternalAssets(manifest) {
+  console.log('\n--- Loading Internal Assets ---');
+  const registryPath = path.join(__dirname, '../public/lib/registry.json');
+  const cacheDir = path.join(__dirname, '../public/lib/cache');
+  
+  if (!fs.existsSync(registryPath)) return { phones: [], newCount: 0 };
+  
+  const registry = JSON.parse(fs.readFileSync(registryPath));
+  const phones = [];
+  let newCount = 0;
+
+  for (const [hash, info] of Object.entries(registry)) {
+    const binPath = path.join(cacheDir, `${hash}.bin`);
+    if (!fs.existsSync(binPath)) continue;
+
+    // Use hash as key to maintain opacity in manifest
+    const key = getIemKey(info.s, hash);
+    
+    if (!manifest.iems[key]) newCount++;
+
+    try {
+       const compressed = fs.readFileSync(binPath);
+       const text = zlib.gunzipSync(compressed).toString('utf-8');
+       const curve = parseFrequencyResponse(text);
+       
+       if (curve.frequencies.length >= 10) {
+          const type = isHeadphone(info.n, info.s) ? 'headphone' : 'iem';
+          const pinna = type === 'headphone' ? detectPinna(info.n, info.s) : null;
+          
+          phones.push({
+             subdomain: info.s, 
+             brandName: 'Internal',
+             phoneName: info.n,
+             displayName: info.n,
+             fileName: hash, 
+             price: null,
+             quality: 'high',
+             type,
+             pinna,
+             frequencyData: curve
+          });
+          
+          manifest.iems[key] = {
+             price: null,
+             quality: 'high',
+             lastSeen: new Date().toISOString()
+          };
+       }
+    } catch(e) {
+        // Silent fail
+    }
+  }
+  console.log(`  Loaded ${phones.length} internal assets.`);
+  return { phones, newCount };
+}
+
 // ============================================================================
 // MAIN
 // ============================================================================
@@ -535,16 +592,14 @@ function processType(phones, targets, typeLabel) {
 
     // Headphone Special Logic: Split Diffuse Field into 3 columns
     if (desiredType === 'headphone' && group.name === 'Diffuse Field (Tilted)') {
-      const pinnae = ['kb5', 'kb6', '5128'];
-      const labels = ['KB5', 'KB6', '5128'];
+      const pinnae = ['kb5', 'kb6', '5128']; // KB5 first for default
 
       for (let i = 0; i < pinnae.length; i++) {
         const p = pinnae[i];
-        const label = labels[i];
         const targetData = group.variants[p];
         if (!targetData) continue;
 
-        console.log(`Calculating PPI for: ${label} ${group.name}`);
+        console.log(`Calculating PPI for: ${targetData.fileName}`);
         
         const scored = phones
           .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
@@ -571,7 +626,7 @@ function processType(phones, targets, typeLabel) {
           .sort((a, b) => b.similarity - a.similarity);
 
         results.push({ 
-          targetName: `${label} ${group.name}`,
+          targetName: targetData.fileName.replace('.txt', ''),
           targetFiles: { [p]: targetData.fileName },
           scoringMethod: 'ppi', 
           ranked: scored 
@@ -631,12 +686,14 @@ function processType(phones, targets, typeLabel) {
       .sort((a, b) => b.similarity - a.similarity);
     
     const targetFiles = {};
+    let firstFileName = group.name;
     for (const [v, data] of Object.entries(group.variants)) {
         targetFiles[v] = data.fileName;
+        if (v === 'default' || v === 'kb5' || v === '711') firstFileName = data.fileName.replace('.txt', '');
     }
 
     results.push({ 
-      targetName: group.name,
+      targetName: desiredType === 'headphone' ? firstFileName : group.name,
       targetFiles,
       scoringMethod: 'ppi', 
       ranked: scored 
@@ -713,6 +770,11 @@ async function main() {
   
   const allPhones = [];
   let totalNew = 0;
+
+  // Load Internal Assets first
+  const internalAssets = loadInternalAssets(manifest);
+  allPhones.push(...internalAssets.phones);
+  totalNew += internalAssets.newCount;
   
   for (let i = 0; i < domainsToScan.length; i += CONCURRENT_DOMAINS) {
     const batch = domainsToScan.slice(i, i + CONCURRENT_DOMAINS);
