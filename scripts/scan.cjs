@@ -32,7 +32,8 @@ const SUBDOMAINS = [
     "soundignity", "suporsalad", "tgx78", "therollo9", "scboy", "seanwee", 
     "silicagel", "sl0the", "soundcheck39", "tanchjim", "tedthepraimortis", 
     "treblewellxtended", "vsg", "yanyin", "yoshiultra", "kuulokenurkka", 
-    "sai", "earphonesarchive",
+    "sai", "earphonesarchive", "auricularesargentina", "cammyfi", "capraaudio",
+    "elrics", "filk", "unheardlab",
     // Extras supported by app logic or known
     "crinacle5128", "listener5128", "crinacleHP"
 ];
@@ -53,31 +54,17 @@ const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai", "crinacle51
 const RIG_5128_DOMAINS = [
   "earphonesarchive", 
   "crinacle5128",
-  "listener5128"
+  "listener5128",
+  "den-fi"
 ];
 
-// Exclusion lists for filtering out headphones and TWS
-const NOT_A_HEADPHONE = ["IEM", "In-Ear", "Monitor", "Earphone", "T10", "Planar IEM"];
-const HP_SINGLES = [
-  "(OE)", "Over-Ear", "On-Ear", "Closed-back", "Open-back", "Circumaural", 
-  "Supra-aural", "HD600", "HD650", "HD800", "HD6XX", "HD560", "HD580", 
-  "Sundara", "Ananda", "Susvara", "DT770", "DT880", "DT990", "DT1990", 
-  "K701", "K702", "K371", "MDR-7506", "Porta Pro"
-];
-const HP_PAIRS = {
-  "Dan Clark": ["Stealth", "Expanse", "Ether", "Aeon", "Corina", "DCA"],
-  "ZMF": ["Atrium", "Verite", "Aeolus", "Eikon", "Auteur", "Caldera", "Bokeh"],
-  "Focal": ["Clear", "Stellia", "Utopia", "Elex", "Radiance", "Bathys", "Hadenys"],
-  "Audeze": ["Maxwell", "LCD", "Mobius", "Penrose"],
-  "Meze": ["Elite", "Empyrean", "Liric", "109 Pro"]
-};
 const TWS_KEYWORDS = ["Earbud", "TWS", "Wireless", "Buds", "Pods", "True Wireless", "AirPods"];
 
 // Timeouts
 const PHONE_BOOK_TIMEOUT = 10000;
 const MEASUREMENT_TIMEOUT = 5000;
-const CONCURRENT_DOMAINS = 15;
-const CONCURRENT_MEASUREMENTS = 25;
+const CONCURRENT_DOMAINS = 30;
+const CONCURRENT_MEASUREMENTS = 50;
 
 // Paths
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
@@ -86,7 +73,169 @@ const RESULTS_PATH = path.join(DATA_DIR, 'results.json');
 const TARGETS_DIR = path.join(__dirname, '..', 'public', 'targets');
 
 // ============================================================================
-// UTILITY FUNCTIONS
+// AIR-TIGHT CLASSIFICATION ENGINE (IE vs OE)
+// ============================================================================
+
+const STRICTLY_IE_BRANDS = [
+  "KZ", "TRN", "LETSHUOER", "7HZ", "THIEAUDIO", "KIWI EARS", "TANGZU", "TANCHJIM", 
+  "SIMGOT", "QOA", "KINERA", "NICEHCK", "TRIPOWIN", "DUNU", "SOFTEARS", "EMPIRE EARS", 
+  "CAMPFIRE AUDIO", "VISION EARS", "UNIQUE MELODY", "ETYMOTIC", "DIREM", "SONICAST", 
+  "UCOTECH", "NOSTALGIA AUDIO", "TONEMAY", "CUSTOM ART", "RHA", "AFO", "FEAULLE",
+  "64 AUDIO", "AFUL", "ZIIGAAT", "JUZEAR", "HIDIZS", "SALNOTES", "IKKO", "MOONDROP CHU", 
+  "MOONDROP ARIA", "WHIZZER", "FENGRU", "FAAEAL", "VENTURE ELECTRONICS", "VE MONK", 
+  "YINMAN", "BGVP", "MOONDROP QUARKS", "MOONDROP SPACESHIP", "MOONDROP KATO", "MOONDROP LAN"
+];
+
+const OE_MODEL_REGISTRY = [
+  // Moondrop OE
+  "MOONDROP VENUS", "MOONDROP COSMO", "MOONDROP PARA", "MOONDROP VOID", "MOONDROP JOKER", "GREAT GATSBY",
+  // Sennheiser OE
+  "HD600", "HD650", "HD800", "HD6XX", "HD560", "HD580", "HD660", "HD490", "SENNHEISER HE1", "HD25", "HD280", "HD300", "MOMENTUM",
+  // Focal OE
+  "FOCAL UTOPIA", "FOCAL CLEAR", "FOCAL STELLIA", "FOCAL ELEX", "FOCAL RADIANCE", "FOCAL BATHYS", "FOCAL HADENYS", "FOCAL AZURYS", "FOCAL LISTEN", "FOCAL ELEGIA", "FOCAL CELESTEE",
+  // Sony OE
+  "MDR-7506", "MDR-V6", "MDR-CD900ST", "MDR-Z1R", "MDR-Z7", "MDR-MV1", "MDR-1A", "WH-1000", "WH-CH",
+  // Hifiman OE
+  "SUNDARA", "ANANDA", "SUSVARA", "ARYA", "HE1000", "HE400", "EDITION XS", "DEVA", "SHANGRI-LA", "AUDIVINA", "HE-R9", "HE-R10",
+  // Audeze OE
+  "LCD-2", "LCD-3", "LCD-4", "LCD-X", "LCD-XC", "LCD-5", "LCD-MX4", "LCD-GX", "MAXWELL", "MOBIUS", "PENROSE", "MM-500", "MM-100",
+  // Koss OE
+  "KSC75", "PORTA PRO", "KPH30I", "KPH40", "UR20", "UR40",
+  // FiiO OE
+  "FT3", "FT5", "FT1", "JT1",
+  // AKG OE
+  "K701", "K702", "K612", "K240", "K141", "K550", "K812", "K712", "K371", "K361",
+  // Audio-Technica OE
+  "ATH-M50", "ATH-M40", "ATH-M30", "ATH-M20", "ATH-AD", "ATH-A", "ATH-R70X", "ATH-AW", "ATH-WP",
+  // Final OE
+  "FINAL D8000", "FINAL SONOROUS", "FINAL UX3000", "PANDORA",
+  // Beyerdynamic OE
+  "DT770", "DT880", "DT990", "DT1990", "DT1770", "DT700", "DT900", "AMIRON", "CUSTOM ONE", "T1", "T5"
+];
+
+const STRICTLY_IE_DOMAINS = [
+  "hbb", "precog", "timmyv", "aftersound", "paulwasabii", "tonedeafmonk", 
+  "vortexreviews", "nymz", "rg", "tonedeafmonk", "eliseaudio", "achoreviews",
+  "animagus", "ankramutt", "atechreviews", "awsmdanny", "bakkwatan", "banzai1122",
+  "bassyalexander", "breampike", "bryaudioreviews", "bukanaudiophile", "csi-zone",
+  "ekaudio", "enemyspider", "eplv", "foxtoldmeso", "freeryder05", "hu-fi", "ianfann",
+  "ideru", "iemocean", "iemworld", "isaiahse", "jacstone", "jaytiss", "joshtbvo",
+  "kazi", "lestat", "loomynarty", "lown-fi", "melatonin", "mmagtech", "musicafe",
+  "obodio", "practiphile", "recode", "riz", "smirk", "soundignity", "suporsalad",
+  "tgx78", "therollo9", "scboy", "seanwee", "silicagel", "sl0the", "soundcheck39",
+  "tanchjim", "tedthepraimortis", "treblewellxtended", "yanyin", "yoshiultra"
+];
+
+const IE_FORCE_KEYWORDS = [
+  "IEM", "IN-EAR", "MONITOR", "EARPHONE", "EARBUD", "BUDS", "PODS", "TWS", "WIRELESS IEM", 
+  "WF-", "IE 200", "IE 300", "IE 600", "IE 900", "CX ", "MX ", "ISINE", "LCD-I", "EUCLID", "SPHEAR", "LYRIC"
+];
+
+function isHeadphone(name, subdomain) {
+  const upperName = name.toUpperCase();
+  const lowerSub = subdomain.toLowerCase();
+  
+  let score = 0;
+
+  // 1. Explicit OE Tags (+100)
+  if (upperName.includes("(OE)") || upperName.includes("(HP)") || upperName.includes("OVER-EAR") || upperName.includes("HEADPHONE")) {
+    score += 100;
+  }
+
+  // 2. OE Model Registry Match (+100)
+  for (const model of OE_MODEL_REGISTRY) {
+    if (upperName.includes(model)) {
+      score += 100;
+      break;
+    }
+  }
+
+  // 3. Strictly IE Brands (-100)
+  for (const brand of STRICTLY_IE_BRANDS) {
+    if (upperName.includes(brand)) {
+      score -= 100;
+      break;
+    }
+  }
+
+  // 4. IE Force Keywords (-100)
+  for (const kw of IE_FORCE_KEYWORDS) {
+    if (upperName.includes(kw)) {
+      score -= 100;
+      break;
+    }
+  }
+
+  // 5. Strictly IE Domains (-50)
+  if (STRICTLY_IE_DOMAINS.includes(lowerSub)) {
+    score -= 50;
+  }
+
+  // 6. Domain-specific hints
+  if (lowerSub.includes('5128') || lowerSub.includes('headphone') || lowerSub === 'crinaclehp') {
+    score += 30;
+  }
+
+  // Final Decision: Must have a positive score to be a headphone
+  return score > 0;
+}
+
+function isTWS(name) {
+  const upperName = name.toUpperCase();
+  for (const keyword of TWS_KEYWORDS) {
+    if (upperName.includes(keyword.toUpperCase())) return true;
+  }
+  return false;
+}
+
+function shouldInclude(name, subdomain) {
+  // Include both IEMs and Headphones
+  return !isTWS(name);
+}
+
+function detectPinna(name, subdomain) {
+  const n = name.toLowerCase();
+  const s = subdomain.toLowerCase();
+
+  // 1. Explicit Domain Mapping
+  if (s.includes('5128')) return '5128';
+  if (s === 'sai' || s === 'kuulokenurkka' || s === 'crinaclehp') return 'kb5';
+  if (s === 'gadgetrytech' || s === 'listener') return 'kb6';
+
+  // 2. Keyword Search
+  if (n.includes('5128')) return '5128';
+  if (n.includes('kb5') || n.includes('kb5000') || n.includes('kb5010') || n.includes('kb5011')) return 'kb5';
+  if (n.includes('kb0065') || n.includes('kb0066') || n.includes('kb006x') || n.includes('kb6')) return 'kb6';
+  
+  // Default for headphones is KB5
+  return 'kb5';
+}
+
+// ============================================================================
+// MANIFEST MANAGEMENT
+// ============================================================================
+
+function loadManifest() {
+  try {
+    if (fs.existsSync(MANIFEST_PATH)) {
+      return JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
+    }
+  } catch (e) {
+    console.warn('Could not load manifest, starting fresh');
+  }
+  return { iems: {}, lastFullScan: null };
+}
+
+function saveManifest(manifest) {
+  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
+}
+
+function getIemKey(subdomain, fileName) {
+  return `${subdomain}::${fileName}`;
+}
+
+// ============================================================================
+// SCANNING FUNCTIONS
 // ============================================================================
 
 async function fetchWithTimeout(url, timeoutMs) {
@@ -124,115 +273,6 @@ function parsePrice(priceStr) {
   const num = parseFloat(cleaned);
   return isNaN(num) ? null : num;
 }
-
-// ============================================================================
-// FILTERING FUNCTIONS
-// ============================================================================
-
-function isHeadphone(name, subdomain) {
-  const upperName = name.toUpperCase();
-  
-  // Logic from check.py
-  // is_hp_path check
-  const isHpPath = subdomain.includes('5128') || subdomain.toLowerCase().includes('headphone') || subdomain.includes('hp'); // approximate check
-  
-  // has_iem_keyword
-  let hasIemKeyword = false;
-  for (const marker of NOT_A_HEADPHONE) {
-    if (upperName.includes(marker.toUpperCase())) {
-      hasIemKeyword = true;
-      break;
-    }
-  }
-
-  // has_hp_single
-  let hasHpSingle = false;
-  for (const keyword of HP_SINGLES) {
-    if (upperName.includes(keyword.toUpperCase())) {
-      hasHpSingle = true;
-      break;
-    }
-  }
-
-  // has_hp_pair
-  let hasHpPair = false;
-  for (const [brand, models] of Object.entries(HP_PAIRS)) {
-    if (upperName.includes(brand.toUpperCase())) {
-      for (const model of models) {
-        if (upperName.includes(model.toUpperCase())) {
-          hasHpPair = true;
-          break;
-        }
-      }
-    }
-    if (hasHpPair) break;
-  }
-
-  // Final logic
-  // if (is_dedicated_hp or is_hp_path or has_hp_single or has_hp_pair) and not has_iem_keyword:
-  if ((isHpPath || hasHpSingle || hasHpPair) && !hasIemKeyword) {
-      // if "jaytiss" not in link_domain or (has_hp_single or has_hp_pair):
-      if (!subdomain.includes('jaytiss') || hasHpSingle || hasHpPair) {
-          return true;
-      }
-  }
-  return false;
-}
-
-function isTWS(name) {
-  const upperName = name.toUpperCase();
-  for (const keyword of TWS_KEYWORDS) {
-    if (upperName.includes(keyword.toUpperCase())) return true;
-  }
-  return false;
-}
-
-function shouldInclude(name, subdomain) {
-  // Include both IEMs and Headphones
-  return !isTWS(name);
-}
-
-function detectPinna(name, subdomain) {
-  const n = name.toLowerCase();
-  // 5128
-  if (subdomain.includes('5128') || n.includes('5128')) return '5128';
-  
-  // KB5 / KB50xx (Specific Model Numbers)
-  if (n.includes('kb5') || n.includes('kb5000') || n.includes('kb5010') || n.includes('kb5011')) return 'kb5';
-  
-  // KB0065 / KB006x (Specific Model Numbers)
-  if (n.includes('kb0065') || n.includes('kb0066') || n.includes('kb006x')) return 'kb0065';
-  
-  // Default (Standard GRAS or Unspecified)
-  return 'gras';
-}
-
-// ============================================================================
-// MANIFEST MANAGEMENT
-// ============================================================================
-
-function loadManifest() {
-  try {
-    if (fs.existsSync(MANIFEST_PATH)) {
-      return JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
-    }
-  } catch (e) {
-    console.warn('Could not load manifest, starting fresh');
-  }
-  return { iems: {}, lastFullScan: null };
-}
-
-function saveManifest(manifest) {
-  fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
-}
-
-function getIemKey(subdomain, fileName) {
-  return `${subdomain}::${fileName}`;
-}
-
-// ============================================================================
-// SCANNING FUNCTIONS
-// ============================================================================
 
 async function fetchMeasurement(baseUrl, fileName) {
   const encodedFile = encodeURIComponent(fileName);
@@ -491,9 +531,56 @@ function processType(phones, targets, typeLabel) {
   const desiredType = typeLabel === 'Headphone' ? 'headphone' : 'iem';
 
   for (const group of targets) {
-    // Filter targets by type
     if (group.type && group.type !== desiredType) continue;
 
+    // Headphone Special Logic: Split Diffuse Field into 3 columns
+    if (desiredType === 'headphone' && group.name === 'Diffuse Field (Tilted)') {
+      const pinnae = ['kb5', 'kb6', '5128'];
+      const labels = ['KB5', 'KB6', '5128'];
+
+      for (let i = 0; i < pinnae.length; i++) {
+        const p = pinnae[i];
+        const label = labels[i];
+        const targetData = group.variants[p];
+        if (!targetData) continue;
+
+        console.log(`Calculating PPI for: ${label} ${group.name}`);
+        
+        const scored = phones
+          .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
+          .filter(phone => phone.type === 'headphone')
+          .filter(phone => phone.pinna === p)
+          .map(phone => {
+            const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
+            return {
+              id: getIemKey(phone.subdomain, phone.fileName),
+              name: phone.displayName,
+              similarity: ppiResult.ppi,
+              stdev: ppiResult.stdev,
+              slope: ppiResult.slope,
+              avgError: ppiResult.avgError,
+              price: phone.price,
+              quality: phone.quality,
+              sourceDomain: `${phone.subdomain}.squig.link`,
+              type: phone.type,
+              rig: phone.pinna === '5128' ? '5128' : '711',
+              targetVariant: p,
+              pinna: phone.pinna
+            };
+          })
+          .sort((a, b) => b.similarity - a.similarity);
+
+        results.push({ 
+          targetName: `${label} ${group.name}`,
+          targetFiles: { [p]: targetData.fileName },
+          scoringMethod: 'ppi', 
+          ranked: scored 
+        });
+      }
+      continue;
+    }
+
+    // Standard logic for others
     console.log(`Calculating PPI for: ${group.name}`);
     
     const scored = phones
@@ -507,7 +594,6 @@ function processType(phones, targets, typeLabel) {
                               phone.fileName.includes('(5128)') || 
                               phone.displayName.includes('(5128)');
             
-            // For IEMs, we have 711 and 5128 variants
             if (is5128Rig) {
                 targetVariant = group.variants['5128'] ? '5128' : '711';
                 targetData = group.variants[targetVariant];
@@ -516,31 +602,14 @@ function processType(phones, targets, typeLabel) {
                 targetData = group.variants[targetVariant];
             }
         } else {
-            // Headphones
-            if (phone.pinna === '5128') targetVariant = '5128';
-            else if (phone.pinna === 'kb5') targetVariant = 'kb5';
-            else if (phone.pinna === 'kb0065') targetVariant = 'kb0065';
-            else targetVariant = 'default'; // gras/unknown
-
-            targetData = group.variants[targetVariant];
-            
-            // Fallback for HPs
-            if (!targetData) {
-                if (group.variants['default']) {
-                    targetVariant = 'default';
-                    targetData = group.variants['default'];
-                } else if (group.variants['kb5']) { // KB5 is common modern gras
-                    targetVariant = 'kb5';
-                    targetData = group.variants['kb5'];
-                }
-            }
+            targetVariant = phone.pinna;
+            targetData = group.variants[targetVariant] || group.variants['default'];
         }
 
         if (!targetData) return null;
         
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
-        
-        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain); // Simple check for rig field
+        const is5128Rig = phone.pinna === '5128' || RIG_5128_DOMAINS.includes(phone.subdomain);
 
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
@@ -558,16 +627,9 @@ function processType(phones, targets, typeLabel) {
           pinna: phone.pinna
         };
       })
-      .filter(x => x !== null);
+      .filter(x => x !== null)
+      .sort((a, b) => b.similarity - a.similarity);
     
-    scored.sort((a, b) => {
-      if (Math.abs(b.similarity - a.similarity) > 0.01) {
-        return b.similarity - a.similarity;
-      }
-      return (a.price ?? Infinity) - (b.price ?? Infinity);
-    });
-    
-    // Construct targetFiles map for UI downloads
     const targetFiles = {};
     for (const [v, data] of Object.entries(group.variants)) {
         targetFiles[v] = data.fileName;
@@ -579,8 +641,6 @@ function processType(phones, targets, typeLabel) {
       scoringMethod: 'ppi', 
       ranked: scored 
     });
-    
-    console.log(`  Top match: ${scored[0]?.name} (PPI: ${scored[0]?.similarity.toFixed(1)})`);
   }
   return results;
 }
