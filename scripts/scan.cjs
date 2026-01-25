@@ -62,7 +62,7 @@ const RIG_5128_DOMAINS = [
 const TWS_KEYWORDS = ["Earbud", "TWS", "Wireless", "Buds", "Pods", "True Wireless", "AirPods"];
 
 // Timeouts
-const PHONE_BOOK_TIMEOUT = 10000;
+const PHONE_BOOK_TIMEOUT = 30000;
 const MEASUREMENT_TIMEOUT = 5000;
 const CONCURRENT_DOMAINS = 30;
 const CONCURRENT_MEASUREMENTS = 50;
@@ -85,7 +85,8 @@ const STRICTLY_IE_BRANDS = [
   "64 AUDIO", "AFUL", "ZIIGAAT", "JUZEAR", "HIDIZS", "SALNOTES", "IKKO", "MOONDROP CHU", 
   "MOONDROP ARIA", "WHIZZER", "FENGRU", "FAAEAL", "VENTURE ELECTRONICS", "VE MONK", 
   "YINMAN", "BGVP", "MOONDROP QUARKS", "MOONDROP SPACESHIP", "MOONDROP KATO", "MOONDROP LAN",
-  "RE-2", "NA3", "A8", "D-FI"
+  "RE-2", "NA3", "A8", "D-FI",
+  "TIN", "CTM", "FEARLESS", "AUDIOSENSE", "NUARL", "QCY", "KLIPSCH"
 ];
 
 const OE_MODEL_REGISTRY = [
@@ -125,7 +126,8 @@ const STRICTLY_IE_DOMAINS = [
   "kazi", "lestat", "loomynarty", "lown-fi", "melatonin", "mmagtech", "musicafe",
   "obodio", "practiphile", "recode", "riz", "smirk", "soundignity", "suporsalad",
   "tgx78", "therollo9", "scboy", "seanwee", "silicagel", "sl0the", "soundcheck39",
-  "tanchjim", "tedthepraimortis", "treblewellxtended", "yanyin", "yoshiultra"
+  "tanchjim", "tedthepraimortis", "treblewellxtended", "yanyin", "yoshiultra",
+  "crinacle"
 ];
 
 const IE_FORCE_KEYWORDS = [
@@ -247,7 +249,8 @@ async function fetchWithTimeout(url, timeoutMs) {
     const response = await fetch(url, { 
       signal: controller.signal,
       headers: {
-        'User-Agent': 'SquigRank-Scanner/1.0'
+        'User-Agent': 'SquigRank-Scanner/1.0',
+        'Referer': 'https://squig.link/'
       }
     });
     clearTimeout(timeoutId);
@@ -536,6 +539,9 @@ function loadInternalAssets(manifest) {
     // Use hash as key to maintain opacity in manifest
     const key = getIemKey(info.s, hash);
     
+    // Check exclusion (TWS, etc)
+    if (!shouldInclude(info.n, info.s)) continue;
+
     if (!manifest.iems[key]) newCount++;
 
     try {
