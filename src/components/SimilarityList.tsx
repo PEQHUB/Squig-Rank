@@ -100,7 +100,7 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
           <button onClick={handleNext} className="nav-button">&#9654;</button>
         </div>
       ) : (
-        <div className="desktop-view">
+        <div className={`desktop-view ${results.length === 1 ? 'single-column' : ''}`}>
           {results.map((result, index) => (
             <TargetColumn
               key={result.targetName}

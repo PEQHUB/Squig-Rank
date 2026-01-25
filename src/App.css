@@ -137,6 +137,13 @@ body {
   gap: 28px;
 }
 
+.desktop-view.single-column {
+  grid-template-columns: 1fr;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
 .mobile-view {
   display: flex;
   flex-direction: column;
