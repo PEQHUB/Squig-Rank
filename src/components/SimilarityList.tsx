@@ -5,6 +5,7 @@ const PAGE_SIZE = 25;
 
 export default function SimilarityList({ results, isHeadphoneMode = false }: { results: CalculationResult[], isHeadphoneMode?: boolean }) {
   const [activeColumn, setActiveColumn] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   
   // State for filters
   const [showCloneCoupler, setShowCloneCoupler] = useState(results.map(() => true));
@@ -62,7 +63,18 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
 
   return (
     <div className="similarity-list">
-          {isMobile ? (
+      <div className="search-container">
+        <span className="search-icon">🔍</span>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search by model name..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {isMobile ? (
         <div className="mobile-view">
           <button onClick={handlePrev} className="nav-button">&#9664;</button>
           <TargetColumn
@@ -70,6 +82,7 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
             showCloneCoupler={showCloneCoupler[activeColumn]}
             hideDuplicates={hideDuplicates[activeColumn]}
             pinnaFilter={isHeadphoneMode ? pinnaFilters[activeColumn] : undefined}
+            searchTerm={searchTerm}
             onPinnaChange={(val) => handlePinnaChange(activeColumn, val)}
             onToggleClone={() => toggleCloneCoupler(activeColumn)}
             onToggleDupes={() => toggleDuplicates(activeColumn)}
@@ -87,6 +100,7 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
               showCloneCoupler={showCloneCoupler[index]}
               hideDuplicates={hideDuplicates[index]}
               pinnaFilter={isHeadphoneMode ? pinnaFilters[index] : undefined}
+              searchTerm={searchTerm}
               onPinnaChange={(val) => handlePinnaChange(index, val)}
               onToggleClone={() => toggleCloneCoupler(index)}
               onToggleDupes={() => toggleDuplicates(index)}
@@ -127,6 +141,7 @@ interface TargetColumnProps {
   showCloneCoupler: boolean;
   hideDuplicates: boolean;
   pinnaFilter?: string;
+  searchTerm?: string;
   onPinnaChange?: (value: string) => void;
   onToggleClone: () => void;
   onToggleDupes: () => void;
@@ -139,6 +154,7 @@ function TargetColumn({
   showCloneCoupler, 
   hideDuplicates,
   pinnaFilter,
+  searchTerm,
   onPinnaChange,
   onToggleClone, 
   onToggleDupes,
@@ -151,6 +167,14 @@ function TargetColumn({
   let filteredItems = showCloneCoupler 
     ? allItems 
     : allItems.filter(iem => iem.quality === 'high');
+
+  // 1.2 Filter by Search Term
+  if (searchTerm && searchTerm.trim()) {
+    const term = searchTerm.toLowerCase().trim();
+    filteredItems = filteredItems.filter(item => 
+      item.name.toLowerCase().includes(term)
+    );
+  }
 
   // 1.5 Filter by Pinna (Headphones only)
   if (pinnaFilter && pinnaFilter !== 'all') {
