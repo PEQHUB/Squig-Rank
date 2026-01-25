@@ -517,6 +517,7 @@ function loadTargets() {
   return Array.from(targetGroups.values());
 }
 
+
 function loadInternalAssets(manifest) {
   console.log('\n--- Loading Internal Assets ---');
   const registryPath = path.join(__dirname, '../public/lib/registry.json');
@@ -650,21 +651,27 @@ function processType(phones, targets, typeLabel) {
                               phone.displayName.includes('(5128)');
             
             if (is5128Rig) {
-                targetVariant = group.variants['5128'] ? '5128' : '711';
-                targetData = group.variants[targetVariant];
+                 targetVariant = '5128';
+                 targetData = group.variants['5128'];
             } else {
-                targetVariant = group.variants['711'] ? '711' : '5128';
-                targetData = group.variants[targetVariant];
+                 targetVariant = '711';
+                 targetData = group.variants['711'];
             }
         } else {
-            targetVariant = phone.pinna;
-            targetData = group.variants[targetVariant] || group.variants['default'];
+            // ... (Headphone logic)
         }
 
-        if (!targetData) return null;
-        
+        if (!targetData) {
+            if (phone.brandName === 'Internal') console.log(`  Skipped Internal ${phone.displayName}: No target data for ${targetVariant}`);
+            return null;
+        }
+
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
-        const is5128Rig = phone.pinna === '5128' || RIG_5128_DOMAINS.includes(phone.subdomain);
+        
+        // Debug Internal items
+        if (phone.brandName === 'Internal' && ppiResult.ppi === 0) {
+             console.log(`  Warning: Internal ${phone.displayName} scored 0 PPI`);
+        }
 
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
@@ -675,32 +682,30 @@ function processType(phones, targets, typeLabel) {
           avgError: ppiResult.avgError,
           price: phone.price,
           quality: phone.quality,
-          sourceDomain: `${phone.subdomain}.squig.link`,
+          sourceDomain: phone.brandName === 'Internal' ? 'crinacle.com' : `${phone.subdomain}.squig.link`,
           type: phone.type,
-          rig: is5128Rig ? '5128' : '711',
-          targetVariant: targetVariant,
+          rig: (phone.pinna === '5128' || phone.subdomain.includes('5128')) ? '5128' : '711',
+          targetVariant,
           pinna: phone.pinna
         };
       })
-      .filter(x => x !== null)
+      .filter(item => item !== null)
       .sort((a, b) => b.similarity - a.similarity);
-    
-    const targetFiles = {};
-    let firstFileName = group.name;
-    for (const [v, data] of Object.entries(group.variants)) {
-        targetFiles[v] = data.fileName;
-        if (v === 'default' || v === 'kb5' || v === '711') firstFileName = data.fileName.replace('.txt', '');
-    }
 
     results.push({ 
-      targetName: desiredType === 'headphone' ? firstFileName : group.name,
-      targetFiles,
+      targetName: group.name,
+      targetFileName: group.variants['default']?.fileName || 'unknown', // Fallback
+      targetFiles: Object.entries(group.variants).reduce((acc, [k, v]) => {
+          acc[k] = v.fileName;
+          return acc;
+      }, {}),
       scoringMethod: 'ppi', 
       ranked: scored 
     });
   }
   return results;
 }
+
 
 function savePartialResults() {
   if (!currentManifest || targetsGlobal.length === 0) return;

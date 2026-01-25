@@ -129,7 +129,13 @@ function getSquigUrl(iem: ScoredIEM): string {
   
   // Handle special domain overrides
   if (subdomain === 'crinacle') {
-    return `https://graph.hangout.audio/iem/711/?share=${encodeURIComponent(fileName)}`;
+    // Basic slugification: lower case, replace spaces with hyphens
+    const slug = iem.name.toLowerCase()
+        .replace(/ \+ /g, '-') // "Truthear + Crinacle" -> "truthear-crinacle"
+        .replace(/ x /g, '-') // "Truthear x Crinacle" -> "truthear-crinacle"
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    return `https://crinacle.com/graphs/iems/${slug}/`;
   }
   if (subdomain === 'superreview') {
     return `https://squig.link/?share=${encodeURIComponent(fileName)}`;
