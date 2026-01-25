@@ -3,12 +3,15 @@ import type { CalculationResult, ScoredIEM } from '../types';
 
 const PAGE_SIZE = 25;
 
-export default function SimilarityList({ results }: { results: CalculationResult[] }) {
+export default function SimilarityList({ results, isHeadphoneMode = false }: { results: CalculationResult[], isHeadphoneMode?: boolean }) {
   const [activeColumn, setActiveColumn] = useState(0);
   
   // State for filters
   const [showCloneCoupler, setShowCloneCoupler] = useState(results.map(() => true));
   const [hideDuplicates, setHideDuplicates] = useState(results.map(() => true));
+  
+  // Headphone specific filters
+  const [pinnaFilters, setPinnaFilters] = useState(results.map(() => 'all'));
 
   // Track how many items to show per column
   const [showCounts, setShowCounts] = useState(
@@ -41,6 +44,14 @@ export default function SimilarityList({ results }: { results: CalculationResult
     });
   };
 
+  const handlePinnaChange = (targetIndex: number, value: string) => {
+    setPinnaFilters(prev => {
+      const newFilters = [...prev];
+      newFilters[targetIndex] = value;
+      return newFilters;
+    });
+  };
+
   const handleLoadMore = (targetIndex: number) => {
     setShowCounts(prev => {
       const newCounts = [...prev];
@@ -51,13 +62,15 @@ export default function SimilarityList({ results }: { results: CalculationResult
 
   return (
     <div className="similarity-list">
-      {isMobile ? (
+          {isMobile ? (
         <div className="mobile-view">
           <button onClick={handlePrev} className="nav-button">&#9664;</button>
           <TargetColumn
             data={results[activeColumn]}
             showCloneCoupler={showCloneCoupler[activeColumn]}
             hideDuplicates={hideDuplicates[activeColumn]}
+            pinnaFilter={isHeadphoneMode ? pinnaFilters[activeColumn] : undefined}
+            onPinnaChange={(val) => handlePinnaChange(activeColumn, val)}
             onToggleClone={() => toggleCloneCoupler(activeColumn)}
             onToggleDupes={() => toggleDuplicates(activeColumn)}
             showCount={showCounts[activeColumn]}
@@ -73,6 +86,8 @@ export default function SimilarityList({ results }: { results: CalculationResult
               data={result}
               showCloneCoupler={showCloneCoupler[index]}
               hideDuplicates={hideDuplicates[index]}
+              pinnaFilter={isHeadphoneMode ? pinnaFilters[index] : undefined}
+              onPinnaChange={(val) => handlePinnaChange(index, val)}
               onToggleClone={() => toggleCloneCoupler(index)}
               onToggleDupes={() => toggleDuplicates(index)}
               showCount={showCounts[index]}
@@ -111,6 +126,8 @@ interface TargetColumnProps {
   data: CalculationResult;
   showCloneCoupler: boolean;
   hideDuplicates: boolean;
+  pinnaFilter?: string;
+  onPinnaChange?: (value: string) => void;
   onToggleClone: () => void;
   onToggleDupes: () => void;
   showCount: number;
@@ -121,6 +138,8 @@ function TargetColumn({
   data, 
   showCloneCoupler, 
   hideDuplicates,
+  pinnaFilter,
+  onPinnaChange,
   onToggleClone, 
   onToggleDupes,
   showCount, 
@@ -132,6 +151,15 @@ function TargetColumn({
   let filteredItems = showCloneCoupler 
     ? allItems 
     : allItems.filter(iem => iem.quality === 'high');
+
+  // 1.5 Filter by Pinna (Headphones only)
+  if (pinnaFilter && pinnaFilter !== 'all') {
+    filteredItems = filteredItems.filter(item => {
+        // If 5128 pinna filter selected, match 5128 rig OR 5128 pinna
+        if (pinnaFilter === '5128') return item.pinna === '5128' || item.rig === '5128';
+        return item.pinna === pinnaFilter;
+    });
+  }
 
   // 2. Filter Duplicates (if enabled)
   if (hideDuplicates) {
@@ -226,6 +254,22 @@ function TargetColumn({
           <span>Hide Duplicates</span>
           {hideDuplicates && <span className="toggle-icon">&#10003;</span>}
         </div>
+        
+        {/* Pinna Filter (Headphones Only) */}
+        {pinnaFilter && (
+          <div className="pinna-selector">
+            <select 
+              value={pinnaFilter} 
+              onChange={(e) => onPinnaChange?.(e.target.value)}
+              className="pinna-dropdown"
+            >
+              <option value="all">All Pinnae</option>
+              <option value="kb5">KB5</option>
+              <option value="kb0065">KB0065</option>
+              <option value="5128">5128</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <ul>

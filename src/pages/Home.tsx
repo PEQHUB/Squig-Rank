@@ -11,6 +11,9 @@ interface ResultsData {
 
 export default function Home() {
   const [results, setResults] = useState<CalculationResult[] | null>(null);
+  const [hpResults, setHpResults] = useState<CalculationResult[] | null>(null);
+  const [activeType, setActiveType] = useState<'iem' | 'headphone'>('iem');
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
@@ -19,31 +22,55 @@ export default function Home() {
   // Custom Ranking State
   const [customResult, setCustomResult] = useState<CalculationResult | null>(null);
 
+  async function fetchResults(type: 'iem' | 'headphone'): Promise<ResultsData | null> {
+    try {
+      const file = type === 'iem' ? './data/results.json' : './data/results_hp.json';
+      const response = await fetch(file);
+      if (!response.ok) {
+        if (type === 'headphone') return null; // HP might not exist yet
+        throw new Error('Results not available yet');
+      }
+      return await response.json() as ResultsData;
+    } catch (e) {
+      console.warn(`Failed to load ${type} results`, e);
+      return null;
+    }
+  }
+
   useEffect(() => {
-    async function loadResults() {
+    async function initLoad() {
+      setLoading(true);
       try {
-        const response = await fetch('./data/results.json');
-        if (!response.ok) {
-          throw new Error('Results not available yet');
+        const iemData = await fetchResults('iem');
+        if (iemData) {
+          setResults(iemData.results);
+          setLastUpdate(iemData.generatedAt);
+          setTotalIEMs(iemData.totalIEMs);
         }
-        const data: ResultsData = await response.json();
-        setResults(data.results);
-        setLastUpdate(data.generatedAt);
-        setTotalIEMs(data.totalIEMs);
       } catch (e: unknown) {
-        if (e instanceof Error) {
-            setError(e.message);
-        } else {
-            setError('An unknown error occurred');
-        }
+        setError(e instanceof Error ? e.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
     }
-    loadResults();
+    initLoad();
   }, []);
 
-  if (loading) {
+  const handleTypeChange = async (type: 'iem' | 'headphone') => {
+    setActiveType(type);
+    setCustomResult(null); // Reset custom on switch
+    
+    if (type === 'headphone' && !hpResults) {
+      setLoading(true);
+      const data = await fetchResults('headphone');
+      if (data) {
+        setHpResults(data.results);
+      }
+      setLoading(false);
+    }
+  };
+
+  if (loading && !results) { // Only full screen load on init
     return (
       <div className="home">
         <h1 className="title">Squig-Rank</h1>
@@ -77,12 +104,30 @@ export default function Home() {
         )}
       </div>
       
+      <div className="type-tabs">
+        <button 
+          className={`tab-btn ${activeType === 'iem' ? 'active' : ''}`}
+          onClick={() => handleTypeChange('iem')}
+        >
+          IEMs
+        </button>
+        <button 
+          className={`tab-btn ${activeType === 'headphone' ? 'active' : ''}`}
+          onClick={() => handleTypeChange('headphone')}
+        >
+          Headphones
+        </button>
+      </div>
+
       <TargetSubmission 
         onCalculate={setCustomResult} 
         isRanking={!!customResult}
       />
       
-      <SimilarityList results={customResult ? [customResult] : results} />
+      <SimilarityList 
+        results={customResult ? [customResult] : (activeType === 'iem' ? results : hpResults) || []} 
+        isHeadphoneMode={activeType === 'headphone'}
+      />
     </div>
   );
 }

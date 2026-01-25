@@ -47,6 +47,7 @@ export interface IEM {
   price: number | null;
   type: 'iem' | 'headphone' | 'tws';
   rig?: '711' | '5128';
+  pinna?: 'kb5' | 'kb0065' | '5128' | 'gras';
 }
 
 // IEM with similarity score

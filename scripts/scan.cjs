@@ -192,7 +192,23 @@ function isTWS(name) {
 }
 
 function shouldInclude(name, subdomain) {
-  return !isHeadphone(name, subdomain) && !isTWS(name);
+  // Include both IEMs and Headphones
+  return !isTWS(name);
+}
+
+function detectPinna(name, subdomain) {
+  const n = name.toLowerCase();
+  // 5128
+  if (subdomain.includes('5128') || n.includes('5128')) return '5128';
+  
+  // KB5 / KB50xx (Specific Model Numbers)
+  if (n.includes('kb5') || n.includes('kb5000') || n.includes('kb5010') || n.includes('kb5011')) return 'kb5';
+  
+  // KB0065 / KB006x (Specific Model Numbers)
+  if (n.includes('kb0065') || n.includes('kb0066') || n.includes('kb006x')) return 'kb0065';
+  
+  // Default (Standard GRAS or Unspecified)
+  return 'gras';
 }
 
 // ============================================================================
@@ -299,6 +315,9 @@ function extractPhonesFromPhoneBook(phoneBook, subdomain) {
       // Pass subdomain for context-aware filtering
       if (!shouldInclude(displayName, subdomain)) continue;
       
+      const type = isHeadphone(displayName, subdomain) ? 'headphone' : 'iem';
+      const pinna = type === 'headphone' ? detectPinna(displayName, subdomain) : null;
+
       phones.push({
         subdomain,
         brandName: brand.name,
@@ -306,7 +325,9 @@ function extractPhonesFromPhoneBook(phoneBook, subdomain) {
         displayName,
         fileName,
         price: parsePrice(phone.price),
-        quality: HIGH_QUALITY_DOMAINS.includes(subdomain) ? 'high' : 'low'
+        quality: HIGH_QUALITY_DOMAINS.includes(subdomain) ? 'high' : 'low',
+        type,
+        pinna
       });
     }
   }
@@ -449,19 +470,19 @@ let currentManifest = null;
 let currentPhones = [];
 let targetsGlobal = [];
 
-function savePartialResults() {
-  if (!currentManifest || targetsGlobal.length === 0) return;
-  
-  console.log('\n--- Saving partial results ---');
-  saveManifest(currentManifest);
-  
-  // Generate results from what we have
-  const phonesToProcess = [...currentPhones];
-  
+function processType(phones, targets, typeLabel) {
   const results = [];
+  console.log(`\n--- Processing ${typeLabel}s (${phones.length}) ---`);
   
-  for (const group of targetsGlobal) {
-    const scored = phonesToProcess
+  for (const group of targets) {
+    // Filter targets suitable for this type?
+    // User hasn't provided HP targets yet, so we use existing ones (Harman IE 2019) which is wrong for HP.
+    // Ideally we should check target filename for "OE" or similar.
+    // For now, process all.
+    
+    console.log(`Calculating PPI for: ${group.name}`);
+    
+    const scored = phones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
         const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
@@ -478,17 +499,14 @@ function savePartialResults() {
           } else {
             targetVariant = '711';
             targetData = group['711'];
-            console.warn(`[WARNING] No 5128 target found for ${group.name}, falling back to 711 for ${phone.displayName}`);
           }
         } else {
-          // 711 Rig
           if (group['711']) {
             targetVariant = '711';
             targetData = group['711'];
           } else {
             targetVariant = '5128';
             targetData = group['5128'];
-            console.warn(`[WARNING] No 711 target found for ${group.name}, falling back to 5128 for ${phone.displayName}`);
           }
         }
 
@@ -507,7 +525,8 @@ function savePartialResults() {
           quality: phone.quality,
           sourceDomain: `${phone.subdomain}.squig.link`,
           rig: is5128Rig ? '5128' : '711',
-          targetVariant: targetVariant
+          targetVariant: targetVariant,
+          pinna: phone.pinna // Pass pinna info
         };
       })
       .filter(x => x !== null);
@@ -528,17 +547,36 @@ function savePartialResults() {
       scoringMethod: 'ppi', 
       ranked: scored 
     });
+    
+    console.log(`  Top match: ${scored[0]?.name} (PPI: ${scored[0]?.similarity.toFixed(1)})`);
   }
+  return results;
+}
+
+function savePartialResults() {
+  if (!currentManifest || targetsGlobal.length === 0) return;
+  
+  console.log('\n--- Saving partial results ---');
+  saveManifest(currentManifest);
+  
+  const phonesToProcess = [...currentPhones];
+  
+  // Split phones by type (default to 'iem' if undefined)
+  const iems = phonesToProcess.filter(p => p.type !== 'headphone'); 
+  // const headphones = phonesToProcess.filter(p => p.type === 'headphone'); 
+  // For partial save, just saving IEMs is safer to avoid complexity
+  
+  const resultsIEM = processType(iems, targetsGlobal, 'IEM');
   
   const output = {
     generatedAt: new Date().toISOString(),
-    totalIEMs: phonesToProcess.length,
+    totalIEMs: iems.length,
     partial: true,
-    results
+    results: resultsIEM
   };
   
   fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
-  console.log(`Partial results saved: ${phonesToProcess.length} IEMs`);
+  console.log(`Partial results saved: ${iems.length} IEMs`);
 }
 
 // Handle graceful shutdown
@@ -617,88 +655,38 @@ async function main() {
   const phonesToProcess = [...allPhones];
   console.log(`Processing ${phonesToProcess.length} measurements (no deduplication)\n`);
   
-  const results = [];
+  // Split phones by type
+  const iems = phonesToProcess.filter(p => p.type === 'iem');
+  const headphones = phonesToProcess.filter(p => p.type === 'headphone');
   
-  for (const group of targets) {
-    console.log(`Calculating PPI for: ${group.name}`);
-    
-    const scored = phonesToProcess
-      .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
-      .map(phone => {
-        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
-                          phone.fileName.includes('(5128)') || 
-                          phone.displayName.includes('(5128)');
-        
-        let targetVariant = '711';
-        let targetData = group['711'];
-        
-        if (is5128Rig) {
-          if (group['5128']) {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          } else {
-            targetVariant = '711';
-            targetData = group['711'];
-          }
-        } else {
-          if (group['711']) {
-            targetVariant = '711';
-            targetData = group['711'];
-          } else {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          }
-        }
-
-        if (!targetData) return null;
-        
-        const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
-        
-        return {
-          id: getIemKey(phone.subdomain, phone.fileName),
-          name: phone.displayName,
-          similarity: ppiResult.ppi,
-          stdev: ppiResult.stdev,
-          slope: ppiResult.slope,
-          avgError: ppiResult.avgError,
-          price: phone.price,
-          quality: phone.quality,
-          sourceDomain: `${phone.subdomain}.squig.link`,
-          rig: is5128Rig ? '5128' : '711',
-          targetVariant: targetVariant
-        };
-      })
-      .filter(x => x !== null);
-    
-    scored.sort((a, b) => {
-      if (Math.abs(b.similarity - a.similarity) > 0.01) {
-        return b.similarity - a.similarity;
-      }
-      return (a.price ?? Infinity) - (b.price ?? Infinity);
-    });
-    
-    results.push({
-      targetName: group.name,
-      targetFiles: {
-        '711': group['711'] ? group['711'].fileName : null,
-        '5128': group['5128'] ? group['5128'].fileName : null
-      },
-      scoringMethod: 'ppi',
-      ranked: scored
-    });
-    
-    console.log(`  Top match: ${scored[0]?.name} (PPI: ${scored[0]?.similarity.toFixed(1)})`);
-  }
+  // Process IEMs
+  const resultsIEM = processType(iems, targetsGlobal, 'IEM');
   
-  const output = {
+  // Process Headphones
+  const resultsHP = processType(headphones, targetsGlobal, 'Headphone'); // Note: Targets for HP might need to be different?
+  // User said "I will add two initial targets" for HP.
+  // Currently we only have IEM targets.
+  // If we run HP against IEM targets, scores will be bad, but that's expected until targets arrive.
+  
+  const outputIEM = {
     generatedAt: new Date().toISOString(),
-    totalIEMs: phonesToProcess.length,
+    totalIEMs: iems.length,
     domainsScanned: domainsToScan.length,
-    results
+    results: resultsIEM
   };
   
-  fs.writeFileSync(RESULTS_PATH, JSON.stringify(output, null, 2));
-  console.log(`Results saved to ${RESULTS_PATH}`);
+  const outputHP = {
+    generatedAt: new Date().toISOString(),
+    totalIEMs: headphones.length,
+    domainsScanned: domainsToScan.length,
+    results: resultsHP
+  };
+  
+  fs.writeFileSync(RESULTS_PATH, JSON.stringify(outputIEM, null, 2));
+  fs.writeFileSync(path.join(DATA_DIR, 'results_hp.json'), JSON.stringify(outputHP, null, 2));
+  
+  console.log(`Results saved to ${RESULTS_PATH} (IEMs)`);
+  console.log(`Results saved to ${path.join(DATA_DIR, 'results_hp.json')} (Headphones)`);
 
   // Create curves.json for client-side ranking
   console.log('Generating curves.json for client-side ranking...');
