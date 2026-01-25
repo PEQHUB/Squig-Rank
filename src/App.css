@@ -758,29 +758,41 @@ body {
   align-items: center;
   background: var(--glass-1);
   border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  padding: 0 12px;
+  border-radius: 100px;
+  padding: 4px 4px 4px 16px;
+  gap: 8px;
 }
 
-.rig-option {
+.rig-toggle {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-right: 12px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--text-secondary);
-  user-select: none;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px;
+  border-radius: 100px;
+  border: 1px solid var(--glass-border);
 }
 
-.rig-option:hover {
+.rig-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rig-btn:hover {
   color: var(--text-primary);
 }
 
-.rig-option input {
-  cursor: pointer;
-  accent-color: var(--accent-primary);
+.rig-btn.active {
+  background: var(--glass-highlight);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
 
 .upload-error {
   color: var(--score-poor);
