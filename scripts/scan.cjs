@@ -419,7 +419,7 @@ async function scanDomain(subdomain, manifest) {
 // ============================================================================
 
 function loadTargets() {
-  const targetGroups = new Map(); // name -> { name, 711: {curve, fileName}, 5128: {curve, fileName} }
+  const targetGroups = new Map(); 
   
   if (!fs.existsSync(TARGETS_DIR)) return [];
   
@@ -432,27 +432,45 @@ function loadTargets() {
       const curve = parseFrequencyResponse(text);
       
       if (curve.frequencies.length >= 10) {
-        const is5128 = fileName.toLowerCase().includes('5128');
-        // Base name: remove " (5128)", " (711)" and ".txt"
-        let baseName = fileName
-          .replace(/\s*\(5128\)/i, '')
-          .replace(/\s*\(711\)/i, '')
-          .replace('.txt', '')
-          .trim();
-        
+        let baseName = '';
+        let variant = '';
+        let type = 'iem'; // 'iem' or 'headphone'
+
+        // Detect HP Targets
+        if (fileName.includes('Harman 2018')) {
+            baseName = 'Harman 2018';
+            variant = 'default';
+            type = 'headphone';
+        } 
+        else if (fileName.startsWith('5128 DF') || fileName.startsWith('KEMAR DF')) {
+            baseName = 'Diffuse Field (Tilted)';
+            type = 'headphone';
+            if (fileName.includes('5128')) variant = '5128';
+            else if (fileName.includes('KB50xx')) variant = 'kb5';
+            else if (fileName.includes('KB006x')) variant = 'kb0065';
+            else variant = 'default';
+        }
+        // Detect IEM Targets
+        else {
+            type = 'iem';
+            const is5128 = fileName.toLowerCase().includes('5128');
+            variant = is5128 ? '5128' : '711';
+            
+            baseName = fileName
+              .replace(/\s*\(5128\)/i, '')
+              .replace(/\s*\(711\)/i, '')
+              .replace('.txt', '')
+              .trim();
+        }
+
         if (!targetGroups.has(baseName)) {
-          targetGroups.set(baseName, { name: baseName, '711': null, '5128': null });
+          targetGroups.set(baseName, { name: baseName, type, variants: {} });
         }
         
         const group = targetGroups.get(baseName);
-        const type = is5128 ? '5128' : '711';
+        group.variants[variant] = { fileName, curve };
         
-        group[type] = {
-          fileName: fileName,
-          curve: curve
-        };
-        
-        console.log(`  Loaded target: ${fileName} [${type}] -> Group: ${baseName}`);
+        console.log(`  Loaded target: ${fileName} [${variant}] -> Group: ${baseName} (${type})`);
       }
     } catch (e) {
       console.warn(`  Failed to load target: ${fileName}`);
@@ -474,46 +492,60 @@ function processType(phones, targets, typeLabel) {
   const results = [];
   console.log(`\n--- Processing ${typeLabel}s (${phones.length}) ---`);
   
+  const desiredType = typeLabel === 'Headphone' ? 'headphone' : 'iem';
+
   for (const group of targets) {
-    // Filter targets suitable for this type?
-    // User hasn't provided HP targets yet, so we use existing ones (Harman IE 2019) which is wrong for HP.
-    // Ideally we should check target filename for "OE" or similar.
-    // For now, process all.
-    
+    // Filter targets by type
+    if (group.type && group.type !== desiredType) continue;
+
     console.log(`Calculating PPI for: ${group.name}`);
     
     const scored = phones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .map(phone => {
-        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
-                          phone.fileName.includes('(5128)') || 
-                          phone.displayName.includes('(5128)');
-        
-        let targetVariant = '711';
-        let targetData = group['711'];
-        
-        if (is5128Rig) {
-          if (group['5128']) {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          } else {
-            targetVariant = '711';
-            targetData = group['711'];
-          }
+        let targetVariant = 'default';
+        let targetData = null;
+
+        if (desiredType === 'iem') {
+            const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain) || 
+                              phone.fileName.includes('(5128)') || 
+                              phone.displayName.includes('(5128)');
+            
+            // For IEMs, we have 711 and 5128 variants
+            if (is5128Rig) {
+                targetVariant = group.variants['5128'] ? '5128' : '711';
+                targetData = group.variants[targetVariant];
+            } else {
+                targetVariant = group.variants['711'] ? '711' : '5128';
+                targetData = group.variants[targetVariant];
+            }
         } else {
-          if (group['711']) {
-            targetVariant = '711';
-            targetData = group['711'];
-          } else {
-            targetVariant = '5128';
-            targetData = group['5128'];
-          }
+            // Headphones
+            if (phone.pinna === '5128') targetVariant = '5128';
+            else if (phone.pinna === 'kb5') targetVariant = 'kb5';
+            else if (phone.pinna === 'kb0065') targetVariant = 'kb0065';
+            else targetVariant = 'default'; // gras/unknown
+
+            targetData = group.variants[targetVariant];
+            
+            // Fallback for HPs
+            if (!targetData) {
+                if (group.variants['default']) {
+                    targetVariant = 'default';
+                    targetData = group.variants['default'];
+                } else if (group.variants['kb5']) { // KB5 is common modern gras
+                    targetVariant = 'kb5';
+                    targetData = group.variants['kb5'];
+                }
+            }
         }
 
         if (!targetData) return null;
         
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
         
+        const is5128Rig = RIG_5128_DOMAINS.includes(phone.subdomain); // Simple check for rig field
+
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
           name: phone.displayName,
@@ -526,7 +558,7 @@ function processType(phones, targets, typeLabel) {
           sourceDomain: `${phone.subdomain}.squig.link`,
           rig: is5128Rig ? '5128' : '711',
           targetVariant: targetVariant,
-          pinna: phone.pinna // Pass pinna info
+          pinna: phone.pinna
         };
       })
       .filter(x => x !== null);
@@ -538,12 +570,15 @@ function processType(phones, targets, typeLabel) {
       return (a.price ?? Infinity) - (b.price ?? Infinity);
     });
     
+    // Construct targetFiles map for UI downloads
+    const targetFiles = {};
+    for (const [v, data] of Object.entries(group.variants)) {
+        targetFiles[v] = data.fileName;
+    }
+
     results.push({ 
       targetName: group.name,
-      targetFiles: {
-        '711': group['711'] ? group['711'].fileName : null,
-        '5128': group['5128'] ? group['5128'].fileName : null
-      },
+      targetFiles,
       scoringMethod: 'ppi', 
       ranked: scored 
     });
