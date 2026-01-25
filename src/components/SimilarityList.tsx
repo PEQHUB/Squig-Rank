@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CalculationResult, ScoredIEM } from '../types';
 
 const PAGE_SIZE = 25;
@@ -8,16 +8,20 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
   const [searchTerm, setSearchTerm] = useState('');
   
   // State for filters
-  const [showCloneCoupler, setShowCloneCoupler] = useState(results.map(() => true));
-  const [hideDuplicates, setHideDuplicates] = useState(results.map(() => true));
-  
-  // Headphone specific filters
-  const [pinnaFilters, setPinnaFilters] = useState(results.map(() => 'all'));
+  const [showCloneCoupler, setShowCloneCoupler] = useState<boolean[]>([]);
+  const [hideDuplicates, setHideDuplicates] = useState<boolean[]>([]);
+  const [pinnaFilters, setPinnaFilters] = useState<string[]>([]);
+  const [showCounts, setShowCounts] = useState<number[]>([]);
 
-  // Track how many items to show per column
-  const [showCounts, setShowCounts] = useState(
-    results.map(() => PAGE_SIZE)
-  );
+  // Update filters when results change
+  useEffect(() => {
+    if (results.length > 0) {
+      setShowCloneCoupler(results.map(() => true));
+      setHideDuplicates(results.map(() => true));
+      setPinnaFilters(results.map(() => 'all'));
+      setShowCounts(results.map(() => PAGE_SIZE));
+    }
+  }, [results]);
 
   const isMobile = window.innerWidth <= 768;
 
@@ -60,6 +64,10 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
       return newCounts;
     });
   };
+
+  if (!results || results.length === 0) {
+    return <div className="loading-results">Loading rankings...</div>;
+  }
 
   return (
     <div className="similarity-list">
