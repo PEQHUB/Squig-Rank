@@ -552,7 +552,7 @@ function loadInternalAssets(manifest) {
              brandName: 'Internal',
              phoneName: info.n,
              displayName: info.n,
-             fileName: hash, 
+             fileName: info.u || hash, 
              price: null,
              quality: 'high',
              type,

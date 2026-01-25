@@ -139,7 +139,7 @@ function getSquigUrl(iem: ScoredIEM): string {
         path = 'iem/5128';
     }
     
-    return `https://graph.hangout.audio/${path}/?share=${encodeURIComponent(iem.name)}`;
+    return `https://graph.hangout.audio/${path}/?share=${encodeURIComponent(fileName)}`;
   }
   if (subdomain === 'superreview') {
     return `https://squig.link/?share=${encodeURIComponent(fileName)}`;
