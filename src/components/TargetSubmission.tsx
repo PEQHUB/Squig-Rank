@@ -49,7 +49,8 @@ export function TargetSubmission({ onCalculate, isRanking }: Props) {
       }
 
       // 2. Fetch Curves Data
-      const response = await fetch('./data/curves.json');
+      // Add cache busting to ensure we get fresh metadata (compensation curves)
+      const response = await fetch(`./data/curves.json?v=${Date.now()}`);
       if (!response.ok) throw new Error('Failed to load measurement data');
       const data: CurvesData = await response.json();
 
