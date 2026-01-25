@@ -83,7 +83,8 @@ const STRICTLY_IE_BRANDS = [
   "UCOTECH", "NOSTALGIA AUDIO", "TONEMAY", "CUSTOM ART", "RHA", "AFO", "FEAULLE",
   "64 AUDIO", "AFUL", "ZIIGAAT", "JUZEAR", "HIDIZS", "SALNOTES", "IKKO", "MOONDROP CHU", 
   "MOONDROP ARIA", "WHIZZER", "FENGRU", "FAAEAL", "VENTURE ELECTRONICS", "VE MONK", 
-  "YINMAN", "BGVP", "MOONDROP QUARKS", "MOONDROP SPACESHIP", "MOONDROP KATO", "MOONDROP LAN"
+  "YINMAN", "BGVP", "MOONDROP QUARKS", "MOONDROP SPACESHIP", "MOONDROP KATO", "MOONDROP LAN",
+  "RE-2", "NA3", "A8", "D-FI"
 ];
 
 const OE_MODEL_REGISTRY = [
@@ -114,7 +115,7 @@ const OE_MODEL_REGISTRY = [
 ];
 
 const STRICTLY_IE_DOMAINS = [
-  "hbb", "precog", "timmyv", "aftersound", "paulwasabii", "tonedeafmonk", 
+  "dchpgall", "hbb", "precog", "timmyv", "aftersound", "paulwasabii", "tonedeafmonk", 
   "vortexreviews", "nymz", "rg", "tonedeafmonk", "eliseaudio", "achoreviews",
   "animagus", "ankramutt", "atechreviews", "awsmdanny", "bakkwatan", "banzai1122",
   "bassyalexander", "breampike", "bryaudioreviews", "bukanaudiophile", "csi-zone",
@@ -138,7 +139,7 @@ function isHeadphone(name, subdomain) {
   let score = 0;
 
   // 1. Explicit OE Tags (+100)
-  if (upperName.includes("(OE)") || upperName.includes("(HP)") || upperName.includes("OVER-EAR") || upperName.includes("HEADPHONE")) {
+  if (upperName.includes("(OE)") || upperName.includes("(HP)") || upperName.includes("OVER-EAR") || upperName.includes("HEADPHONE") || upperName.includes("CLOSED-BACK") || upperName.includes("OPEN-BACK")) {
     score += 100;
   }
 
@@ -150,25 +151,25 @@ function isHeadphone(name, subdomain) {
     }
   }
 
-  // 3. Strictly IE Brands (-100)
+  // 3. Strictly IE Brands (-200)
   for (const brand of STRICTLY_IE_BRANDS) {
     if (upperName.includes(brand)) {
-      score -= 100;
+      score -= 200;
       break;
     }
   }
 
-  // 4. IE Force Keywords (-100)
+  // 4. IE Force Keywords (-200)
   for (const kw of IE_FORCE_KEYWORDS) {
     if (upperName.includes(kw)) {
-      score -= 100;
+      score -= 200;
       break;
     }
   }
 
-  // 5. Strictly IE Domains (-50)
+  // 5. Strictly IE Domains (-150)
   if (STRICTLY_IE_DOMAINS.includes(lowerSub)) {
-    score -= 50;
+    score -= 150;
   }
 
   // 6. Domain-specific hints
@@ -176,7 +177,6 @@ function isHeadphone(name, subdomain) {
     score += 30;
   }
 
-  // Final Decision: Must have a positive score to be a headphone
   return score > 0;
 }
 
