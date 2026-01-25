@@ -661,18 +661,10 @@ function processType(phones, targets, typeLabel) {
             // ... (Headphone logic)
         }
 
-        if (!targetData) {
-            if (phone.brandName === 'Internal') console.log(`  Skipped Internal ${phone.displayName}: No target data for ${targetVariant}`);
-            return null;
-        }
+        if (!targetData) return null;
 
         const ppiResult = calculatePPI(phone.frequencyData, targetData.curve);
         
-        // Debug Internal items
-        if (phone.brandName === 'Internal' && ppiResult.ppi === 0) {
-             console.log(`  Warning: Internal ${phone.displayName} scored 0 PPI`);
-        }
-
         return {
           id: getIemKey(phone.subdomain, phone.fileName),
           name: phone.displayName,
@@ -682,7 +674,7 @@ function processType(phones, targets, typeLabel) {
           avgError: ppiResult.avgError,
           price: phone.price,
           quality: phone.quality,
-          sourceDomain: phone.brandName === 'Internal' ? 'crinacle.com' : `${phone.subdomain}.squig.link`,
+          sourceDomain: phone.brandName === 'Internal' ? 'graph.hangout.audio' : `${phone.subdomain}.squig.link`,
           type: phone.type,
           rig: (phone.pinna === '5128' || phone.subdomain.includes('5128')) ? '5128' : '711',
           targetVariant,
