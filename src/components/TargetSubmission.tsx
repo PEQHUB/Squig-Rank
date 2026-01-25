@@ -170,7 +170,7 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
   return (
     <div className="custom-target-upload">
       <h3>Live Ranking</h3>
-      <p className="subtitle" style={{marginBottom: '16px'}}>
+      <p className="subtitle" style={{marginBottom: '12px'}}>
         Paste your custom target curve to instantly rank all {activeType === 'iem' ? 'IEMs' : 'Headphones'}.
       </p>
 
