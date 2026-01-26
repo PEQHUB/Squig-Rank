@@ -335,6 +335,10 @@ body {
   border: 1px solid transparent;
 }
 
+.row-main, .row-expansion {
+  display: contents;
+}
+
 .target-column li:hover {
   background: var(--glass-2);
   border-color: var(--glass-border);
@@ -533,7 +537,7 @@ body {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .home {
     padding: 16px 12px;
   }
@@ -580,9 +584,39 @@ body {
   }
 
   .target-column li {
-    padding: 12px 8px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    gap: 0;
+  }
+
+  .target-column li.expanded {
+    background: var(--glass-2);
+    border-color: var(--glass-border);
+  }
+
+  .row-main {
+    display: flex;
+    align-items: center;
+    width: 100%;
     gap: 8px;
-    font-size: 14px;
+  }
+
+  .row-expansion {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--glass-border);
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   .rank {
@@ -591,36 +625,35 @@ body {
   }
 
   .iem-name {
-    font-size: 13px;
+    font-size: 14px;
     min-width: 0; /* Enable ellipsis truncation */
-    margin-right: 2px;
+    margin-right: auto;
   }
 
   .score {
-    min-width: 40px;
+    min-width: 44px;
     font-size: 13px;
     padding: 3px 6px;
-    text-align: center;
+    text-align: right;
   }
 
-  /* Convert tag to small indicator dot on mobile */
+  /* Reset tag for expanded view */
   .tag {
-    font-size: 0;
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    min-width: 8px;
-    border-radius: 50%;
-    margin-left: 4px;
+    font-size: 10px;
+    width: 75px;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: 0;
+    display: inline-flex;
   }
 
   .quality-indicator {
-    font-size: 14px;
-    min-width: 16px;
+    display: none;
   }
   
   .view-graph-btn {
-    padding: 6px 8px;
+    padding: 7px 12px;
     font-size: 10px;
     letter-spacing: 0.5px;
   }

@@ -319,31 +319,12 @@ function TargetColumn({
 
       <ul>
         {displayedItems.map((iem: ScoredIEM, index: number) => (
-          <li key={`${iem.id}-${index}`} className={`quality-${iem.quality}`}>
-            <span className="rank">{index + 1}.</span>
-            <span className="iem-name">{iem.name}</span>
-            {iem.rig && (
-              <span className={`rig-badge rig-${iem.rig}`}>
-                {iem.rig}
-              </span>
-            )}
-            <span className={`score ${getScoreClass(iem.similarity)}`}>
-              {iem.similarity.toFixed(1)}
-            </span>
-            
-            <span className={`tag ${iem.quality === 'high' ? 'genuine' : 'clone'}`}>
-              {iem.quality === 'high' ? 'Genuine' : 'Clone'}
-            </span>
-            <a
-              href={getSquigUrl(iem)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="view-graph-btn"
-              title={`View on ${iem.sourceDomain}`}
-            >
-              View Graph
-            </a>
-          </li>
+          <SimilarityRow 
+            key={`${iem.id}-${index}`}
+            iem={iem}
+            index={index}
+            isMobile={window.innerWidth <= 768}
+          />
         ))}
       </ul>
       {hasMore && (
@@ -352,6 +333,49 @@ function TargetColumn({
         </button>
       )}
     </div>
+  );
+}
+
+function SimilarityRow({ iem, index, isMobile }: { iem: ScoredIEM, index: number, isMobile: boolean }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <li 
+      className={`quality-${iem.quality} ${isExpanded ? 'expanded' : ''}`}
+      onClick={() => isMobile && setIsExpanded(!isExpanded)}
+      style={{ cursor: isMobile ? 'pointer' : 'default' }}
+    >
+      <div className="row-main">
+        <span className="rank">{index + 1}.</span>
+        <span className="iem-name">{iem.name}</span>
+        <span className={`score ${getScoreClass(iem.similarity)}`}>
+          {iem.similarity.toFixed(1)}
+        </span>
+      </div>
+      
+      {(!isMobile || isExpanded) && (
+        <div className="row-expansion">
+          {iem.rig && (
+            <span className={`rig-badge rig-${iem.rig}`}>
+              {iem.rig}
+            </span>
+          )}
+          <span className={`tag ${iem.quality === 'high' ? 'genuine' : 'clone'}`}>
+            {iem.quality === 'high' ? 'Genuine' : 'Clone'}
+          </span>
+          <a
+            href={getSquigUrl(iem)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="view-graph-btn"
+            title={`View on ${iem.sourceDomain}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            View Graph
+          </a>
+        </div>
+      )}
+    </li>
   );
 }
 
