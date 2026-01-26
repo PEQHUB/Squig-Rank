@@ -150,6 +150,9 @@ function getSquigUrl(iem: ScoredIEM): string {
   if (subdomain === 'paulwasabii' || subdomain === 'pw') {
     return `https://pw.squig.link/?share=${encodeURIComponent(fileName)}`;
   }
+  if (subdomain === 'earphonesarchiveHP') {
+    return `https://earphonesarchive.squig.link/headphones/?share=${encodeURIComponent(fileName)}`;
+  }
   
   return `https://${subdomain}.squig.link/?share=${encodeURIComponent(fileName)}`;
 }
