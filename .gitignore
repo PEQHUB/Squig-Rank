@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scanner checkpoint (ephemeral, not committed)
+public/cache/checkpoint.json

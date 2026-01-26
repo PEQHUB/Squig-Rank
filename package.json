@@ -8,9 +8,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "scan": "node scripts/scanner/index.cjs",
+    "scan:force": "node scripts/scanner/index.cjs --force",
+    "scan:legacy": "node scripts/scan.cjs"
   },
   "dependencies": {
+    "@msgpack/msgpack": "^3.1.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
