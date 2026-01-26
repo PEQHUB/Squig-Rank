@@ -307,7 +307,6 @@ function TargetColumn({
             >
               <option value="all">All Pinnae</option>
               <option value="kb5">KB5</option>
-              <option value="kb6">KB006x</option>
               <option value="5128">5128</option>
             </select>
           </div>

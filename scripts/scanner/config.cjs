@@ -29,7 +29,7 @@ const SUBDOMAINS = [
   "sai", "earphonesarchive", "auricularesargentina", "cammyfi", "capraaudio",
   "elrics", "filk", "unheardlab",
   // Special virtual domains
-  "crinacle5128", "listener5128", "crinacleHP"
+  "crinacle5128", "listener5128", "crinacleHP", "earphonesarchiveHP"
 ];
 
 const OVERRIDES = {
@@ -39,17 +39,23 @@ const OVERRIDES = {
   "superreview": "https://squig.link/data/phone_book.json",
   "den-fi": "https://ish.squig.link/data/phone_book.json",
   "paulwasabii": "https://pw.squig.link/data/phone_book.json",
-  "listener5128": "https://listener.squig.link/5128/data/phone_book.json"
+  "listener5128": "https://listener.squig.link/5128/data/phone_book.json",
+  "earphonesarchiveHP": "https://earphonesarchive.squig.link/headphones/data/phone_book.json"
 };
 
-const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "sai", "crinacle5128"];
+const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "earphonesarchiveHP", "sai", "crinacle5128"];
 
 const RIG_5128_DOMAINS = [
   "earphonesarchive", 
+  "earphonesarchiveHP",
   "crinacle5128",
   "listener5128",
   "den-fi"
 ];
+
+// Domains that use KB006x pinnae for IEM measurements
+// (KB6 support removed per user request, but keeping variable stub if needed later)
+const RIG_KB6_DOMAINS = [];
 
 // ============================================================================
 // CLASSIFICATION CONFIGURATION

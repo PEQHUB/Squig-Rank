@@ -90,12 +90,10 @@ function detectPinna(name, subdomain) {
   // 1. Explicit Domain Mapping
   if (s.includes('5128')) return '5128';
   if (s === 'sai' || s === 'kuulokenurkka' || s === 'crinaclehp') return 'kb5';
-  if (s === 'gadgetrytech' || s === 'listener') return 'kb6';
-
+  
   // 2. Keyword Search
   if (n.includes('5128')) return '5128';
   if (n.includes('kb5') || n.includes('kb5000') || n.includes('kb5010') || n.includes('kb5011')) return 'kb5';
-  if (n.includes('kb0065') || n.includes('kb0066') || n.includes('kb006x') || n.includes('kb6')) return 'kb6';
   
   // Default for headphones is KB5
   return 'kb5';

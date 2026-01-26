@@ -27,7 +27,7 @@ function scorePhones(phones, targetGroups, type) {
 
     // Headphone Special Logic: Split Diffuse Field into separate columns per pinna
     if (desiredType === 'headphone' && group.name === 'Diffuse Field (Tilted)') {
-      const pinnae = ['kb5', 'kb6', '5128'];
+      const pinnae = ['kb5', '5128'];
 
       for (const p of pinnae) {
         const targetData = group.variants[p];

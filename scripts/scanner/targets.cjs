@@ -54,7 +54,7 @@ function loadTargets() {
         type = 'headphone';
         if (fileName.includes('5128')) variant = '5128';
         else if (fileName.includes('KB50xx')) variant = 'kb5';
-        else if (fileName.includes('KB006x')) variant = 'kb6';
+        else if (fileName.includes('KB006x')) continue; // KB6 removed per request
         else variant = 'default';
       }
       // Detect IEM Targets
