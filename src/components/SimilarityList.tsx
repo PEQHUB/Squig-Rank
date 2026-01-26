@@ -337,14 +337,8 @@ function TargetColumn({
 }
 
 function SimilarityRow({ iem, index, isMobile }: { iem: ScoredIEM, index: number, isMobile: boolean }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   return (
-    <li 
-      className={`quality-${iem.quality} ${isExpanded ? 'expanded' : ''}`}
-      onClick={() => isMobile && setIsExpanded(!isExpanded)}
-      style={{ cursor: isMobile ? 'pointer' : 'default' }}
-    >
+    <li className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''}`}>
       <div className="row-main">
         <span className="rank">{index + 1}.</span>
         <span className="iem-name">{iem.name}</span>
@@ -353,28 +347,25 @@ function SimilarityRow({ iem, index, isMobile }: { iem: ScoredIEM, index: number
         </span>
       </div>
       
-      {(!isMobile || isExpanded) && (
-        <div className="row-expansion">
-          {iem.rig && (
-            <span className={`rig-badge rig-${iem.rig}`}>
-              {iem.rig}
-            </span>
-          )}
-          <span className={`tag ${iem.quality === 'high' ? 'genuine' : 'clone'}`}>
-            {iem.quality === 'high' ? 'Genuine' : 'Clone'}
+      <div className="row-details">
+        {iem.rig && (
+          <span className={`rig-badge rig-${iem.rig}`}>
+            {iem.rig}
           </span>
-          <a
-            href={getSquigUrl(iem)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="view-graph-btn"
-            title={`View on ${iem.sourceDomain}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            View Graph
-          </a>
-        </div>
-      )}
+        )}
+        <span className={`tag ${iem.quality === 'high' ? 'genuine' : 'clone'}`}>
+          {iem.quality === 'high' ? 'Genuine' : 'Clone'}
+        </span>
+        <a
+          href={getSquigUrl(iem)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="view-graph-btn"
+          title={`View on ${iem.sourceDomain}`}
+        >
+          View Graph
+        </a>
+      </div>
     </li>
   );
 }
