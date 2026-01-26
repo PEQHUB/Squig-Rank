@@ -567,9 +567,16 @@ body {
     font-size: 19px;
   }
 
-  /* Hide Custom Target box on mobile to save space */
-  .custom-target-upload {
+  /* Compact Custom Target Upload on Mobile */
+  .custom-target-upload h3,
+  .custom-target-upload .subtitle,
+  .target-name-input {
     display: none;
+  }
+  
+  /* Ensure rig selector aligns properly when input is hidden */
+  .input-group > div {
+    justify-content: center;
   }
 
   .target-column li {
