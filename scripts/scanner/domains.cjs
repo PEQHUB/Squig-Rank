@@ -97,6 +97,12 @@ function extractPhones(phoneBook, subdomain) {
       
       const rig = classifier.detectRig(subdomain, fileName, classification.displayName);
       
+      // For headphones: if measured on 5128 rig, pinna should also be 5128
+      let pinna = classification.pinna;
+      if (classification.type === 'headphone' && rig === '5128') {
+        pinna = '5128';
+      }
+      
       phones.push({
         subdomain,
         brandName: brand.name,
@@ -107,7 +113,7 @@ function extractPhones(phoneBook, subdomain) {
         quality: config.HIGH_QUALITY_DOMAINS.includes(subdomain) ? 'high' : 'low',
         type: classification.type,
         rig,
-        pinna: classification.pinna
+        pinna
       });
     }
   }
@@ -382,6 +388,19 @@ function loadPhonesFromCache(cacheIndex) {
     
     const [subdomain, fileName] = key.split('::');
     
+    // Recompute pinna for headphones to ensure correct assignment
+    // (handles migration from old cache entries with incorrect pinna values)
+    let pinna = entry.pinna;
+    if (entry.type === 'headphone') {
+      // If measured on 5128 rig, pinna should be 5128
+      if (entry.rig === '5128') {
+        pinna = '5128';
+      } else if (!pinna) {
+        // Fallback to detectPinna for headphones with null pinna
+        pinna = classifier.detectPinna(entry.name, subdomain);
+      }
+    }
+    
     phones.push({
       subdomain,
       fileName,
@@ -390,7 +409,7 @@ function loadPhonesFromCache(cacheIndex) {
       quality: entry.quality,
       type: entry.type,
       rig: entry.rig,
-      pinna: entry.pinna,
+      pinna,
       hash: entry.hash,
       frequencyData: curve
     });
