@@ -567,6 +567,11 @@ body {
     font-size: 19px;
   }
 
+  /* Hide Custom Target box on mobile to save space */
+  .custom-target-upload {
+    display: none;
+  }
+
   .target-column li {
     padding: 12px 8px;
     gap: 8px;
