@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import type { CalculationResult, ScoredIEM } from '../types';
-import './transitions.css';
 
 const PAGE_SIZE = 25;
 
@@ -86,75 +84,39 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
 
       {isMobile ? (
         <div className="mobile-view">
-          <div className="mobile-nav-container">
-            <button onClick={handlePrev} className="nav-button prev-btn">
-              <span className="nav-icon">←</span>
-              <span className="nav-label">Prev Target</span>
-            </button>
-            <span className="mobile-pagination">
-              {activeColumn + 1} / {results.length}
-            </span>
-            <button onClick={handleNext} className="nav-button next-btn">
-              <span className="nav-label">Next</span>
-              <span className="nav-icon">→</span>
-            </button>
-          </div>
+          <button onClick={handlePrev} className="nav-button">&#9664;</button>
           
-          <TransitionGroup component="div">
-            <CSSTransition
-              key={activeColumn}
-              timeout={300}
-              classNames={{
-                enter: 'TargetColumn entering',
-                enterActive: 'TargetColumn enter-active',
-                exit: 'TargetColumn exiting',
-                exitActive: 'TargetColumn exit-active'
-              }}
-            >
-              <TargetColumn
-                data={results[activeColumn]}
-                showCloneCoupler={showCloneCoupler[activeColumn]}
-                hideDuplicates={hideDuplicates[activeColumn]}
-                pinnaFilter={isHeadphoneMode ? pinnaFilters[activeColumn] : undefined}
-                searchTerm={searchTerm}
-                onPinnaChange={(val) => handlePinnaChange(activeColumn, val)}
-                onToggleClone={() => toggleCloneCoupler(activeColumn)}
-                onToggleDupes={() => toggleDuplicates(activeColumn)}
-                showCount={showCounts[activeColumn]}
-                onLoadMore={() => handleLoadMore(activeColumn)}
-              />
-            </CSSTransition>
-          </TransitionGroup>
+          <TargetColumn
+            data={results[activeColumn]}
+            showCloneCoupler={showCloneCoupler[activeColumn]}
+            hideDuplicates={hideDuplicates[activeColumn]}
+            pinnaFilter={isHeadphoneMode ? pinnaFilters[activeColumn] : undefined}
+            searchTerm={searchTerm}
+            onPinnaChange={(val) => handlePinnaChange(activeColumn, val)}
+            onToggleClone={() => toggleCloneCoupler(activeColumn)}
+            onToggleDupes={() => toggleDuplicates(activeColumn)}
+            showCount={showCounts[activeColumn]}
+            onLoadMore={() => handleLoadMore(activeColumn)}
+          />
+          <button onClick={handleNext} className="nav-button">&#9654;</button>
         </div>
       ) : (
         <div className={`desktop-view ${results.length === 1 ? 'single-column' : ''}`}>
-          <TransitionGroup component="div">
-            {results.map((result, index) => (
-              <CSSTransition
-                key={result.targetName}
-                timeout={300}
-                classNames={{
-                  enter: 'TargetColumn entering',
-                  enterActive: 'TargetColumn enter-active',
-                  exit: 'TargetColumn exiting',
-                  exitActive: 'TargetColumn exit-active'
-                }}
-              >
-                <TargetColumn
-                  data={result}
-                  showCloneCoupler={showCloneCoupler[index]}
-                  hideDuplicates={hideDuplicates[index]}
-                  pinnaFilter={isHeadphoneMode ? pinnaFilters[index] : undefined}
-                  searchTerm={searchTerm}
-                  onPinnaChange={(val) => handlePinnaChange(index, val)}
-                  onToggleClone={() => toggleCloneCoupler(index)}
-                  onToggleDupes={() => toggleDuplicates(index)}
-                  showCount={showCounts[index]}
-                  onLoadMore={() => handleLoadMore(index)}
-                />
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
+          {results.map((result, index) => (
+            <TargetColumn
+              key={result.targetName}
+              data={result}
+              showCloneCoupler={showCloneCoupler[index]}
+              hideDuplicates={hideDuplicates[index]}
+              pinnaFilter={isHeadphoneMode ? pinnaFilters[index] : undefined}
+              searchTerm={searchTerm}
+              onPinnaChange={(val) => handlePinnaChange(index, val)}
+              onToggleClone={() => toggleCloneCoupler(index)}
+              onToggleDupes={() => toggleDuplicates(index)}
+              showCount={showCounts[index]}
+              onLoadMore={() => handleLoadMore(index)}
+            />
+          ))}
         </div>
       )}
     </div>

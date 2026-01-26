@@ -151,23 +151,23 @@ body {
   gap: 20px;
 }
 
-/* Navigation buttons */
-.nav-button {
-  background: var(--glass-2);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 18px 28px;
-  color: var(--text-primary);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
+  /* Navigation buttons */
+  .nav-button {
+    background: var(--glass-2);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 18px 28px;
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
 
-.nav-button::before {
+  .nav-button::before {
   content: '';
   position: absolute;
   top: 0;
