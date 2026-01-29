@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-01-28T23:58:18.441Z",
-  "totalIEMs": 606,
+  "generatedAt": "2026-01-29T04:55:19.884Z",
+  "totalIEMs": 607,
   "domainsScanned": 104,
   "results": [
     {
@@ -47,6 +47,21 @@
           "stdev": 1.8242035999859474,
           "slope": 0.370338375798795,
           "avgError": 1.3086737903723986,
+          "price": null,
+          "quality": "high",
+          "sourceDomain": "sai.squig.link",
+          "type": "headphone",
+          "rig": "711",
+          "targetVariant": "kb5",
+          "pinna": "kb5"
+        },
+        {
+          "id": "sai::FT1 Pro with ECOS FT1Pro hybrid pads",
+          "name": "FiiO FT1 Pro pad-rolling",
+          "similarity": 77.50902881117923,
+          "stdev": 1.858347352307877,
+          "slope": 0.12489680817192042,
+          "avgError": 1.7052431614006995,
           "price": null,
           "quality": "high",
           "sourceDomain": "sai.squig.link",
@@ -9833,6 +9848,21 @@
           "price": null,
           "quality": "high",
           "sourceDomain": "crinacle.squig.link",
+          "type": "headphone",
+          "rig": "711",
+          "targetVariant": "default",
+          "pinna": "kb5"
+        },
+        {
+          "id": "sai::FT1 Pro with ECOS FT1Pro hybrid pads",
+          "name": "FiiO FT1 Pro pad-rolling",
+          "similarity": 70.40832376430933,
+          "stdev": 2.6364516598564545,
+          "slope": 0.09354032923474713,
+          "avgError": 1.906658143721284,
+          "price": null,
+          "quality": "high",
+          "sourceDomain": "sai.squig.link",
           "type": "headphone",
           "rig": "711",
           "targetVariant": "default",
