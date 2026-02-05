@@ -126,10 +126,130 @@ function extractPhones(phoneBook, subdomain) {
 // ============================================================================
 
 /**
+ * Average multiple curves together by iteratively averaging pairs
+ */
+function averageMultipleCurves(curves) {
+  if (curves.length === 0) return null;
+  if (curves.length === 1) return curves[0];
+  let result = curves[0];
+  for (let i = 1; i < curves.length; i++) {
+    // Weighted running average: weight previous result by i, new curve by 1
+    const combined = frequency.averageCurves(result, curves[i]);
+    // Correct the simple average to a weighted average
+    const weight = i / (i + 1);
+    combined.db = combined.db.map((db, j) => {
+      return result.db[j] * weight + (db * 2 - result.db[j]) * (1 - weight);
+    });
+    result = combined;
+  }
+  return result;
+}
+
+/**
+ * Fetch measurement via encrypted d-c.php proxy (for graph.hangout.audio)
+ * Supports single-sample IEMs ({file} L.txt / {file} R.txt) and 
+ * multi-sample headphones ({file} L1.txt, {file} L2.txt, ... {file} R1.txt, ...)
+ * 
+ * @param {string} toolPath - e.g. "iem/5128/" or "headphones/"
+ * @param {string} fileName - e.g. "Daybreak" or "K52"
+ * @param {number} numSamples - samples per channel (1 for IEMs, 3 for headphones)
+ */
+async function fetchMeasurementEncrypted(toolPath, fileName, numSamples) {
+  const dirPath = `${toolPath}data/`;
+  
+  if (numSamples > 1) {
+    // Multi-sample mode (headphones): fetch {file} L1.txt .. L{n}.txt and R1..R{n}
+    const fetches = [];
+    for (let s = 1; s <= numSamples; s++) {
+      fetches.push(network.fetchEncrypted(`${dirPath}${fileName} L${s}.txt`).catch(() => null));
+      fetches.push(network.fetchEncrypted(`${dirPath}${fileName} R${s}.txt`).catch(() => null));
+    }
+    
+    try {
+      const results = await Promise.all(fetches);
+      const allCurves = [];
+      
+      for (const text of results) {
+        if (text) {
+          const curve = frequency.parseFrequencyResponse(text);
+          if (curve.frequencies.length > 0) allCurves.push(curve);
+        }
+      }
+      
+      if (allCurves.length > 0) {
+        const averaged = averageMultipleCurves(allCurves);
+        const avgText = averaged.frequencies.map((f, i) => 
+          `${f}\t${averaged.db[i]}`
+        ).join('\n');
+        return { text: avgText, curve: averaged };
+      }
+    } catch (e) {
+      // Fall through to single-file attempt
+    }
+  } else {
+    // Single-sample mode (IEMs): try {file} L.txt + {file} R.txt
+    const filePathL = `${dirPath}${fileName} L.txt`;
+    const filePathR = `${dirPath}${fileName} R.txt`;
+    
+    try {
+      const [respL, respR] = await Promise.all([
+        network.fetchEncrypted(filePathL).catch(() => null),
+        network.fetchEncrypted(filePathR).catch(() => null)
+      ]);
+
+      if (respL && respR) {
+        const curveL = frequency.parseFrequencyResponse(respL);
+        const curveR = frequency.parseFrequencyResponse(respR);
+        
+        if (curveL.frequencies.length > 0 && curveR.frequencies.length > 0) {
+          const averaged = frequency.averageCurves(curveL, curveR);
+          const avgText = averaged.frequencies.map((f, i) => 
+            `${f}\t${averaged.db[i]}`
+          ).join('\n');
+          return { text: avgText, curve: averaged };
+        }
+        if (curveL.frequencies.length > 0) return { text: respL, curve: curveL };
+        if (curveR.frequencies.length > 0) return { text: respR, curve: curveR };
+      }
+
+      if (respL) {
+        const curve = frequency.parseFrequencyResponse(respL);
+        if (curve.frequencies.length > 0) return { text: respL, curve };
+      }
+      
+      if (respR) {
+        const curve = frequency.parseFrequencyResponse(respR);
+        if (curve.frequencies.length > 0) return { text: respR, curve };
+      }
+    } catch (e) {
+      // Fall through to single-file attempt
+    }
+  }
+  
+  // Fallback: try without channel suffix
+  const filePath = `${dirPath}${fileName}.txt`;
+  try {
+    const text = await network.fetchEncrypted(filePath);
+    if (text) {
+      const curve = frequency.parseFrequencyResponse(text);
+      if (curve.frequencies.length > 0) return { text, curve };
+    }
+  } catch (e) {}
+  
+  return null;
+}
+
+/**
  * Fetch measurement for a single phone
  * Tries L+R channels, then single file
  */
-async function fetchMeasurement(baseUrl, fileName) {
+async function fetchMeasurement(baseUrl, fileName, subdomain) {
+  // Use encrypted fetch for domains that require it
+  const encryptedConfig = config.ENCRYPTED_DOMAINS[subdomain];
+  if (encryptedConfig) {
+    return fetchMeasurementEncrypted(encryptedConfig.toolPath, fileName, encryptedConfig.numSamples);
+  }
+
   const encodedFile = encodeURIComponent(fileName);
   
   // Try L and R channels
@@ -282,7 +402,7 @@ async function scanDomain(subdomain, cacheIndex, domainHashes, options = {}) {
     }
     
     // Fetch new measurement
-    const measurement = await fetchMeasurement(baseUrl, phone.fileName);
+    const measurement = await fetchMeasurement(baseUrl, phone.fileName, subdomain);
     if (measurement && measurement.curve.frequencies.length >= 10) {
       const hash = cache.computeMeasurementHash(measurement.text);
       

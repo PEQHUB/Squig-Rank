@@ -45,6 +45,14 @@ const OVERRIDES = {
 
 const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "earphonesarchiveHP", "sai", "crinacle5128"];
 
+// Domains that require encrypted fetch via d-c.php proxy on graph.hangout.audio
+// Maps domain name -> { toolPath, numSamples } for constructing file paths
+const ENCRYPTED_DOMAINS = {
+  "crinacle":     { toolPath: "iem/711/",     numSamples: 1 },
+  "crinacle5128": { toolPath: "iem/5128/",    numSamples: 1 },
+  "crinacleHP":   { toolPath: "headphones/",  numSamples: 3 }
+};
+
 const RIG_5128_DOMAINS = [
   "earphonesarchive", 
   "earphonesarchiveHP",
@@ -148,6 +156,7 @@ module.exports = {
   SUBDOMAINS,
   OVERRIDES,
   HIGH_QUALITY_DOMAINS,
+  ENCRYPTED_DOMAINS,
   RIG_5128_DOMAINS,
   
   // Classification
