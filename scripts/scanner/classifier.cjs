@@ -55,10 +55,12 @@ function isHeadphone(name, subdomain) {
   }
 
   // 6. Domain-specific hints
-  if (lowerSub.includes('5128') || 
-      lowerSub.includes('headphone') || 
-      lowerSub === 'crinaclehp' ||
-      lowerSub === 'earphonesarchivehp') {
+  // crinacleHP and earphonesarchiveHP are exclusively headphone databases
+  if (lowerSub === 'crinaclehp' || lowerSub === 'earphonesarchivehp') {
+    score += 200;
+  }
+  // Other headphone-hinted domains (but NOT rig-name domains like crinacle5128)
+  if (lowerSub.includes('headphone')) {
     score += 30;
   }
 

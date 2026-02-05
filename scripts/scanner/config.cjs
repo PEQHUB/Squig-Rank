@@ -115,7 +115,7 @@ const STRICTLY_IE_DOMAINS = [
   "obodio", "practiphile", "recode", "riz", "smirk", "soundignity", "suporsalad",
   "tgx78", "therollo9", "scboy", "seanwee", "silicagel", "sl0the", "soundcheck39",
   "tanchjim", "tedthepraimortis", "treblewellxtended", "yanyin", "yoshiultra",
-  "crinacle"
+  "crinacle", "crinacle5128"
 ];
 
 const IE_FORCE_KEYWORDS = [
