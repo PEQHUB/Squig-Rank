@@ -1,5 +1,8 @@
 // Active view type for the UI
-export type ActiveViewType = 'iem' | 'hp_kb5' | 'hp_5128';
+export type ActiveViewType = 'latest' | 'iem' | 'hp_kb5' | 'hp_5128';
+
+// Category filter for Latest tab
+export type CategoryFilter = 'all' | 'iem' | 'hp_kb5' | 'hp_5128';
 
 // Phone book entry types from squig.link
 export interface PhoneBookBrand {
@@ -62,6 +65,9 @@ export interface ScoredIEM extends IEM {
   avgError?: number;
   rig?: '711' | '5128';
   targetVariant?: '711' | '5128';
+  // Timestamps for tracking when devices were first added
+  firstSeen?: string;  // YYYY-MM-DD format
+  lastSeen?: string;   // YYYY-MM-DD format
 }
 
 // Error tracking
@@ -104,4 +110,27 @@ export interface ScanProgress {
   completedDomains: number;
   totalIEMs: number;
   currentDomain?: string;
+}
+
+// Latest device with category metadata
+export interface LatestDevice extends ScoredIEM {
+  category: 'iem' | 'hp_kb5' | 'hp_5128';
+  categoryLabel: string;
+  targetName: string;
+}
+
+// Latest results data structure
+export interface LatestResultsData {
+  generatedAt: string;
+  totalDevices: number;
+  devices: LatestDevice[];
+}
+
+// Results data structure (for existing tabs)
+export interface ResultsData {
+  generatedAt: string;
+  totalIEMs: number;
+  domainsScanned?: number;
+  rigType?: string;
+  results: CalculationResult[];
 }

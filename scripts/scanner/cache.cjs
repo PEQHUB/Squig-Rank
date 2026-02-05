@@ -27,7 +27,8 @@ const config = require('./config.cjs');
  *       type: "iem"|"headphone",
  *       rig: "711"|"5128",
  *       pinna: string|null,
- *       lastSeen: ISO date
+ *       firstSeen: string,   // YYYY-MM-DD - when first discovered
+ *       lastSeen: string     // YYYY-MM-DD - last seen in scan
  *     }
  *   }
  * }
@@ -181,10 +182,15 @@ function getCachedEntryKeys(index) {
  * Update cache entry
  */
 function updateCacheEntry(index, key, entryData) {
+  const now = new Date().toISOString().split('T')[0];
+  const existing = index.entries[key];
+  
   index.entries[key] = {
-    ...index.entries[key],
+    ...existing,
     ...entryData,
-    lastSeen: new Date().toISOString().split('T')[0]
+    // For firstSeen: use existing value, or fall back to lastSeen (migration), or set to now
+    firstSeen: existing?.firstSeen || existing?.lastSeen || now,
+    lastSeen: now
   };
 }
 

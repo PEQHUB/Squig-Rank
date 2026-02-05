@@ -123,6 +123,9 @@ async function main() {
   // Results (JSON)
   output.generateResults(allPhonesFromCache, targetGroups);
   
+  // Latest results (merged from all categories)
+  output.generateLatestResults(allPhonesFromCache, targetGroups);
+  
   // Curves (MessagePack)
   try {
     await output.generateCurves(allPhonesFromCache);

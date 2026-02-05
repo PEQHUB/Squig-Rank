@@ -57,7 +57,9 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null) {
             type: phone.type,
             rig: phone.pinna === '5128' ? '5128' : '711',
             targetVariant: pinnaFilter,
-            pinna: phone.pinna
+            pinna: phone.pinna,
+            firstSeen: phone.firstSeen,
+            lastSeen: phone.lastSeen
           };
         })
         .sort((a, b) => b.similarity - a.similarity);
@@ -113,7 +115,9 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null) {
           type: phone.type,
           rig: phone.rig,
           targetVariant,
-          pinna: phone.pinna
+          pinna: phone.pinna,
+          firstSeen: phone.firstSeen,
+          lastSeen: phone.lastSeen
         };
       })
       .filter(item => item !== null)
@@ -192,6 +196,84 @@ function generateResults(phones, targetGroups) {
   console.log(`  Headphones 5128: ${config.RESULTS_HP_5128_PATH} (${hp5128.length} entries)`);
   
   return { iems: resultsIEM, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128 };
+}
+
+/**
+ * Generate results_latest.json - merged results from all three categories
+ * Pre-sorted by firstSeen for the "Latest" tab
+ */
+function generateLatestResults(phones, targetGroups) {
+  cache.ensureDirs();
+  
+  console.log(`\n--- Generating Latest Devices View ---`);
+  
+  // Split phones by type
+  const iems = phones.filter(p => p.type === 'iem');
+  const headphones = phones.filter(p => p.type === 'headphone');
+  
+  // Get all scored results from all categories
+  const resultsIEM = scorePhones(iems, targetGroups, 'iem');
+  const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
+  const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
+  
+  // Merge all results with category metadata
+  const mergedDevices = [];
+  
+  // Add IEMs
+  for (const targetGroup of resultsIEM) {
+    for (const device of targetGroup.ranked) {
+      mergedDevices.push({
+        ...device,
+        category: 'iem',
+        categoryLabel: 'IEMs',
+        targetName: targetGroup.targetName
+      });
+    }
+  }
+  
+  // Add KEMAR KB5 headphones
+  for (const targetGroup of resultsHpKb5) {
+    for (const device of targetGroup.ranked) {
+      mergedDevices.push({
+        ...device,
+        category: 'hp_kb5',
+        categoryLabel: 'KEMAR (711) OE',
+        targetName: targetGroup.targetName
+      });
+    }
+  }
+  
+  // Add B&K 5128 headphones
+  for (const targetGroup of resultsHp5128) {
+    for (const device of targetGroup.ranked) {
+      mergedDevices.push({
+        ...device,
+        category: 'hp_5128',
+        categoryLabel: 'B&K 5128 OE',
+        targetName: targetGroup.targetName
+      });
+    }
+  }
+  
+  // Sort by firstSeen (newest first)
+  mergedDevices.sort((a, b) => {
+    if (!a.firstSeen) return 1;
+    if (!b.firstSeen) return -1;
+    return b.firstSeen.localeCompare(a.firstSeen);
+  });
+  
+  const output = {
+    generatedAt: new Date().toISOString(),
+    totalDevices: mergedDevices.length,
+    devices: mergedDevices
+  };
+  
+  const latestPath = require('path').join(config.DATA_DIR, 'results_latest.json');
+  require('fs').writeFileSync(latestPath, JSON.stringify(output, null, 2));
+  
+  console.log(`  Latest view: ${latestPath} (${mergedDevices.length} devices)`);
+  
+  return output;
 }
 
 // ============================================================================
@@ -294,6 +376,7 @@ function generateCurvesJson(phones) {
 module.exports = {
   scorePhones,
   generateResults,
+  generateLatestResults,
   generateCurves,
   generateCurvesJson
 };

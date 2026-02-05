@@ -1,9 +1,21 @@
-import { useState, useEffect } from 'react';
-import type { CalculationResult, ScoredIEM } from '../types';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { CalculationResult, ScoredIEM, LatestDevice, CategoryFilter } from '../types';
 
 const PAGE_SIZE = 25;
 
-export default function SimilarityList({ results }: { results: CalculationResult[] }) {
+interface SimilarityListProps {
+  results: CalculationResult[];
+  latestDevices?: LatestDevice[];
+  isLatestTab?: boolean;
+  categoryFilter?: CategoryFilter;
+}
+
+export default function SimilarityList({ 
+  results, 
+  latestDevices, 
+  isLatestTab = false, 
+  categoryFilter = 'all' 
+}: SimilarityListProps) {
   const [activeColumn, setActiveColumn] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -55,6 +67,21 @@ export default function SimilarityList({ results }: { results: CalculationResult
     });
   };
 
+  // Render Latest tab
+  if (isLatestTab) {
+    if (!latestDevices || latestDevices.length === 0) {
+      return <div className="loading-results">Loading latest devices...</div>;
+    }
+    
+    return <LatestTabView 
+      devices={latestDevices} 
+      categoryFilter={categoryFilter} 
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+    />;
+  }
+
+  // Render normal tabs
   if (!results || results.length === 0) {
     return <div className="loading-results">Loading rankings...</div>;
   }
@@ -348,6 +375,250 @@ function getScoreClass(score: number): string {
   if (score >= 50) return 'orange';
   if (score >= 0) return 'red';
   return 'gray';
+}
+
+// =============================================================================
+// LATEST TAB COMPONENTS
+// =============================================================================
+
+interface LatestTabViewProps {
+  devices: LatestDevice[];
+  categoryFilter: CategoryFilter;
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+}
+
+function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: LatestTabViewProps) {
+  const isMobile = window.innerWidth <= 768;
+  const isDesktop = !isMobile;
+  
+  // Filter devices by search term
+  let filteredDevices = devices;
+  if (searchTerm && searchTerm.trim()) {
+    const term = searchTerm.toLowerCase().trim();
+    filteredDevices = devices.filter(device => 
+      device.name.toLowerCase().includes(term)
+    );
+  }
+  
+  // Filter by category
+  if (categoryFilter !== 'all') {
+    filteredDevices = filteredDevices.filter(d => d.category === categoryFilter);
+  }
+  
+  const showSingleColumn = isMobile || categoryFilter === 'all';
+  const showThreeColumns = isDesktop && categoryFilter !== 'all';
+  
+  return (
+    <div className="similarity-list latest-tab">
+      <div className="search-container">
+        <span className="search-icon">🔍</span>
+        <input 
+          type="text" 
+          className="search-input" 
+          placeholder="Search by model name..." 
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+        />
+      </div>
+      
+      {showSingleColumn && (
+        <LatestSingleColumn 
+          devices={filteredDevices}
+          showCategoryBadges={categoryFilter === 'all'}
+        />
+      )}
+      
+      {showThreeColumns && (
+        <LatestThreeColumns
+          devices={devices}
+          categoryFilter={categoryFilter}
+          searchTerm={searchTerm}
+        />
+      )}
+    </div>
+  );
+}
+
+interface LatestSingleColumnProps {
+  devices: LatestDevice[];
+  showCategoryBadges: boolean;
+}
+
+function LatestSingleColumn({ devices, showCategoryBadges }: LatestSingleColumnProps) {
+  const [displayCount, setDisplayCount] = useState(50);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    
+    const element = scrollRef.current;
+    const scrolledToBottom = element.scrollHeight - element.scrollTop <= element.clientHeight * 1.5;
+    
+    if (scrolledToBottom && displayCount < devices.length) {
+      setDisplayCount(prev => Math.min(prev + 25, devices.length));
+    }
+  }, [displayCount, devices.length]);
+  
+  const displayedDevices = devices.slice(0, displayCount);
+  
+  return (
+    <div 
+      className="latest-single-column" 
+      ref={scrollRef}
+      onScroll={handleScroll}
+    >
+      <ul>
+        {displayedDevices.map((device, index) => (
+          <LatestDeviceRow 
+            key={`${device.id}-${index}`}
+            device={device}
+            rank={index + 1}
+            showCategoryBadge={showCategoryBadges}
+          />
+        ))}
+      </ul>
+      {displayCount < devices.length && (
+        <div className="loading-more">Scroll for more...</div>
+      )}
+    </div>
+  );
+}
+
+interface LatestThreeColumnsProps {
+  devices: LatestDevice[];
+  categoryFilter: CategoryFilter;
+  searchTerm: string;
+}
+
+function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThreeColumnsProps) {
+  const [currentPage, setCurrentPage] = useState<{iem: number, hp_kb5: number, hp_5128: number}>({
+    iem: 1,
+    hp_kb5: 1,
+    hp_5128: 1
+  });
+  
+  const filterByCategory = (category: 'iem' | 'hp_kb5' | 'hp_5128') => {
+    let filtered = devices.filter(d => d.category === category);
+    
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(d => d.name.toLowerCase().includes(term));
+    }
+    
+    return filtered;
+  };
+  
+  const iemDevices = filterByCategory('iem');
+  const kb5Devices = filterByCategory('hp_kb5');
+  const hp5128Devices = filterByCategory('hp_5128');
+  
+  const renderColumn = (
+    devices: LatestDevice[], 
+    category: 'iem' | 'hp_kb5' | 'hp_5128',
+    label: string,
+    isActive: boolean
+  ) => {
+    const page = currentPage[category];
+    const startIndex = (page - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    const pageDevices = devices.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(devices.length / PAGE_SIZE);
+    
+    return (
+      <div className={`latest-column ${isActive ? 'active' : 'empty'}`}>
+        <h3>{label}</h3>
+        {isActive ? (
+          <>
+            <ul>
+              {pageDevices.map((device, index) => (
+                <LatestDeviceRow
+                  key={`${device.id}-${index}`}
+                  device={device}
+                  rank={startIndex + index + 1}
+                  showCategoryBadge={false}
+                />
+              ))}
+            </ul>
+            {totalPages > 1 && (
+              <div className="pagination-controls">
+                <button 
+                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.max(1, prev[category] - 1) }))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </button>
+                <span>Page {page} of {totalPages}</span>
+                <button 
+                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.min(totalPages, prev[category] + 1) }))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="empty-state"></div>
+        )}
+      </div>
+    );
+  };
+  
+  return (
+    <div className="latest-three-columns">
+      {renderColumn(iemDevices, 'iem', 'IEMs', categoryFilter === 'iem')}
+      {renderColumn(kb5Devices, 'hp_kb5', 'KEMAR (711) OE', categoryFilter === 'hp_kb5')}
+      {renderColumn(hp5128Devices, 'hp_5128', 'B&K 5128 OE', categoryFilter === 'hp_5128')}
+    </div>
+  );
+}
+
+interface LatestDeviceRowProps {
+  device: LatestDevice;
+  rank: number;
+  showCategoryBadge: boolean;
+}
+
+function LatestDeviceRow({ device, rank, showCategoryBadge }: LatestDeviceRowProps) {
+  const isMobile = window.innerWidth <= 768;
+  
+  return (
+    <li className={`quality-${device.quality} ${isMobile ? 'mobile-stack' : ''}`}>
+      <div className="row-main">
+        <span className="rank">{rank}.</span>
+        <span className="iem-name">{device.name}</span>
+        {showCategoryBadge && (
+          <span className={`category-badge category-${device.category}`}>
+            {device.categoryLabel}
+          </span>
+        )}
+        <span className={`score ${getScoreClass(device.similarity)}`}>
+          {device.similarity.toFixed(1)}
+        </span>
+      </div>
+      
+      <div className="row-details">
+        {device.rig && (
+          <span className={`rig-badge rig-${device.rig}`}>
+            {device.rig}
+          </span>
+        )}
+        <span className={`tag ${device.quality === 'high' ? 'genuine' : 'clone'}`}>
+          {device.quality === 'high' ? 'Genuine' : 'Clone'}
+        </span>
+        <a
+          href={getSquigUrl(device)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="view-graph-btn"
+          title={`View on ${device.sourceDomain}`}
+        >
+          View Graph
+        </a>
+      </div>
+    </li>
+  );
 }
 
 export { SimilarityList };

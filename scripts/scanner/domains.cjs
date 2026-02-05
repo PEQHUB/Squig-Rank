@@ -411,6 +411,8 @@ function loadPhonesFromCache(cacheIndex) {
       rig: entry.rig,
       pinna,
       hash: entry.hash,
+      firstSeen: entry.firstSeen,
+      lastSeen: entry.lastSeen,
       frequencyData: curve
     });
   }
