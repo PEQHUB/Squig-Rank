@@ -14,7 +14,7 @@ export default function SimilarityList({
   results, 
   latestDevices, 
   isLatestTab = false, 
-  categoryFilter = 'all' 
+  categoryFilter = 'iem' 
 }: SimilarityListProps) {
   const [activeColumn, setActiveColumn] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -390,24 +390,6 @@ interface LatestTabViewProps {
 
 function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: LatestTabViewProps) {
   const isMobile = window.innerWidth <= 768;
-  const isDesktop = !isMobile;
-  
-  // Filter devices by search term
-  let filteredDevices = devices;
-  if (searchTerm && searchTerm.trim()) {
-    const term = searchTerm.toLowerCase().trim();
-    filteredDevices = devices.filter(device => 
-      device.name.toLowerCase().includes(term)
-    );
-  }
-  
-  // Filter by category
-  if (categoryFilter !== 'all') {
-    filteredDevices = filteredDevices.filter(d => d.category === categoryFilter);
-  }
-  
-  const showSingleColumn = isMobile || categoryFilter === 'all';
-  const showThreeColumns = isDesktop && categoryFilter !== 'all';
   
   return (
     <div className="similarity-list latest-tab">
@@ -422,14 +404,13 @@ function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: 
         />
       </div>
       
-      {showSingleColumn && (
-        <LatestSingleColumn 
-          devices={filteredDevices}
-          showCategoryBadges={categoryFilter === 'all'}
+      {isMobile ? (
+        <LatestMobileView
+          devices={devices}
+          categoryFilter={categoryFilter}
+          searchTerm={searchTerm}
         />
-      )}
-      
-      {showThreeColumns && (
+      ) : (
         <LatestThreeColumns
           devices={devices}
           categoryFilter={categoryFilter}
@@ -440,14 +421,24 @@ function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: 
   );
 }
 
-interface LatestSingleColumnProps {
+interface LatestMobileViewProps {
   devices: LatestDevice[];
-  showCategoryBadges: boolean;
+  categoryFilter: CategoryFilter;
+  searchTerm: string;
 }
 
-function LatestSingleColumn({ devices, showCategoryBadges }: LatestSingleColumnProps) {
+function LatestMobileView({ devices, categoryFilter, searchTerm }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Filter devices by category
+  let filteredDevices = devices.filter(d => d.category === categoryFilter);
+  
+  // Filter by search term
+  if (searchTerm && searchTerm.trim()) {
+    const term = searchTerm.toLowerCase().trim();
+    filteredDevices = filteredDevices.filter(d => d.name.toLowerCase().includes(term));
+  }
   
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
@@ -455,12 +446,12 @@ function LatestSingleColumn({ devices, showCategoryBadges }: LatestSingleColumnP
     const element = scrollRef.current;
     const scrolledToBottom = element.scrollHeight - element.scrollTop <= element.clientHeight * 1.5;
     
-    if (scrolledToBottom && displayCount < devices.length) {
-      setDisplayCount(prev => Math.min(prev + 25, devices.length));
+    if (scrolledToBottom && displayCount < filteredDevices.length) {
+      setDisplayCount(prev => Math.min(prev + 25, filteredDevices.length));
     }
-  }, [displayCount, devices.length]);
+  }, [displayCount, filteredDevices.length]);
   
-  const displayedDevices = devices.slice(0, displayCount);
+  const displayedDevices = filteredDevices.slice(0, displayCount);
   
   return (
     <div 
@@ -474,11 +465,10 @@ function LatestSingleColumn({ devices, showCategoryBadges }: LatestSingleColumnP
             key={`${device.id}-${index}`}
             device={device}
             rank={index + 1}
-            showCategoryBadge={showCategoryBadges}
           />
         ))}
       </ul>
-      {displayCount < devices.length && (
+      {displayCount < filteredDevices.length && (
         <div className="loading-more">Scroll for more...</div>
       )}
     </div>
@@ -536,7 +526,6 @@ function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThree
                   key={`${device.id}-${index}`}
                   device={device}
                   rank={startIndex + index + 1}
-                  showCategoryBadge={false}
                 />
               ))}
             </ul>
@@ -577,10 +566,9 @@ function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThree
 interface LatestDeviceRowProps {
   device: LatestDevice;
   rank: number;
-  showCategoryBadge: boolean;
 }
 
-function LatestDeviceRow({ device, rank, showCategoryBadge }: LatestDeviceRowProps) {
+function LatestDeviceRow({ device, rank }: LatestDeviceRowProps) {
   const isMobile = window.innerWidth <= 768;
   
   return (
@@ -588,11 +576,6 @@ function LatestDeviceRow({ device, rank, showCategoryBadge }: LatestDeviceRowPro
       <div className="row-main">
         <span className="rank">{rank}.</span>
         <span className="iem-name">{device.name}</span>
-        {showCategoryBadge && (
-          <span className={`category-badge category-${device.category}`}>
-            {device.categoryLabel}
-          </span>
-        )}
         <span className={`score ${getScoreClass(device.similarity)}`}>
           {device.similarity.toFixed(1)}
         </span>

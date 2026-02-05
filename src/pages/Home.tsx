@@ -9,7 +9,7 @@ export default function Home() {
   const [hp5128Results, setHp5128Results] = useState<CalculationResult[] | null>(null);
   const [latestResults, setLatestResults] = useState<LatestResultsData | null>(null);
   const [activeType, setActiveType] = useState<ActiveViewType>('latest');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('iem');
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -211,12 +211,6 @@ export default function Home() {
 
       {activeType === 'latest' && (
         <div className="category-filters">
-          <button
-            className={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setCategoryFilter('all')}
-          >
-            All
-          </button>
           <button
             className={`filter-btn ${categoryFilter === 'iem' ? 'active' : ''}`}
             onClick={() => setCategoryFilter('iem')}

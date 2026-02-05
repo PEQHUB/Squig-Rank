@@ -2,7 +2,7 @@
 export type ActiveViewType = 'latest' | 'iem' | 'hp_kb5' | 'hp_5128';
 
 // Category filter for Latest tab
-export type CategoryFilter = 'all' | 'iem' | 'hp_kb5' | 'hp_5128';
+export type CategoryFilter = 'iem' | 'hp_kb5' | 'hp_5128';
 
 // Phone book entry types from squig.link
 export interface PhoneBookBrand {
