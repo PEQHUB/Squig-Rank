@@ -45,6 +45,14 @@ const OVERRIDES = {
 
 const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "earphonesarchiveHP", "sai", "crinacle5128"];
 
+// Display domain overrides for sourceDomain in results
+// Domains not listed here default to "${subdomain}.squig.link"
+const DISPLAY_DOMAINS = {
+  "crinacle": "graph.hangout.audio",
+  "crinacle5128": "graph.hangout.audio",
+  "crinacleHP": "graph.hangout.audio"
+};
+
 // Domains that require encrypted fetch via d-c.php proxy on graph.hangout.audio
 // Maps domain name -> { toolPath, numSamples } for constructing file paths
 const ENCRYPTED_DOMAINS = {
@@ -156,6 +164,7 @@ module.exports = {
   SUBDOMAINS,
   OVERRIDES,
   HIGH_QUALITY_DOMAINS,
+  DISPLAY_DOMAINS,
   ENCRYPTED_DOMAINS,
   RIG_5128_DOMAINS,
   

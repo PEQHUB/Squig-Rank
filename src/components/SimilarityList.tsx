@@ -231,6 +231,12 @@ function getSquigUrl(iem: ScoredIEM): string {
     
     return `https://graph.hangout.audio/${path}/?share=${encodeURIComponent(fileName)}`;
   }
+  if (subdomain === 'crinacle5128') {
+    return `https://graph.hangout.audio/iem/5128/?share=${encodeURIComponent(fileName)}`;
+  }
+  if (subdomain === 'crinacleHP') {
+    return `https://graph.hangout.audio/headphones/?share=${encodeURIComponent(fileName)}`;
+  }
   if (subdomain === 'superreview') {
     return `https://squig.link/?share=${encodeURIComponent(fileName)}`;
   }
