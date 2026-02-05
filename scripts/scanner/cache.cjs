@@ -243,71 +243,6 @@ function getCacheStats(index) {
 // ============================================================================
 // LEGACY CACHE MIGRATION
 // ============================================================================
-
-/**
- * Migrate old internal cache (public/lib/cache) to new unified cache
- */
-function migrateOldCache(index) {
-  const oldRegistryPath = path.join(config.ROOT_DIR, 'public', 'lib', 'registry.json');
-  const oldCacheDir = path.join(config.ROOT_DIR, 'public', 'lib', 'cache');
-  
-  if (!fs.existsSync(oldRegistryPath)) {
-    return { migrated: 0, skipped: 0 };
-  }
-  
-  console.log('Migrating legacy cache...');
-  
-  const registry = JSON.parse(fs.readFileSync(oldRegistryPath, 'utf-8'));
-  let migrated = 0;
-  let skipped = 0;
-  
-  for (const [oldHash, info] of Object.entries(registry)) {
-    const oldBinPath = path.join(oldCacheDir, `${oldHash}.bin`);
-    if (!fs.existsSync(oldBinPath)) {
-      skipped++;
-      continue;
-    }
-    
-    try {
-      // Read old bin file (already gzipped)
-      const compressed = fs.readFileSync(oldBinPath);
-      const text = zlib.gunzipSync(compressed).toString('utf-8');
-      
-      // Compute new hash
-      const newHash = computeMeasurementHash(text);
-      const key = getEntryKey(info.s, info.u || oldHash);
-      
-      // Save to new location if not already there
-      if (!hasMeasurement(newHash)) {
-        saveMeasurement(newHash, text);
-      }
-      
-      // Update index
-      if (!index.entries[key]) {
-        index.entries[key] = {
-          hash: newHash,
-          name: info.n,
-          price: null,
-          quality: 'high',
-          type: info.t === 'hp' ? 'headphone' : 'iem',
-          rig: '711',
-          pinna: null,
-          lastSeen: new Date().toISOString().split('T')[0]
-        };
-        migrated++;
-      } else {
-        skipped++;
-      }
-    } catch (e) {
-      console.warn(`Failed to migrate ${oldHash}:`, e.message);
-      skipped++;
-    }
-  }
-  
-  console.log(`Migration complete: ${migrated} migrated, ${skipped} skipped`);
-  return { migrated, skipped };
-}
-
 module.exports = {
   // Cache index
   loadCacheIndex,
@@ -335,7 +270,7 @@ module.exports = {
   clearCheckpoint,
   
   // Migration
-  migrateOldCache,
+
   
   // Utils
   ensureDirs

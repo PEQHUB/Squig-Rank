@@ -39,15 +39,7 @@ async function main() {
   console.log(`  IEMs: ${stats.iems}, Headphones: ${stats.headphones}`);
   console.log(`  Last scan: ${stats.lastScan || 'never'}`);
   
-  // 2. Migrate old cache if needed
-  if (stats.totalEntries === 0) {
-    const migrationResult = cache.migrateOldCache(cacheIndex);
-    if (migrationResult.migrated > 0) {
-      cache.saveCacheIndex(cacheIndex);
-    }
-  }
-  
-  // 3. Check for checkpoint (resume capability)
+  // 2. Check for checkpoint (resume capability)
   const checkpoint = cache.loadCheckpoint();
   let startDomainIndex = 0;
   

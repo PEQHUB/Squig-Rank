@@ -10,8 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "scan": "node scripts/scanner/index.cjs",
-    "scan:force": "node scripts/scanner/index.cjs --force",
-    "scan:legacy": "node scripts/scan.cjs"
+    "scan:force": "node scripts/scanner/index.cjs --force"
   },
   "dependencies": {
     "@msgpack/msgpack": "^3.1.3",
