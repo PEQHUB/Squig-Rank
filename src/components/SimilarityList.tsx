@@ -3,14 +3,13 @@ import type { CalculationResult, ScoredIEM } from '../types';
 
 const PAGE_SIZE = 25;
 
-export default function SimilarityList({ results, isHeadphoneMode = false }: { results: CalculationResult[], isHeadphoneMode?: boolean }) {
+export default function SimilarityList({ results }: { results: CalculationResult[] }) {
   const [activeColumn, setActiveColumn] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   
   // State for filters
   const [showCloneCoupler, setShowCloneCoupler] = useState<boolean[]>([]);
   const [hideDuplicates, setHideDuplicates] = useState<boolean[]>([]);
-  const [pinnaFilters, setPinnaFilters] = useState<string[]>([]);
   const [showCounts, setShowCounts] = useState<number[]>([]);
 
   // Update filters when results change
@@ -18,7 +17,6 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
     if (results.length > 0) {
       setShowCloneCoupler(results.map(() => true));
       setHideDuplicates(results.map(() => true));
-      setPinnaFilters(results.map(() => 'all'));
       setShowCounts(results.map(() => PAGE_SIZE));
     }
   }, [results]);
@@ -45,14 +43,6 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
     setHideDuplicates(prev => {
       const newFilters = [...prev];
       newFilters[targetIndex] = !newFilters[targetIndex];
-      return newFilters;
-    });
-  };
-
-  const handlePinnaChange = (targetIndex: number, value: string) => {
-    setPinnaFilters(prev => {
-      const newFilters = [...prev];
-      newFilters[targetIndex] = value;
       return newFilters;
     });
   };
@@ -90,9 +80,7 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
             data={results[activeColumn]}
             showCloneCoupler={showCloneCoupler[activeColumn]}
             hideDuplicates={hideDuplicates[activeColumn]}
-            pinnaFilter={isHeadphoneMode ? pinnaFilters[activeColumn] : undefined}
             searchTerm={searchTerm}
-            onPinnaChange={(val) => handlePinnaChange(activeColumn, val)}
             onToggleClone={() => toggleCloneCoupler(activeColumn)}
             onToggleDupes={() => toggleDuplicates(activeColumn)}
             showCount={showCounts[activeColumn]}
@@ -108,9 +96,7 @@ export default function SimilarityList({ results, isHeadphoneMode = false }: { r
               data={result}
               showCloneCoupler={showCloneCoupler[index]}
               hideDuplicates={hideDuplicates[index]}
-              pinnaFilter={isHeadphoneMode ? pinnaFilters[index] : undefined}
               searchTerm={searchTerm}
-              onPinnaChange={(val) => handlePinnaChange(index, val)}
               onToggleClone={() => toggleCloneCoupler(index)}
               onToggleDupes={() => toggleDuplicates(index)}
               showCount={showCounts[index]}
@@ -162,9 +148,7 @@ interface TargetColumnProps {
   data: CalculationResult;
   showCloneCoupler: boolean;
   hideDuplicates: boolean;
-  pinnaFilter?: string;
   searchTerm?: string;
-  onPinnaChange?: (value: string) => void;
   onToggleClone: () => void;
   onToggleDupes: () => void;
   showCount: number;
@@ -175,9 +159,7 @@ function TargetColumn({
   data, 
   showCloneCoupler, 
   hideDuplicates,
-  pinnaFilter,
   searchTerm,
-  onPinnaChange,
   onToggleClone, 
   onToggleDupes,
   showCount, 
@@ -198,14 +180,7 @@ function TargetColumn({
     );
   }
 
-  // 1.5 Filter by Pinna (Headphones only)
-  if (pinnaFilter && pinnaFilter !== 'all') {
-    filteredItems = filteredItems.filter(item => {
-        // If 5128 pinna filter selected, match 5128 rig OR 5128 pinna
-        if (pinnaFilter === '5128') return item.pinna === '5128' || item.rig === '5128';
-        return item.pinna === pinnaFilter;
-    });
-  }
+  // Pinna filter removed - headphones are now pre-separated by rig type in separate files
 
   // 2. Filter Duplicates (if enabled)
   if (hideDuplicates) {
@@ -275,6 +250,11 @@ function TargetColumn({
             5128 Target
           </a>
         )}
+        {data.targetFiles && data.targetFiles['kb5'] && (
+          <a href={`targets/${data.targetFiles['kb5']}`} download className="target-download-btn" title="Download KB5 (711) Target">
+            Target
+          </a>
+        )}
         {!data.targetFiles && data.targetFileName && (
            <a href={`targets/${data.targetFileName}`} download className="target-download-btn">
              Download Target
@@ -301,20 +281,7 @@ function TargetColumn({
           {hideDuplicates && <span className="toggle-icon">&#10003;</span>}
         </div>
         
-        {/* Pinna Filter (Headphones Only) */}
-        {pinnaFilter && (
-          <div className="pinna-selector">
-            <select 
-              value={pinnaFilter} 
-              onChange={(e) => onPinnaChange?.(e.target.value)}
-              className="pinna-dropdown"
-            >
-              <option value="all">All Pinnae</option>
-              <option value="kb5">KB5</option>
-              <option value="5128">5128</option>
-            </select>
-          </div>
-        )}
+        {/* Pinna Filter removed - headphones are now pre-separated by rig type */}
       </div>
 
       <ul>

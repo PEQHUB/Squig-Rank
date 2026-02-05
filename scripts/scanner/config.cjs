@@ -138,7 +138,8 @@ const CHECKPOINT_PATH = path.join(CACHE_DIR, 'checkpoint.json');
 
 // Output files
 const RESULTS_IEM_PATH = path.join(DATA_DIR, 'results.json');
-const RESULTS_HP_PATH = path.join(DATA_DIR, 'results_hp.json');
+const RESULTS_HP_KB5_PATH = path.join(DATA_DIR, 'results_hp_kb5.json');
+const RESULTS_HP_5128_PATH = path.join(DATA_DIR, 'results_hp_5128.json');
 const CURVES_PATH = path.join(DATA_DIR, 'curves.msgpack');
 const CURVES_JSON_PATH = path.join(DATA_DIR, 'curves.json'); // Keep for migration
 
@@ -175,7 +176,8 @@ module.exports = {
   DOMAINS_HASH_PATH,
   CHECKPOINT_PATH,
   RESULTS_IEM_PATH,
-  RESULTS_HP_PATH,
+  RESULTS_HP_KB5_PATH,
+  RESULTS_HP_5128_PATH,
   CURVES_PATH,
   CURVES_JSON_PATH
 };

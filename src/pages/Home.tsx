@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SimilarityList } from '../components/SimilarityList';
 import { TargetSubmission } from '../components/TargetSubmission';
-import type { CalculationResult } from '../types';
+import type { CalculationResult, ActiveViewType } from '../types';
 
 interface ResultsData {
   generatedAt: string;
@@ -11,8 +11,9 @@ interface ResultsData {
 
 export default function Home() {
   const [results, setResults] = useState<CalculationResult[] | null>(null);
-  const [hpResults, setHpResults] = useState<CalculationResult[] | null>(null);
-  const [activeType, setActiveType] = useState<'iem' | 'headphone'>('iem');
+  const [hpKb5Results, setHpKb5Results] = useState<CalculationResult[] | null>(null);
+  const [hp5128Results, setHp5128Results] = useState<CalculationResult[] | null>(null);
+  const [activeType, setActiveType] = useState<ActiveViewType>('iem');
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,12 +23,23 @@ export default function Home() {
   // Custom Ranking State
   const [customResult, setCustomResult] = useState<CalculationResult | null>(null);
 
-  async function fetchResults(type: 'iem' | 'headphone'): Promise<ResultsData | null> {
+  async function fetchResults(type: ActiveViewType): Promise<ResultsData | null> {
     try {
-      const file = type === 'iem' ? './data/results.json' : './data/results_hp.json';
+      let file: string;
+      switch (type) {
+        case 'iem':
+          file = './data/results.json';
+          break;
+        case 'hp_kb5':
+          file = './data/results_hp_kb5.json';
+          break;
+        case 'hp_5128':
+          file = './data/results_hp_5128.json';
+          break;
+      }
       const response = await fetch(file);
       if (!response.ok) {
-        if (type === 'headphone') return null; // HP might not exist yet
+        if (type !== 'iem') return null; // HP files might not exist yet
         throw new Error('Results not available yet');
       }
       return await response.json() as ResultsData;
@@ -56,7 +68,7 @@ export default function Home() {
     initLoad();
   }, []);
 
-  const handleTypeChange = async (type: 'iem' | 'headphone') => {
+  const handleTypeChange = async (type: ActiveViewType) => {
     setActiveType(type);
     setCustomResult(null); // Reset custom on switch
     
@@ -64,12 +76,39 @@ export default function Home() {
     setLoading(true);
     const data = await fetchResults(type);
     if (data) {
-      if (type === 'iem') setResults(data.results);
-      else setHpResults(data.results);
+      switch (type) {
+        case 'iem':
+          setResults(data.results);
+          break;
+        case 'hp_kb5':
+          setHpKb5Results(data.results);
+          break;
+        case 'hp_5128':
+          setHp5128Results(data.results);
+          break;
+      }
       setTotalIEMs(data.totalIEMs);
       setLastUpdate(data.generatedAt);
     }
     setLoading(false);
+  };
+  
+  // Helper to get label for active type
+  const getTypeLabel = (type: ActiveViewType): string => {
+    switch (type) {
+      case 'iem': return 'IEM';
+      case 'hp_kb5': return 'KEMAR (711) OE Headphone';
+      case 'hp_5128': return 'B&K 5128 OE Headphone';
+    }
+  };
+  
+  // Helper to get current results based on active type
+  const getCurrentResults = (): CalculationResult[] | null => {
+    switch (activeType) {
+      case 'iem': return results;
+      case 'hp_kb5': return hpKb5Results;
+      case 'hp_5128': return hp5128Results;
+    }
   };
 
   if (loading && !results) { // Only full screen load on init
@@ -93,7 +132,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <p className="subtitle">{activeType === 'iem' ? 'IEM' : 'Headphone'} Preference Prediction Index Rankings</p>
+      <p className="subtitle">{getTypeLabel(activeType)} Preference Prediction Index Rankings</p>
       <div className="meta">
         <span>{totalIEMs.toLocaleString()} {activeType === 'iem' ? 'IEMs' : 'Headphones'} scanned</span>
         {lastUpdate && (
@@ -111,10 +150,16 @@ export default function Home() {
           IEMs
         </button>
         <button 
-          className={`tab-btn ${activeType === 'headphone' ? 'active' : ''}`}
-          onClick={() => handleTypeChange('headphone')}
+          className={`tab-btn ${activeType === 'hp_kb5' ? 'active' : ''}`}
+          onClick={() => handleTypeChange('hp_kb5')}
         >
-          Headphones
+          KEMAR (711) OE
+        </button>
+        <button 
+          className={`tab-btn ${activeType === 'hp_5128' ? 'active' : ''}`}
+          onClick={() => handleTypeChange('hp_5128')}
+        >
+          B&K 5128 OE
         </button>
       </div>
 
@@ -125,8 +170,7 @@ export default function Home() {
       />
       
       <SimilarityList 
-        results={customResult ? [customResult] : (activeType === 'iem' ? results : hpResults) || []} 
-        isHeadphoneMode={activeType === 'headphone'}
+        results={customResult ? [customResult] : getCurrentResults() || []} 
       />
     </div>
   );

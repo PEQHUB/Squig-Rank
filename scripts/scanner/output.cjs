@@ -15,61 +15,63 @@ const targets = require('./targets.cjs');
 
 /**
  * Score all phones against target curves
+ * @param {Array} phones - Array of phone objects with frequency data
+ * @param {Array} targetGroups - Array of target groups
+ * @param {string} type - 'iem' or 'headphone'
+ * @param {string|null} pinnaFilter - For headphones: 'kb5' or '5128' to filter by pinna
  */
-function scorePhones(phones, targetGroups, type) {
+function scorePhones(phones, targetGroups, type, pinnaFilter = null) {
   const results = [];
   const desiredType = type;
   
-  console.log(`\n--- Scoring ${type}s (${phones.length}) ---`);
+  const label = pinnaFilter ? `${type}s (${pinnaFilter})` : `${type}s`;
+  console.log(`\n--- Scoring ${label} (${phones.length}) ---`);
   
   for (const group of targetGroups) {
     if (group.type && group.type !== desiredType) continue;
 
-    // Headphone Special Logic: Split Diffuse Field into separate columns per pinna
-    if (desiredType === 'headphone' && group.name === 'Diffuse Field (Tilted)') {
-      const pinnae = ['kb5', '5128'];
+    // For headphones with pinna filter, only process targets matching the pinna
+    if (desiredType === 'headphone' && pinnaFilter) {
+      // Check if this target has a variant for the requested pinna
+      const targetData = group.variants[pinnaFilter];
+      if (!targetData) continue;
 
-      for (const p of pinnae) {
-        const targetData = group.variants[p];
-        if (!targetData) continue;
+      console.log(`  Scoring: ${group.name} [${pinnaFilter}]`);
+      
+      const scored = phones
+        .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
+        .filter(phone => phone.type === 'headphone')
+        .filter(phone => phone.pinna === pinnaFilter)
+        .map(phone => {
+          const ppiResult = frequency.calculatePPI(phone.frequencyData, targetData.curve);
+          return {
+            id: cache.getEntryKey(phone.subdomain, phone.fileName),
+            name: phone.displayName,
+            similarity: ppiResult.ppi,
+            stdev: ppiResult.stdev,
+            slope: ppiResult.slope,
+            avgError: ppiResult.avgError,
+            price: phone.price,
+            quality: phone.quality,
+            sourceDomain: `${phone.subdomain}.squig.link`,
+            type: phone.type,
+            rig: phone.pinna === '5128' ? '5128' : '711',
+            targetVariant: pinnaFilter,
+            pinna: phone.pinna
+          };
+        })
+        .sort((a, b) => b.similarity - a.similarity);
 
-        console.log(`  Scoring: ${targetData.fileName}`);
-        
-        const scored = phones
-          .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
-          .filter(phone => phone.type === 'headphone')
-          .filter(phone => phone.pinna === p)
-          .map(phone => {
-            const ppiResult = frequency.calculatePPI(phone.frequencyData, targetData.curve);
-            return {
-              id: cache.getEntryKey(phone.subdomain, phone.fileName),
-              name: phone.displayName,
-              similarity: ppiResult.ppi,
-              stdev: ppiResult.stdev,
-              slope: ppiResult.slope,
-              avgError: ppiResult.avgError,
-              price: phone.price,
-              quality: phone.quality,
-              sourceDomain: `${phone.subdomain}.squig.link`,
-              type: phone.type,
-              rig: phone.pinna === '5128' ? '5128' : '711',
-              targetVariant: p,
-              pinna: phone.pinna
-            };
-          })
-          .sort((a, b) => b.similarity - a.similarity);
-
-        results.push({ 
-          targetName: targetData.fileName.replace('.txt', ''),
-          targetFiles: { [p]: targetData.fileName },
-          scoringMethod: 'ppi', 
-          ranked: scored 
-        });
-      }
+      results.push({ 
+        targetName: group.name,
+        targetFiles: { [pinnaFilter]: targetData.fileName },
+        scoringMethod: 'ppi', 
+        ranked: scored 
+      });
       continue;
     }
 
-    // Standard logic for IEMs and other targets
+    // Standard logic for IEMs
     console.log(`  Scoring: ${group.name}`);
     
     const scored = phones
@@ -136,7 +138,7 @@ function scorePhones(phones, targetGroups, type) {
 // ============================================================================
 
 /**
- * Generate results.json files for IEMs and Headphones
+ * Generate results.json files for IEMs and Headphones (split by pinna)
  */
 function generateResults(phones, targetGroups) {
   cache.ensureDirs();
@@ -144,12 +146,15 @@ function generateResults(phones, targetGroups) {
   // Split phones by type
   const iems = phones.filter(p => p.type === 'iem');
   const headphones = phones.filter(p => p.type === 'headphone');
+  const hpKb5 = headphones.filter(p => p.pinna === 'kb5');
+  const hp5128 = headphones.filter(p => p.pinna === '5128');
   
   // Score IEMs
   const resultsIEM = scorePhones(iems, targetGroups, 'iem');
   
-  // Score Headphones
-  const resultsHP = scorePhones(headphones, targetGroups, 'headphone');
+  // Score Headphones - split by pinna type
+  const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
+  const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
   
   // Generate IEM output
   const outputIEM = {
@@ -159,22 +164,34 @@ function generateResults(phones, targetGroups) {
     results: resultsIEM
   };
   
-  // Generate HP output
-  const outputHP = {
+  // Generate HP KB5 (KEMAR 711) output
+  const outputHpKb5 = {
     generatedAt: new Date().toISOString(),
-    totalIEMs: headphones.length,
+    totalIEMs: hpKb5.length,
     domainsScanned: config.SUBDOMAINS.length,
-    results: resultsHP
+    rigType: 'kb5',
+    results: resultsHpKb5
+  };
+  
+  // Generate HP 5128 (B&K 5128) output
+  const outputHp5128 = {
+    generatedAt: new Date().toISOString(),
+    totalIEMs: hp5128.length,
+    domainsScanned: config.SUBDOMAINS.length,
+    rigType: '5128',
+    results: resultsHp5128
   };
   
   fs.writeFileSync(config.RESULTS_IEM_PATH, JSON.stringify(outputIEM, null, 2));
-  fs.writeFileSync(config.RESULTS_HP_PATH, JSON.stringify(outputHP, null, 2));
+  fs.writeFileSync(config.RESULTS_HP_KB5_PATH, JSON.stringify(outputHpKb5, null, 2));
+  fs.writeFileSync(config.RESULTS_HP_5128_PATH, JSON.stringify(outputHp5128, null, 2));
   
   console.log(`\nResults saved:`);
   console.log(`  IEMs: ${config.RESULTS_IEM_PATH} (${iems.length} entries)`);
-  console.log(`  Headphones: ${config.RESULTS_HP_PATH} (${headphones.length} entries)`);
+  console.log(`  Headphones KB5: ${config.RESULTS_HP_KB5_PATH} (${hpKb5.length} entries)`);
+  console.log(`  Headphones 5128: ${config.RESULTS_HP_5128_PATH} (${hp5128.length} entries)`);
   
-  return { iems: resultsIEM, headphones: resultsHP };
+  return { iems: resultsIEM, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128 };
 }
 
 // ============================================================================

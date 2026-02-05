@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { decode } from '@msgpack/msgpack';
 import { parseFrequencyResponse, calculatePPI, logInterpolate } from '../utils/ppi';
-import type { CalculationResult, ScoredIEM } from '../types';
+import type { CalculationResult, ScoredIEM, ActiveViewType } from '../types';
 
 // ============================================================================
 // TYPES
@@ -49,7 +49,7 @@ interface CurvesDataJson {
 interface Props {
   onCalculate: (results: CalculationResult | null) => void;
   isRanking: boolean;
-  activeType: 'iem' | 'headphone';
+  activeType: ActiveViewType;
 }
 
 const RIG_5128_DOMAINS = ["earphonesarchive", "crinacle5128", "listener5128"];
@@ -157,6 +157,23 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
   const [targetType, setTargetType] = useState<'711' | '5128'>('711');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setTargetText(content);
+      setTargetName(file.name.replace(/\.txt$/i, ''));
+    };
+    reader.readAsText(file);
+    
+    // Reset input so same file can be re-uploaded
+    e.target.value = '';
+  };
 
   const handleRank = async () => {
     if (!targetText.trim()) {
@@ -199,23 +216,36 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
 
       // 3. Calculate Scores
       const scored: ScoredIEM[] = [];
+      
+      // Determine what type of entries to include and what pinna filter (for headphones)
+      const isHeadphoneMode = activeType === 'hp_kb5' || activeType === 'hp_5128';
+      const targetPinna = activeType === 'hp_kb5' ? 'kb5' : activeType === 'hp_5128' ? '5128' : null;
 
       for (const entry of data.entries) {
-        // Filter by active view
-        if (entry.type !== activeType) continue;
+        // Filter by active view type
+        if (isHeadphoneMode) {
+          if (entry.type !== 'headphone') continue;
+          // Also filter by pinna for headphones
+          if (targetPinna && entry.pinna !== targetPinna) continue;
+        } else {
+          if (entry.type !== 'iem') continue;
+        }
 
         const iemCurve = { frequencies: freqs, db: entry.db };
         const iemRig = entry.rig;
         
         let activeTarget = targetBase;
 
-        if (targetType === '711') {
-          if (iemRig === '5128') {
-            activeTarget = targetPlus711Comp;
-          }
-        } else {
-          if (iemRig === '711') {
-            activeTarget = targetPlus5128Comp;
+        // Only apply compensation for IEMs (not for headphones per user request)
+        if (!isHeadphoneMode) {
+          if (targetType === '711') {
+            if (iemRig === '5128') {
+              activeTarget = targetPlus711Comp;
+            }
+          } else {
+            if (iemRig === '711') {
+              activeTarget = targetPlus5128Comp;
+            }
           }
         }
         
@@ -269,7 +299,7 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
     <div className="custom-target-upload">
       <h3>Live Ranking</h3>
       <p className="subtitle" style={{marginBottom: '12px'}}>
-        Paste your custom target curve to instantly rank all {activeType === 'iem' ? 'IEMs' : 'Headphones'}.
+        Paste your custom target curve to instantly rank all {activeType === 'iem' ? 'IEMs' : activeType === 'hp_kb5' ? 'KEMAR (711) OE Headphones' : 'B&K 5128 OE Headphones'}.
       </p>
 
       <div className="input-group">
@@ -303,10 +333,28 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
           </div>
         </div>
 
+        {/* Hidden file input */}
+        <input 
+          type="file" 
+          ref={fileInputRef}
+          accept=".txt"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+        />
+        
+        {/* Styled upload button */}
+        <button 
+          type="button"
+          className="upload-btn"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Upload .txt File
+        </button>
+
         <textarea
           value={targetText}
           onChange={e => setTargetText(e.target.value)}
-          placeholder={`20 95.0\n100 98.0\n1000 100.0\n...`}
+          placeholder={`Or paste target data here...\n20 95.0\n100 98.0\n1000 100.0\n...`}
           rows={6}
           className="target-textarea"
         />

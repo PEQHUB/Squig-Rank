@@ -46,16 +46,19 @@ function loadTargets() {
       // Detect HP Targets
       if (fileName.includes('Harman 2018')) {
         baseName = 'Harman 2018';
-        variant = 'default';
+        variant = 'kb5';  // Harman 2018 is KB5/711-based, only for KEMAR measurements
         type = 'headphone';
       } 
-      else if (fileName.startsWith('5128 DF') || fileName.startsWith('KEMAR DF')) {
-        baseName = 'Diffuse Field (Tilted)';
+      else if (fileName.startsWith('5128 DF')) {
+        baseName = '5128 DF (Tilted)';
         type = 'headphone';
-        if (fileName.includes('5128')) variant = '5128';
-        else if (fileName.includes('KB50xx')) variant = 'kb5';
-        else if (fileName.includes('KB006x')) continue; // KB6 removed per request
-        else variant = 'default';
+        variant = '5128';
+      }
+      else if (fileName.startsWith('KEMAR DF')) {
+        if (fileName.includes('KB006x')) continue; // KB6 removed per request
+        baseName = 'KEMAR DF (Tilted)';
+        type = 'headphone';
+        variant = 'kb5';
       }
       // Detect IEM Targets
       else {

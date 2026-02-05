@@ -872,6 +872,30 @@ body {
   margin-bottom: 16px;
 }
 
+.upload-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px var(--accent-glow);
+  margin-bottom: 12px;
+}
+
+.upload-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--accent-glow);
+}
+
+.upload-btn:active {
+  transform: translateY(0);
+}
+
 .submit-btn {
   background: var(--accent-primary);
   color: white;

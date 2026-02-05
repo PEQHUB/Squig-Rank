@@ -1,3 +1,6 @@
+// Active view type for the UI
+export type ActiveViewType = 'iem' | 'hp_kb5' | 'hp_5128';
+
 // Phone book entry types from squig.link
 export interface PhoneBookBrand {
   name: string;
@@ -79,8 +82,9 @@ export interface CalculationResult {
   targetName: string;
   targetFileName?: string;
   targetFiles?: {
-    '711': string | null;
-    '5128': string | null;
+    '711'?: string | null;
+    '5128'?: string | null;
+    'kb5'?: string | null;
   };
   scoringMethod?: 'ppi' | 'rms';  // Now always PPI
   ranked: ScoredIEM[];  // All ranked IEMs for pagination
