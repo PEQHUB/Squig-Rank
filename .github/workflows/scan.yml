@@ -61,10 +61,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -m "Update scan results"
           git push
-      
-      - name: Trigger deploy
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          gh workflow run pages.yml
-        env:
-          GH_TOKEN: ${{ github.token }}
+        # Note: Pushing to main automatically triggers pages.yml via its 'on: push' trigger
