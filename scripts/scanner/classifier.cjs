@@ -55,7 +55,10 @@ function isHeadphone(name, subdomain) {
   }
 
   // 6. Domain-specific hints
-  if (lowerSub.includes('5128') || lowerSub.includes('headphone') || lowerSub === 'crinaclehp') {
+  if (lowerSub.includes('5128') || 
+      lowerSub.includes('headphone') || 
+      lowerSub === 'crinaclehp' ||
+      lowerSub === 'earphonesarchivehp') {
     score += 30;
   }
 

@@ -4,6 +4,19 @@ export type ActiveViewType = 'latest' | 'iem' | 'hp_kb5' | 'hp_5128';
 // Category filter for Latest tab
 export type CategoryFilter = 'iem' | 'hp_kb5' | 'hp_5128';
 
+// Target selection for IEMs
+export type IEMTarget = 'harman' | 'iso';
+
+// Target selection for KEMAR KB5 headphones
+export type KEMARTarget = 'harman' | 'kemar';
+
+// Combined target selection state
+export interface TargetSelection {
+  iem: IEMTarget;
+  hp_kb5: KEMARTarget;
+  // hp_5128 has only one target, no selection needed
+}
+
 // Phone book entry types from squig.link
 export interface PhoneBookBrand {
   name: string;
@@ -123,6 +136,8 @@ export interface LatestDevice extends ScoredIEM {
 export interface LatestResultsData {
   generatedAt: string;
   totalDevices: number;
+  category: string;
+  categoryLabel: string;
   devices: LatestDevice[];
 }
 

@@ -1155,6 +1155,67 @@ body {
    LATEST TAB STYLES
    ============================================ */
 
+/* Target Selectors */
+.target-selectors {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 16px 0;
+  padding: 12px 20px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.target-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.target-selector label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.target-selector select {
+  padding: 6px 12px;
+  padding-right: 28px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.target-selector select:hover {
+  border-color: var(--glass-border-light);
+  background-color: var(--glass-3);
+}
+
+.target-selector select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.target-selector select option {
+  background: #1a1a2e;
+  color: var(--text-primary);
+  padding: 8px;
+}
+
 /* Category Filter Buttons */
 .category-filters {
   display: flex;
@@ -1366,8 +1427,89 @@ body {
   box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
 }
 
+/* PPI Rank Badge */
+.rank-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  flex-shrink: 0;
+}
+
+/* First Seen Timer */
+.first-seen {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding: 2px 8px;
+  background: var(--glass-1);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+/* Empty State for Latest Tab */
+.latest-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.latest-empty-state p {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.latest-empty-state .empty-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Hide category filters on desktop - only show on mobile */
+@media (min-width: 769px) {
+  .category-filters.mobile-only {
+    display: none;
+  }
+  
+  /* All columns always active on desktop */
+  .latest-column {
+    opacity: 1;
+    border-style: solid;
+  }
+  
+  .latest-column.active {
+    border-color: var(--glass-border);
+    box-shadow: none;
+  }
+}
+
 /* Mobile Responsive for Latest Tab */
 @media (max-width: 768px) {
+  .target-selectors {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  
+  .target-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .target-selector select {
+    flex: 1;
+    max-width: 180px;
+  }
+  
   .category-filters {
     padding: 0 12px;
   }
@@ -1394,6 +1536,17 @@ body {
   .category-badge {
     font-size: 10px;
     padding: 3px 8px;
+  }
+  
+  /* Adjust rank badge and timer for mobile */
+  .rank-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  
+  .first-seen {
+    font-size: 10px;
+    padding: 2px 6px;
   }
 }
 

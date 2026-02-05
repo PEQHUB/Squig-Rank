@@ -5,16 +5,59 @@ const PAGE_SIZE = 25;
 
 interface SimilarityListProps {
   results: CalculationResult[];
-  latestDevices?: LatestDevice[];
   isLatestTab?: boolean;
   categoryFilter?: CategoryFilter;
+  latestIemDevices?: LatestDevice[];
+  latestKb5Devices?: LatestDevice[];
+  latest5128Devices?: LatestDevice[];
+}
+
+// Extended type with PPI rank for Latest tab
+interface LatestDeviceWithRank extends LatestDevice {
+  ppiRank: number;
+}
+
+// Format relative time since a date
+function formatTimeSince(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+  return `${Math.floor(diffDays / 365)}y ago`;
+}
+
+// Add PPI rank and sort chronologically (newest first)
+function prepareLatestDevices(devices: LatestDevice[]): LatestDeviceWithRank[] {
+  // Devices come sorted by PPI score - add rank based on that order
+  const withRank = devices.map((device, index) => ({
+    ...device,
+    ppiRank: index + 1
+  }));
+  
+  // Filter to only devices with firstSeen data
+  const withDates = withRank.filter(d => d.firstSeen);
+  
+  // Sort by firstSeen (newest first)
+  return withDates.sort((a, b) => {
+    const dateA = new Date(a.firstSeen!);
+    const dateB = new Date(b.firstSeen!);
+    return dateB.getTime() - dateA.getTime();
+  });
 }
 
 export default function SimilarityList({ 
   results, 
-  latestDevices, 
   isLatestTab = false, 
-  categoryFilter = 'iem' 
+  categoryFilter = 'iem',
+  latestIemDevices,
+  latestKb5Devices,
+  latest5128Devices
 }: SimilarityListProps) {
   const [activeColumn, setActiveColumn] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -69,12 +112,19 @@ export default function SimilarityList({
 
   // Render Latest tab
   if (isLatestTab) {
-    if (!latestDevices || latestDevices.length === 0) {
+    // Check if any data is available
+    const hasAnyData = (latestIemDevices && latestIemDevices.length > 0) ||
+                       (latestKb5Devices && latestKb5Devices.length > 0) ||
+                       (latest5128Devices && latest5128Devices.length > 0);
+    
+    if (!hasAnyData) {
       return <div className="loading-results">Loading latest devices...</div>;
     }
     
     return <LatestTabView 
-      devices={latestDevices} 
+      iemDevices={latestIemDevices || []}
+      kb5Devices={latestKb5Devices || []}
+      hp5128Devices={latest5128Devices || []}
       categoryFilter={categoryFilter} 
       searchTerm={searchTerm}
       onSearchChange={setSearchTerm}
@@ -382,14 +432,25 @@ function getScoreClass(score: number): string {
 // =============================================================================
 
 interface LatestTabViewProps {
-  devices: LatestDevice[];
+  iemDevices: LatestDevice[];
+  kb5Devices: LatestDevice[];
+  hp5128Devices: LatestDevice[];
   categoryFilter: CategoryFilter;
   searchTerm: string;
   onSearchChange: (term: string) => void;
 }
 
-function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: LatestTabViewProps) {
+function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, categoryFilter, searchTerm, onSearchChange }: LatestTabViewProps) {
   const isMobile = window.innerWidth <= 768;
+  
+  // Get devices for current category filter (for mobile view)
+  const getMobileDevices = (): LatestDevice[] => {
+    switch (categoryFilter) {
+      case 'iem': return iemDevices;
+      case 'hp_kb5': return kb5Devices;
+      case 'hp_5128': return hp5128Devices;
+    }
+  };
   
   return (
     <div className="similarity-list latest-tab">
@@ -406,14 +467,14 @@ function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: 
       
       {isMobile ? (
         <LatestMobileView
-          devices={devices}
-          categoryFilter={categoryFilter}
+          devices={getMobileDevices()}
           searchTerm={searchTerm}
         />
       ) : (
         <LatestThreeColumns
-          devices={devices}
-          categoryFilter={categoryFilter}
+          iemDevices={iemDevices}
+          kb5Devices={kb5Devices}
+          hp5128Devices={hp5128Devices}
           searchTerm={searchTerm}
         />
       )}
@@ -423,21 +484,20 @@ function LatestTabView({ devices, categoryFilter, searchTerm, onSearchChange }: 
 
 interface LatestMobileViewProps {
   devices: LatestDevice[];
-  categoryFilter: CategoryFilter;
   searchTerm: string;
 }
 
-function LatestMobileView({ devices, categoryFilter, searchTerm }: LatestMobileViewProps) {
+function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  // Filter devices by category
-  let filteredDevices = devices.filter(d => d.category === categoryFilter);
+  // Prepare devices with rank and sort chronologically
+  let preparedDevices = prepareLatestDevices(devices);
   
   // Filter by search term
   if (searchTerm && searchTerm.trim()) {
     const term = searchTerm.toLowerCase().trim();
-    filteredDevices = filteredDevices.filter(d => d.name.toLowerCase().includes(term));
+    preparedDevices = preparedDevices.filter(d => d.name.toLowerCase().includes(term));
   }
   
   const handleScroll = useCallback(() => {
@@ -446,12 +506,17 @@ function LatestMobileView({ devices, categoryFilter, searchTerm }: LatestMobileV
     const element = scrollRef.current;
     const scrolledToBottom = element.scrollHeight - element.scrollTop <= element.clientHeight * 1.5;
     
-    if (scrolledToBottom && displayCount < filteredDevices.length) {
-      setDisplayCount(prev => Math.min(prev + 25, filteredDevices.length));
+    if (scrolledToBottom && displayCount < preparedDevices.length) {
+      setDisplayCount(prev => Math.min(prev + 25, preparedDevices.length));
     }
-  }, [displayCount, filteredDevices.length]);
+  }, [displayCount, preparedDevices.length]);
   
-  const displayedDevices = filteredDevices.slice(0, displayCount);
+  const displayedDevices = preparedDevices.slice(0, displayCount);
+  
+  // Show empty state if no devices with firstSeen
+  if (preparedDevices.length === 0) {
+    return <LatestEmptyState category="devices" />;
+  }
   
   return (
     <div 
@@ -464,68 +529,78 @@ function LatestMobileView({ devices, categoryFilter, searchTerm }: LatestMobileV
           <LatestDeviceRow 
             key={`${device.id}-${index}`}
             device={device}
-            rank={index + 1}
           />
         ))}
       </ul>
-      {displayCount < filteredDevices.length && (
+      {displayCount < preparedDevices.length && (
         <div className="loading-more">Scroll for more...</div>
       )}
     </div>
   );
 }
 
+// Empty state component
+function LatestEmptyState({ category }: { category: string }) {
+  return (
+    <div className="latest-empty-state">
+      <p>No new {category} added yet.</p>
+      <p className="empty-hint">New devices will appear here as they are discovered.</p>
+    </div>
+  );
+}
+
 interface LatestThreeColumnsProps {
-  devices: LatestDevice[];
-  categoryFilter: CategoryFilter;
+  iemDevices: LatestDevice[];
+  kb5Devices: LatestDevice[];
+  hp5128Devices: LatestDevice[];
   searchTerm: string;
 }
 
-function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThreeColumnsProps) {
+function LatestThreeColumns({ iemDevices, kb5Devices, hp5128Devices, searchTerm }: LatestThreeColumnsProps) {
   const [currentPage, setCurrentPage] = useState<{iem: number, hp_kb5: number, hp_5128: number}>({
     iem: 1,
     hp_kb5: 1,
     hp_5128: 1
   });
   
-  const filterByCategory = (category: 'iem' | 'hp_kb5' | 'hp_5128') => {
-    let filtered = devices.filter(d => d.category === category);
+  // Prepare devices with rank and sort chronologically, then filter by search
+  const prepareAndFilter = (devices: LatestDevice[]): LatestDeviceWithRank[] => {
+    let prepared = prepareLatestDevices(devices);
     
     if (searchTerm && searchTerm.trim()) {
       const term = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(d => d.name.toLowerCase().includes(term));
+      prepared = prepared.filter(d => d.name.toLowerCase().includes(term));
     }
     
-    return filtered;
+    return prepared;
   };
   
-  const iemDevices = filterByCategory('iem');
-  const kb5Devices = filterByCategory('hp_kb5');
-  const hp5128Devices = filterByCategory('hp_5128');
+  const preparedIem = prepareAndFilter(iemDevices);
+  const preparedKb5 = prepareAndFilter(kb5Devices);
+  const prepared5128 = prepareAndFilter(hp5128Devices);
   
   const renderColumn = (
-    devices: LatestDevice[], 
+    devices: LatestDeviceWithRank[], 
     category: 'iem' | 'hp_kb5' | 'hp_5128',
-    label: string,
-    isActive: boolean
+    label: string
   ) => {
     const page = currentPage[category];
     const startIndex = (page - 1) * PAGE_SIZE;
     const endIndex = startIndex + PAGE_SIZE;
     const pageDevices = devices.slice(startIndex, endIndex);
     const totalPages = Math.ceil(devices.length / PAGE_SIZE);
+    const totalDevices = devices.length;
     
     return (
-      <div className={`latest-column ${isActive ? 'active' : 'empty'}`}>
-        <h3>{label}</h3>
-        {isActive ? (
+      <div className="latest-column active">
+        <h3>{label} ({totalDevices})</h3>
+        {totalDevices > 0 ? (
           <>
             <ul>
               {pageDevices.map((device, index) => (
                 <LatestDeviceRow
                   key={`${device.id}-${index}`}
                   device={device}
-                  rank={startIndex + index + 1}
                 />
               ))}
             </ul>
@@ -535,9 +610,9 @@ function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThree
                   onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.max(1, prev[category] - 1) }))}
                   disabled={page === 1}
                 >
-                  Previous
+                  Prev
                 </button>
-                <span>Page {page} of {totalPages}</span>
+                <span>{page} / {totalPages}</span>
                 <button 
                   onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.min(totalPages, prev[category] + 1) }))}
                   disabled={page === totalPages}
@@ -548,7 +623,7 @@ function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThree
             )}
           </>
         ) : (
-          <div className="empty-state"></div>
+          <LatestEmptyState category={label} />
         )}
       </div>
     );
@@ -556,29 +631,31 @@ function LatestThreeColumns({ devices, categoryFilter, searchTerm }: LatestThree
   
   return (
     <div className="latest-three-columns">
-      {renderColumn(iemDevices, 'iem', 'IEMs', categoryFilter === 'iem')}
-      {renderColumn(kb5Devices, 'hp_kb5', 'KEMAR (711) OE', categoryFilter === 'hp_kb5')}
-      {renderColumn(hp5128Devices, 'hp_5128', 'B&K 5128 OE', categoryFilter === 'hp_5128')}
+      {renderColumn(preparedIem, 'iem', 'IEMs')}
+      {renderColumn(preparedKb5, 'hp_kb5', 'KEMAR (711) OE')}
+      {renderColumn(prepared5128, 'hp_5128', 'B&K 5128 OE')}
     </div>
   );
 }
 
 interface LatestDeviceRowProps {
-  device: LatestDevice;
-  rank: number;
+  device: LatestDeviceWithRank;
 }
 
-function LatestDeviceRow({ device, rank }: LatestDeviceRowProps) {
+function LatestDeviceRow({ device }: LatestDeviceRowProps) {
   const isMobile = window.innerWidth <= 768;
   
   return (
     <li className={`quality-${device.quality} ${isMobile ? 'mobile-stack' : ''}`}>
       <div className="row-main">
-        <span className="rank">{rank}.</span>
         <span className="iem-name">{device.name}</span>
+        <span className="rank-badge">Rank {device.ppiRank}</span>
         <span className={`score ${getScoreClass(device.similarity)}`}>
           {device.similarity.toFixed(1)}
         </span>
+        {device.firstSeen && (
+          <span className="first-seen">{formatTimeSince(device.firstSeen)}</span>
+        )}
       </div>
       
       <div className="row-details">

@@ -199,13 +199,22 @@ function generateResults(phones, targetGroups) {
 }
 
 /**
- * Generate results_latest.json - merged results from all three categories
+ * Generate separate results_latest_*.json files per target combination
  * Pre-sorted by firstSeen for the "Latest" tab
+ * 
+ * Files generated:
+ * - results_latest_iem_harman.json     (IEMs with Harman 2019)
+ * - results_latest_iem_iso.json        (IEMs with ISO 11904-2 DF)
+ * - results_latest_hp_kb5_harman.json  (KEMAR KB5 with Harman 2018)
+ * - results_latest_hp_kb5_kemar.json   (KEMAR KB5 with KEMAR DF)
+ * - results_latest_hp_5128.json        (B&K 5128 with 5128 DF)
  */
 function generateLatestResults(phones, targetGroups) {
   cache.ensureDirs();
+  const fs = require('fs');
+  const path = require('path');
   
-  console.log(`\n--- Generating Latest Devices View ---`);
+  console.log(`\n--- Generating Latest Devices View (Per-Target Files) ---`);
   
   // Split phones by type
   const iems = phones.filter(p => p.type === 'iem');
@@ -216,64 +225,103 @@ function generateLatestResults(phones, targetGroups) {
   const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
   const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
   
-  // Merge all results with category metadata
-  const mergedDevices = [];
-  
-  // Add IEMs
-  for (const targetGroup of resultsIEM) {
-    for (const device of targetGroup.ranked) {
-      mergedDevices.push({
-        ...device,
-        category: 'iem',
-        categoryLabel: 'IEMs',
-        targetName: targetGroup.targetName
-      });
-    }
-  }
-  
-  // Add KEMAR KB5 headphones
-  for (const targetGroup of resultsHpKb5) {
-    for (const device of targetGroup.ranked) {
-      mergedDevices.push({
-        ...device,
-        category: 'hp_kb5',
-        categoryLabel: 'KEMAR (711) OE',
-        targetName: targetGroup.targetName
-      });
-    }
-  }
-  
-  // Add B&K 5128 headphones
-  for (const targetGroup of resultsHp5128) {
-    for (const device of targetGroup.ranked) {
-      mergedDevices.push({
-        ...device,
-        category: 'hp_5128',
-        categoryLabel: 'B&K 5128 OE',
-        targetName: targetGroup.targetName
-      });
-    }
-  }
-  
-  // Sort by firstSeen (newest first)
-  mergedDevices.sort((a, b) => {
-    if (!a.firstSeen) return 1;
-    if (!b.firstSeen) return -1;
-    return b.firstSeen.localeCompare(a.firstSeen);
-  });
-  
-  const output = {
-    generatedAt: new Date().toISOString(),
-    totalDevices: mergedDevices.length,
-    devices: mergedDevices
+  // Helper to sort by firstSeen (newest first)
+  const sortByFirstSeen = (devices) => {
+    return devices.sort((a, b) => {
+      if (!a.firstSeen) return 1;
+      if (!b.firstSeen) return -1;
+      return b.firstSeen.localeCompare(a.firstSeen);
+    });
   };
   
-  const latestPath = require('path').join(config.DATA_DIR, 'results_latest.json');
-  require('fs').writeFileSync(latestPath, JSON.stringify(output, null, 2));
+  // Helper to write a latest file
+  const writeLatestFile = (fileName, devices, category, categoryLabel) => {
+    const sorted = sortByFirstSeen(devices.map(d => ({
+      ...d,
+      category,
+      categoryLabel
+    })));
+    
+    const output = {
+      generatedAt: new Date().toISOString(),
+      totalDevices: sorted.length,
+      category,
+      categoryLabel,
+      devices: sorted
+    };
+    
+    const filePath = path.join(config.DATA_DIR, fileName);
+    fs.writeFileSync(filePath, JSON.stringify(output, null, 2));
+    console.log(`  ${fileName}: ${sorted.length} devices`);
+    return sorted.length;
+  };
   
-  console.log(`  Latest view: ${latestPath} (${mergedDevices.length} devices)`);
+  // Target name mappings
+  const targetMappings = {
+    iem: {
+      harman: 'Harman 2019 Target',
+      iso: 'ISO 11904-2 DF (Tilt_ -0.8dB_Oct, B₁₀₅ 3dB)-Compensated'
+    },
+    hp_kb5: {
+      harman: 'Harman 2018',
+      kemar: 'KEMAR DF (Tilted)'
+    },
+    hp_5128: {
+      default: '5128 DF (Tilted)'
+    }
+  };
   
-  return output;
+  let totalFiles = 0;
+  
+  // Generate IEM files (2 targets)
+  for (const [targetKey, targetName] of Object.entries(targetMappings.iem)) {
+    const targetGroup = resultsIEM.find(r => r.targetName === targetName);
+    if (targetGroup) {
+      writeLatestFile(
+        `results_latest_iem_${targetKey}.json`,
+        targetGroup.ranked,
+        'iem',
+        'IEMs'
+      );
+      totalFiles++;
+    } else {
+      console.log(`  Warning: Target "${targetName}" not found for IEMs`);
+    }
+  }
+  
+  // Generate KEMAR KB5 files (2 targets)
+  for (const [targetKey, targetName] of Object.entries(targetMappings.hp_kb5)) {
+    const targetGroup = resultsHpKb5.find(r => r.targetName === targetName);
+    if (targetGroup) {
+      writeLatestFile(
+        `results_latest_hp_kb5_${targetKey}.json`,
+        targetGroup.ranked,
+        'hp_kb5',
+        'KEMAR (711) OE'
+      );
+      totalFiles++;
+    } else {
+      console.log(`  Warning: Target "${targetName}" not found for KEMAR KB5`);
+    }
+  }
+  
+  // Generate B&K 5128 file (1 target)
+  const hp5128TargetGroup = resultsHp5128.find(r => r.targetName === targetMappings.hp_5128.default);
+  if (hp5128TargetGroup) {
+    writeLatestFile(
+      'results_latest_hp_5128.json',
+      hp5128TargetGroup.ranked,
+      'hp_5128',
+      'B&K 5128 OE'
+    );
+    totalFiles++;
+  } else {
+    console.log(`  Warning: Target "${targetMappings.hp_5128.default}" not found for B&K 5128`);
+  }
+  
+  console.log(`  Total: ${totalFiles} files generated`);
+  
+  return { filesGenerated: totalFiles };
 }
 
 // ============================================================================
