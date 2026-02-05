@@ -27,7 +27,7 @@ const config = require('./config.cjs');
  *       type: "iem"|"headphone",
  *       rig: "711"|"5128",
  *       pinna: string|null,
- *       firstSeen: string,   // YYYY-MM-DD - when first discovered
+ *       firstSeen: string,   // ISO 8601 timestamp - when first discovered
  *       lastSeen: string     // YYYY-MM-DD - last seen in scan
  *     }
  *   }
@@ -182,7 +182,7 @@ function getCachedEntryKeys(index) {
  * Update cache entry
  */
 function updateCacheEntry(index, key, entryData) {
-  const now = new Date().toISOString().split('T')[0];
+  const now = new Date().toISOString();  // Full ISO timestamp with time
   const existing = index.entries[key];
   
   index.entries[key] = {

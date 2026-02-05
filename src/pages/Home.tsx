@@ -16,10 +16,10 @@ export default function Home() {
   const [activeType, setActiveType] = useState<ActiveViewType>('latest');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('iem');
   
-  // Target selection state
+  // Target selection state - default to ISO/KEMAR DF
   const [targetSelection, setTargetSelection] = useState<TargetSelection>({
-    iem: 'harman',
-    hp_kb5: 'harman'
+    iem: 'iso',
+    hp_kb5: 'kemar'
   });
   
   const [loading, setLoading] = useState(true);
@@ -286,28 +286,42 @@ export default function Home() {
 
       {activeType === 'latest' && (
         <>
-          {/* Target Selectors */}
+          {/* Target Selectors - Toggle Sliders */}
           <div className="target-selectors">
-            <div className="target-selector">
-              <label>IEM Target:</label>
-              <select 
-                value={targetSelection.iem}
-                onChange={(e) => handleTargetChange('iem', e.target.value)}
-              >
-                <option value="harman">Harman 2019</option>
-                <option value="iso">ISO 11904-2 DF</option>
-              </select>
+            <div className="target-toggle">
+              <span className="target-label">IEM:</span>
+              <div className="toggle-switch">
+                <button 
+                  className={`toggle-option ${targetSelection.iem === 'harman' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('iem', 'harman')}
+                >
+                  Harman 2019
+                </button>
+                <button 
+                  className={`toggle-option ${targetSelection.iem === 'iso' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('iem', 'iso')}
+                >
+                  ISO 11904-2 DF
+                </button>
+              </div>
             </div>
             
-            <div className="target-selector">
-              <label>KEMAR Target:</label>
-              <select
-                value={targetSelection.hp_kb5}
-                onChange={(e) => handleTargetChange('hp_kb5', e.target.value)}
-              >
-                <option value="harman">Harman 2018</option>
-                <option value="kemar">KEMAR DF (Tilted)</option>
-              </select>
+            <div className="target-toggle">
+              <span className="target-label">KEMAR:</span>
+              <div className="toggle-switch">
+                <button 
+                  className={`toggle-option ${targetSelection.hp_kb5 === 'harman' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('hp_kb5', 'harman')}
+                >
+                  Harman 2018
+                </button>
+                <button 
+                  className={`toggle-option ${targetSelection.hp_kb5 === 'kemar' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('hp_kb5', 'kemar')}
+                >
+                  KEMAR DF
+                </button>
+              </div>
             </div>
           </div>
 

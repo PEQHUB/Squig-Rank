@@ -17,34 +17,60 @@ interface LatestDeviceWithRank extends LatestDevice {
   ppiRank: number;
 }
 
-// Format relative time since a date
+// Format relative time since a date (supports both ISO timestamps and date-only strings)
 function formatTimeSince(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 0) return 'Today';
+  // Less than 1 minute
+  if (diffMinutes < 1) return 'Just now';
+  
+  // Less than 1 hour - show minutes
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  
+  // Less than 24 hours - show hours
+  if (diffHours < 24) return `${diffHours}h ago`;
+  
+  // 1 day ago
   if (diffDays === 1) return 'Yesterday';
+  
+  // Less than a week
   if (diffDays < 7) return `${diffDays}d ago`;
+  
+  // Less than a month
   if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  
+  // Less than a year
   if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+  
   return `${Math.floor(diffDays / 365)}y ago`;
 }
 
 // Add PPI rank and sort chronologically (newest first)
 function prepareLatestDevices(devices: LatestDevice[]): LatestDeviceWithRank[] {
-  // Devices come sorted by PPI score - add rank based on that order
-  const withRank = devices.map((device, index) => ({
-    ...device,
-    ppiRank: index + 1
-  }));
+  // Sort by PPI score (similarity) to establish true rankings
+  const sortedByPPI = [...devices].sort((a, b) => b.similarity - a.similarity);
   
-  // Filter to only devices with firstSeen data
-  const withDates = withRank.filter(d => d.firstSeen);
+  // Create a map of device ID to its true PPI rank
+  const rankMap = new Map<string, number>();
+  sortedByPPI.forEach((device, index) => {
+    rankMap.set(device.id, index + 1);
+  });
+  
+  // Filter to only devices with firstSeen, and add their true PPI rank
+  const withRank = devices
+    .filter(d => d.firstSeen)
+    .map(device => ({
+      ...device,
+      ppiRank: rankMap.get(device.id) || 0
+    }));
   
   // Sort by firstSeen (newest first)
-  return withDates.sort((a, b) => {
+  return withRank.sort((a, b) => {
     const dateA = new Date(a.firstSeen!);
     const dateB = new Date(b.firstSeen!);
     return dateB.getTime() - dateA.getTime();
@@ -312,32 +338,23 @@ function TargetColumn({
   const hasMore = filteredItems.length > showCount;
   const totalAvailable = filteredItems.length;
 
+  // Only show target downloads for IEM tab (has both 711 and 5128 targets)
+  const showTargetDownloads = data.targetFiles && data.targetFiles['711'] && data.targetFiles['5128'];
+
   return (
     <div className="target-column">
       <h2>{data.targetName}</h2>
       
-      <div className="target-downloads">
-        {data.targetFiles && data.targetFiles['711'] && (
-          <a href={`targets/${data.targetFiles['711']}`} download className="target-download-btn" title="Download 711 Target">
+      {showTargetDownloads && (
+        <div className="target-downloads">
+          <a href={`targets/${data.targetFiles!['711']}`} download className="target-download-btn" title="Download 711 Target">
             711 Target
           </a>
-        )}
-        {data.targetFiles && data.targetFiles['5128'] && (
-          <a href={`targets/${data.targetFiles['5128']}`} download className="target-download-btn" title="Download 5128 Target">
+          <a href={`targets/${data.targetFiles!['5128']}`} download className="target-download-btn" title="Download 5128 Target">
             5128 Target
           </a>
-        )}
-        {data.targetFiles && data.targetFiles['kb5'] && (
-          <a href={`targets/${data.targetFiles['kb5']}`} download className="target-download-btn" title="Download KB5 (711) Target">
-            Target
-          </a>
-        )}
-        {!data.targetFiles && data.targetFileName && (
-           <a href={`targets/${data.targetFileName}`} download className="target-download-btn">
-             Download Target
-           </a>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="filter-controls">
         {/* Clone Coupler Toggle */}

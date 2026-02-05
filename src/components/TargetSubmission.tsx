@@ -312,25 +312,27 @@ export function TargetSubmission({ onCalculate, isRanking, activeType }: Props) 
             className="target-name-input"
             style={{ flex: 1 }}
           />
-          <div className="rig-selector">
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', marginRight: '8px' }}>Target is for:</span>
-            <div className="rig-toggle">
-              <button 
-                type="button"
-                className={`rig-btn ${targetType === '711' ? 'active' : ''}`}
-                onClick={() => setTargetType('711')}
-              >
-                711
-              </button>
-              <button 
-                type="button"
-                className={`rig-btn ${targetType === '5128' ? 'active' : ''}`}
-                onClick={() => setTargetType('5128')}
-              >
-                5128
-              </button>
+          {activeType === 'iem' && (
+            <div className="rig-selector">
+              <span style={{ fontSize: '13px', color: 'var(--text-secondary)', marginRight: '8px' }}>Target is for:</span>
+              <div className="rig-toggle">
+                <button 
+                  type="button"
+                  className={`rig-btn ${targetType === '711' ? 'active' : ''}`}
+                  onClick={() => setTargetType('711')}
+                >
+                  711
+                </button>
+                <button 
+                  type="button"
+                  className={`rig-btn ${targetType === '5128' ? 'active' : ''}`}
+                  onClick={() => setTargetType('5128')}
+                >
+                  5128
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Hidden file input */}

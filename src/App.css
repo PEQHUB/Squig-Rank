@@ -56,9 +56,9 @@ body {
 
 /* Main container */
 .home {
-  max-width: 1800px;
+  max-width: 2400px;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 16px 48px;
   position: relative;
   z-index: 1;
 }
@@ -192,8 +192,8 @@ body {
   background: var(--glass-2);
   backdrop-filter: blur(40px) saturate(150%);
   -webkit-backdrop-filter: blur(40px) saturate(150%);
-  border-radius: 28px;
-  padding: 32px;
+  border-radius: 20px;
+  padding: 16px 18px;
   border: 1px solid var(--glass-border);
   position: relative;
   overflow: hidden;
@@ -239,13 +239,13 @@ body {
 }
 
 .target-column h2 {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: var(--text-primary);
   text-align: center;
   letter-spacing: -0.3px;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--glass-border);
   position: relative;
   z-index: 1;
@@ -256,8 +256,8 @@ body {
 .filter-controls {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 8px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
@@ -265,15 +265,15 @@ body {
 .toggle-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 100px;
   background: var(--glass-1);
   border: 1px solid var(--glass-border);
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
   position: relative;
@@ -324,19 +324,31 @@ body {
 .target-column li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  margin: 4px 0;
-  font-size: 15px;
-  border-radius: 14px;
+  gap: 8px;
+  padding: 7px 10px;
+  margin: 1px 0;
+  font-size: 14px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   position: relative;
   background: transparent;
   border: 1px solid transparent;
+  flex-wrap: nowrap;
 }
 
-.row-main, .row-details {
-  display: contents;
+.row-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.row-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .target-column li:hover {
@@ -347,9 +359,9 @@ body {
 
 /* Rank number */
 .rank {
-  min-width: 32px;
+  min-width: 26px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -362,18 +374,19 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 15px;
+  font-size: 13px;
+  min-width: 0;
 }
 
 /* Score with color coding */
 .score {
   font-weight: 700;
-  min-width: 52px;
+  min-width: 44px;
   text-align: right;
-  font-size: 15px;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
-  padding: 4px 10px;
-  border-radius: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
   background: var(--glass-1);
 }
 
@@ -456,15 +469,15 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 14px;
-  font-size: 11px;
+  padding: 4px 10px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   color: var(--text-primary);
   background: var(--glass-2);
   border: 1px solid var(--glass-border);
-  border-radius: 8px;
+  border-radius: 6px;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -503,14 +516,14 @@ body {
 .load-more-btn {
   display: block;
   width: 100%;
-  margin-top: 20px;
-  padding: 14px 24px;
-  font-size: 14px;
+  margin-top: 10px;
+  padding: 10px 18px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
   background: var(--glass-2);
   border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.25s ease;
   position: relative;
@@ -583,18 +596,22 @@ body {
     justify-content: center;
   }
 
+  .target-column {
+    padding: 14px 12px;
+  }
+
   .target-column li.mobile-stack {
     flex-direction: column;
     align-items: stretch;
-    padding: 12px 14px;
-    gap: 12px;
+    padding: 10px 12px;
+    gap: 8px;
   }
 
   .row-main {
     display: flex;
     align-items: center;
     width: 100%;
-    gap: 10px;
+    gap: 8px;
   }
 
   .row-details {
@@ -602,36 +619,36 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: 8px;
-    padding-top: 10px;
+    gap: 6px;
+    padding-top: 8px;
     border-top: 1px solid var(--glass-border);
   }
 
   .rank {
-    min-width: 24px;
-    font-size: 13px;
+    min-width: 22px;
+    font-size: 12px;
   }
 
   .iem-name {
-    font-size: 15px;
+    font-size: 14px;
     min-width: 0;
     margin-right: auto;
     font-weight: 600;
   }
 
   .score {
-    min-width: 50px;
-    font-size: 14px;
-    padding: 4px 8px;
+    min-width: 44px;
+    font-size: 13px;
+    padding: 3px 6px;
     text-align: right;
   }
 
   .tag {
-    font-size: 10px;
-    width: 75px;
+    font-size: 9px;
+    width: 60px;
     height: auto;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 3px 6px;
+    border-radius: 5px;
     margin-left: 0;
     display: inline-flex;
   }
@@ -645,9 +662,9 @@ body {
   }
   
   .view-graph-btn {
-    padding: 7px 14px;
-    font-size: 11px;
-    letter-spacing: 0.5px;
+    padding: 5px 10px;
+    font-size: 10px;
+    letter-spacing: 0.4px;
   }
 
   .nav-button {
@@ -688,8 +705,8 @@ body {
 .target-downloads {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .target-download-btn {
@@ -978,13 +995,13 @@ body {
 
 /* Rig Badge */
 .rig-badge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-left: 8px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  margin-left: 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   vertical-align: middle;
 }
 
@@ -1123,14 +1140,14 @@ body {
    TAGS (Genuine vs Clone)
    ============================================ */
 .tag {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.5px;
-  margin-left: 12px;
-  width: 75px; /* Fixed width to prevent layout shifts */
+  padding: 3px 6px;
+  border-radius: 5px;
+  letter-spacing: 0.4px;
+  margin-left: 0;
+  width: 60px; /* Fixed width to prevent layout shifts */
   text-align: center;
   border: 1px solid transparent;
   display: inline-flex;
@@ -1155,13 +1172,13 @@ body {
    LATEST TAB STYLES
    ============================================ */
 
-/* Target Selectors */
+/* Target Selectors - Toggle Switches */
 .target-selectors {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 32px;
   margin: 16px 0;
-  padding: 12px 20px;
+  padding: 12px 24px;
   background: var(--glass-1);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
@@ -1169,51 +1186,48 @@ body {
   -webkit-backdrop-filter: blur(20px);
 }
 
-.target-selector {
+.target-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.target-selector label {
+.target-label {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
 }
 
-.target-selector select {
-  padding: 6px 12px;
-  padding-right: 28px;
-  background: var(--glass-2);
+.toggle-switch {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 100px;
+  padding: 3px;
   border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
+}
+
+.toggle-option {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 100px;
   cursor: pointer;
   transition: all 0.2s ease;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
+  white-space: nowrap;
 }
 
-.target-selector select:hover {
-  border-color: var(--glass-border-light);
-  background-color: var(--glass-3);
-}
-
-.target-selector select:focus {
-  outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.target-selector select option {
-  background: #1a1a2e;
+.toggle-option:hover {
   color: var(--text-primary);
-  padding: 8px;
+}
+
+.toggle-option.active {
+  background: var(--accent-primary);
+  color: white;
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 /* Category Filter Buttons */
@@ -1300,7 +1314,7 @@ body {
 .latest-three-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 24px;
   margin-top: 20px;
 }
 
@@ -1308,7 +1322,7 @@ body {
   background: var(--glass-1);
   border: 1px solid var(--glass-border);
   border-radius: 24px;
-  padding: 20px;
+  padding: 24px;
   min-height: 500px;
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
@@ -1427,6 +1441,43 @@ body {
   box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
 }
 
+/* Latest Tab Row Layout - Single Line on Desktop */
+.latest-tab .target-column li,
+.latest-column li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  flex-wrap: nowrap;
+}
+
+.latest-tab .row-main,
+.latest-column .row-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.latest-tab .row-details,
+.latest-column .row-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.latest-tab .iem-name,
+.latest-column .iem-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* PPI Rank Badge */
 .rank-badge {
   font-size: 10px;
@@ -1491,6 +1542,37 @@ body {
   }
 }
 
+/* Screens smaller than 1920px - tighter layout */
+@media (max-width: 1919px) and (min-width: 769px) {
+  .home {
+    max-width: 100%;
+    padding: 16px 24px;
+  }
+  
+  .latest-three-columns {
+    gap: 16px;
+  }
+  
+  .latest-column {
+    padding: 16px;
+  }
+  
+  .latest-tab .row-main,
+  .latest-column .row-main {
+    gap: 8px;
+  }
+  
+  .rank-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  
+  .first-seen {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
 /* Mobile Responsive for Latest Tab */
 @media (max-width: 768px) {
   .target-selectors {
@@ -1500,14 +1582,20 @@ body {
     margin: 12px 0;
   }
   
-  .target-selector {
+  .target-toggle {
     width: 100%;
     justify-content: space-between;
   }
   
-  .target-selector select {
+  .toggle-switch {
     flex: 1;
-    max-width: 180px;
+    max-width: 220px;
+    justify-content: center;
+  }
+  
+  .toggle-option {
+    font-size: 11px;
+    padding: 6px 10px;
   }
   
   .category-filters {
