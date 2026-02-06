@@ -1016,6 +1016,7 @@ body {
 .type-tabs {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-bottom: 20px;
   background: var(--glass-1);
@@ -1039,6 +1040,11 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .tab-btn:hover {
