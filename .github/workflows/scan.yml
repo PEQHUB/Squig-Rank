@@ -2,8 +2,8 @@ name: Scan IEMs
 
 on:
   schedule:
-    # Run every 30 minutes
-    - cron: '*/30 * * * *'
+    # Run every 20 minutes
+    - cron: '*/20 * * * *'
   workflow_dispatch:
     inputs:
       force_rescan:
