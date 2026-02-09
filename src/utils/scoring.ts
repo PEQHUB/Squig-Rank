@@ -178,7 +178,6 @@ export async function scoreAllDevices(
   const data = await loadCurveData();
   const freqs = data.frequencies;
   const comp711 = data.compensation711;
-  const comp5128 = data.compensation5128;
 
   // Helper to generate compensated target
   const getCompensatedTarget = (compArray: number[] | undefined): FrequencyCurve => {
@@ -195,7 +194,6 @@ export async function scoreAllDevices(
 
   const targetBase = targetCurve;
   const targetPlus711Comp = getCompensatedTarget(comp711);
-  const targetPlus5128Comp = getCompensatedTarget(comp5128);
 
   // Determine what type of entries to include
   const isHeadphoneMode = activeType === 'hp_kb5' || activeType === 'hp_5128';
