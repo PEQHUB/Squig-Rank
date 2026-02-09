@@ -480,42 +480,94 @@ interface LatestMobileViewProps {
 
 function LatestMobileView({ devices, searchTerm, onFindSimilar }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
+  const [showCloneCoupler, setShowCloneCoupler] = useState(true);
+  const [hideDuplicates, setHideDuplicates] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive sort/rank computation
   const rankedDevices = useMemo(() => prepareLatestDevices(devices), [devices]);
 
-  // Filter by search term
+  // Filter by search term, quality, and duplicates
   const preparedDevices = useMemo(() => {
-    if (!searchTerm || !searchTerm.trim()) return rankedDevices;
-    const term = searchTerm.toLowerCase().trim();
-    return rankedDevices.filter(d => d.name.toLowerCase().includes(term));
-  }, [rankedDevices, searchTerm]);
-  
+    let filtered = rankedDevices;
+
+    // Search filter
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(d => d.name.toLowerCase().includes(term));
+    }
+
+    // Quality filter (Clone Coupler)
+    if (!showCloneCoupler) {
+      filtered = filtered.filter(d => d.quality === 'high');
+    }
+
+    // Duplicate filter
+    if (hideDuplicates) {
+      const seen = new Map<string, LatestDeviceWithRank>();
+      for (const device of filtered) {
+        const normalizedName = device.name.toLowerCase().trim();
+        const rigKey = device.rig || '711';
+        const key = `${normalizedName}::${rigKey}`;
+        const existing = seen.get(key);
+        if (!existing) {
+          seen.set(key, device);
+        } else {
+          const scoreDiff = device.similarity - existing.similarity;
+          if (scoreDiff > 0.0001) {
+            seen.set(key, device);
+          } else if (Math.abs(scoreDiff) < 0.0001 && device.quality === 'high' && existing.quality !== 'high') {
+            seen.set(key, device);
+          }
+        }
+      }
+      filtered = Array.from(seen.values());
+    }
+
+    return filtered;
+  }, [rankedDevices, searchTerm, showCloneCoupler, hideDuplicates]);
+
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
-    
+
     const element = scrollRef.current;
     const scrolledToBottom = element.scrollHeight - element.scrollTop <= element.clientHeight * 1.5;
-    
+
     if (scrolledToBottom && displayCount < preparedDevices.length) {
       setDisplayCount(prev => Math.min(prev + 25, preparedDevices.length));
     }
   }, [displayCount, preparedDevices.length]);
-  
+
   const displayedDevices = preparedDevices.slice(0, displayCount);
-  
+
   // Show empty state if no devices with firstSeen
-  if (preparedDevices.length === 0) {
+  if (preparedDevices.length === 0 && !searchTerm?.trim() && showCloneCoupler && !hideDuplicates) {
     return <LatestEmptyState category="devices" />;
   }
-  
+
   return (
-    <div 
-      className="latest-single-column" 
+    <div
+      className="latest-single-column"
       ref={scrollRef}
       onScroll={handleScroll}
     >
+      <div className="filter-controls">
+        <div
+          className={`toggle-pill clone-toggle ${showCloneCoupler ? 'active' : ''}`}
+          onClick={() => setShowCloneCoupler(prev => !prev)}
+        >
+          <span>{showCloneCoupler ? 'Show' : 'Hide'} Clone Coupler</span>
+          {showCloneCoupler && <span className="toggle-icon">&#10003;</span>}
+        </div>
+        <div
+          className={`toggle-pill ${hideDuplicates ? 'active' : ''}`}
+          onClick={() => setHideDuplicates(prev => !prev)}
+        >
+          <span>Hide Duplicates</span>
+          {hideDuplicates && <span className="toggle-icon">&#10003;</span>}
+        </div>
+      </div>
+
       <ul>
         {displayedDevices.map((device, index) => (
           <LatestDeviceRow
@@ -592,6 +644,14 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     iem: PAGE_SIZE, hp_kb5: PAGE_SIZE, hp_5128: PAGE_SIZE, iem_5128: PAGE_SIZE
   });
 
+  // Latest column filter state
+  const [latestShowClone, setLatestShowClone] = useState<Record<string, boolean>>({
+    iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
+  });
+  const [latestHideDupes, setLatestHideDupes] = useState<Record<string, boolean>>({
+    iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
+  });
+
   // Memoize expensive sort/rank computation per device array
   const memoizedPrepare = useCallback((devices: LatestDevice[]) => prepareLatestDevices(devices), []);
 
@@ -611,16 +671,65 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     category: string,
     label: string
   ) => {
+    const showClone = latestShowClone[category] ?? true;
+    const hideDupes = latestHideDupes[category] ?? true;
+
+    // Apply quality filter (Clone Coupler)
+    let filteredDevices = showClone
+      ? devices
+      : devices.filter(d => d.quality === 'high');
+
+    // Apply duplicate filter
+    if (hideDupes) {
+      const seen = new Map<string, LatestDeviceWithRank>();
+      for (const device of filteredDevices) {
+        const normalizedName = device.name.toLowerCase().trim();
+        const rigKey = device.rig || '711';
+        const key = `${normalizedName}::${rigKey}`;
+        const existing = seen.get(key);
+        if (!existing) {
+          seen.set(key, device);
+        } else {
+          // Keep the one with higher score, or prefer high quality as tiebreaker
+          const scoreDiff = device.similarity - existing.similarity;
+          if (scoreDiff > 0.0001) {
+            seen.set(key, device);
+          } else if (Math.abs(scoreDiff) < 0.0001 && device.quality === 'high' && existing.quality !== 'high') {
+            seen.set(key, device);
+          }
+        }
+      }
+      filteredDevices = Array.from(seen.values());
+    }
+
     const page = currentPage[category] || 1;
     const startIndex = (page - 1) * PAGE_SIZE;
     const endIndex = startIndex + PAGE_SIZE;
-    const pageDevices = devices.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(devices.length / PAGE_SIZE);
-    const totalDevices = devices.length;
+    const pageDevices = filteredDevices.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(filteredDevices.length / PAGE_SIZE);
+    const totalDevices = filteredDevices.length;
 
     return (
       <div className="latest-column active">
         <h3>{label} ({totalDevices})</h3>
+
+        <div className="filter-controls">
+          <div
+            className={`toggle-pill clone-toggle ${showClone ? 'active' : ''}`}
+            onClick={() => setLatestShowClone(prev => ({ ...prev, [category]: !(prev[category] ?? true) }))}
+          >
+            <span>{showClone ? 'Show' : 'Hide'} Clone Coupler</span>
+            {showClone && <span className="toggle-icon">&#10003;</span>}
+          </div>
+          <div
+            className={`toggle-pill ${hideDupes ? 'active' : ''}`}
+            onClick={() => setLatestHideDupes(prev => ({ ...prev, [category]: !(prev[category] ?? true) }))}
+          >
+            <span>Hide Duplicates</span>
+            {hideDupes && <span className="toggle-icon">&#10003;</span>}
+          </div>
+        </div>
+
         {totalDevices > 0 ? (
           <>
             <ul>
