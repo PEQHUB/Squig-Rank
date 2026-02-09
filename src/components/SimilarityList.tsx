@@ -452,6 +452,7 @@ function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, 
           <LatestMobileView
             devices={getMobileDevices()}
             searchTerm={searchTerm}
+            onFindSimilar={onFindSimilar}
           />
         )
       ) : (
@@ -474,9 +475,10 @@ function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, 
 interface LatestMobileViewProps {
   devices: LatestDevice[];
   searchTerm: string;
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
-function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
+function LatestMobileView({ devices, searchTerm, onFindSimilar }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -520,6 +522,7 @@ function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
             key={`${device.id}-${index}`}
             device={device}
             animIndex={index}
+            onFindSimilar={onFindSimilar}
           />
         ))}
       </ul>
@@ -626,6 +629,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
                   key={`${device.id}-${index}`}
                   device={device}
                   animIndex={index}
+                  onFindSimilar={onFindSimilar}
                 />
               ))}
             </ul>
@@ -734,9 +738,10 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
 interface LatestDeviceRowProps {
   device: LatestDeviceWithRank;
   animIndex?: number;
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
-function LatestDeviceRow({ device, animIndex }: LatestDeviceRowProps) {
+function LatestDeviceRow({ device, animIndex, onFindSimilar }: LatestDeviceRowProps) {
   const isMobile = useIsMobile();
 
   return (
@@ -754,7 +759,7 @@ function LatestDeviceRow({ device, animIndex }: LatestDeviceRowProps) {
           <span className="first-seen">{formatTimeSince(device.firstSeen)}</span>
         )}
       </div>
-      
+
       <div className="row-details">
         {device.rig && (
           <span className={`rig-badge rig-${device.rig}`}>
@@ -773,6 +778,15 @@ function LatestDeviceRow({ device, animIndex }: LatestDeviceRowProps) {
         >
           View Graph
         </a>
+        {onFindSimilar && (
+          <button
+            className="find-similar-btn"
+            onClick={() => onFindSimilar(device)}
+            title="Find IEMs similar to this one"
+          >
+            Find Similar
+          </button>
+        )}
       </div>
     </li>
   );
