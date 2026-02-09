@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { SimilarityList } from '../components/SimilarityList';
 import { TargetPanel } from '../components/TargetPanel';
 import { CATEGORY_DEFAULTS } from '../utils/shelfFilter';
+import { loadCurveData } from '../utils/scoring';
 import type {
   CalculationResult,
   LatestResultsData,
@@ -284,12 +285,24 @@ export default function Home() {
     }
   };
 
-  const handleFindSimilar = useCallback((iem: ScoredIEM) => {
+  const handleFindSimilar = useCallback(async (iem: ScoredIEM) => {
+    // LatestDevice objects from pre-scored JSON don't have frequencyData,
+    // so we look up the device's raw db array from the curve data cache.
+    let db = iem.frequencyData?.db;
+    if (!db) {
+      const curveData = await loadCurveData();
+      const entry = curveData.entries.find(e => e.id === iem.id);
+      if (!entry) {
+        console.error('Could not find curve data for device:', iem.id);
+        return;
+      }
+      db = entry.db;
+    }
     setFindSimilarDevice({
       id: iem.id,
       name: iem.name,
       rig: iem.rig || '711',
-      db: iem.frequencyData.db,
+      db,
     });
     setPanelTab('similar');
   }, []);
