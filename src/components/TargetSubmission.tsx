@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { scoreAllDevices } from '../utils/scoring';
 import type { CalculationResult, CategoryFilter } from '../types';
@@ -37,7 +37,7 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
     e.target.value = '';
   };
 
-  const handleRank = async () => {
+  const handleRank = useCallback(async () => {
     if (!targetText.trim()) {
       setError('Please paste target data first');
       return;
@@ -54,7 +54,6 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
       }
 
       // 2. Score all devices using shared pipeline
-      // Map category to the activeType expected by scoreAllDevices
       const result = await scoreAllDevices(
         parsedTarget,
         targetType,
@@ -70,32 +69,24 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [targetText, targetType, category, targetName, onCalculate]);
 
   const handleReset = () => {
     onCalculate(null);
   };
 
+  // Auto-re-rank when rig type or category changes while ranking is active
   useEffect(() => {
     if (isRanking && targetText.trim()) {
       handleRank();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetType, category]);
-
-  // Determine active view label
-  const viewLabel = category === 'iem' ? 'IEMs' :
-                    category === 'iem_5128' ? 'B&K 5128 IEMs' :
-                    category === 'hp_kb5' ? 'KB5 (711) OE Headphones' :
-                    'B&K 5128 OE Headphones';
 
   const isIemCategory = category === 'iem' || category === 'iem_5128';
 
   return (
     <div className="custom-target-upload">
-      <p className="subtitle" style={{marginBottom: '12px'}}>
-        Paste your custom target curve to instantly rank all {viewLabel}.
-      </p>
-
       <div className="input-group">
         <div style={{ display: 'flex', gap: '12px' }}>
           <input
@@ -151,7 +142,7 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
           value={targetText}
           onChange={e => setTargetText(e.target.value)}
           placeholder={`Or paste target data here...\n20 95.0\n100 98.0\n1000 100.0\n...`}
-          rows={6}
+          rows={2}
           className="target-textarea"
         />
       </div>
@@ -161,7 +152,7 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
       <div className="submission-actions">
         {isRanking && (
            <button className="reset-btn" onClick={handleReset}>
-             Clear & Show Standard Rankings
+             Clear
            </button>
         )}
 
@@ -170,7 +161,7 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
           onClick={handleRank}
           disabled={loading}
         >
-          {loading ? 'Ranking...' : (isRanking ? 'Update Rankings' : `Rank All ${isIemCategory ? 'IEMs' : 'Headphones'}`)}
+          {loading ? 'Ranking...' : (isRanking ? 'Re-Rank' : 'Rank')}
         </button>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { DFTargetBuilder } from './DFTargetBuilder';
 import { TargetSubmission } from './TargetSubmission';
 import type {
   BuilderParams,
+  BuilderResults,
   BuilderState,
   CalculationResult,
   CategoryFilter,
@@ -19,12 +20,12 @@ interface Props {
   measurementMode: MeasurementMode;
   onModeChange: (mode: MeasurementMode) => void;
   builderState: BuilderState;
-  builderHasResults: { iem: boolean; hp_kb5: boolean; hp_5128: boolean; iem_5128: boolean };
+  builderResults: BuilderResults;
   onBuilderParamsChange: (category: CategoryFilter, params: BuilderParams) => void;
   onBuilderCalculate: (category: CategoryFilter, result: CalculationResult) => void;
   onBuilderReset: (category: CategoryFilter) => void;
   onUploadCalculate: (result: CalculationResult | null) => void;
-  isUploadRanking: boolean;
+  customResult: CalculationResult | null;
 }
 
 // ============================================================================
@@ -35,12 +36,12 @@ export function TargetPanel({
   measurementMode,
   onModeChange,
   builderState,
-  builderHasResults,
+  builderResults,
   onBuilderParamsChange,
   onBuilderCalculate,
   onBuilderReset,
   onUploadCalculate,
-  isUploadRanking,
+  customResult,
 }: Props) {
   const [activeTab, setActiveTab] = useState<PanelTab>('build');
 
@@ -59,18 +60,37 @@ export function TargetPanel({
 
   const effectiveCategory: CategoryFilter = builderCategory;
 
+  const siblingCategory: CategoryFilter = measurementMode === 'ie'
+    ? (effectiveCategory === 'iem' ? 'iem_5128' : 'iem')
+    : (effectiveCategory === 'hp_kb5' ? 'hp_5128' : 'hp_kb5');
+  const siblingParams = builderState[siblingCategory];
+  const siblingHasResults = builderResults[siblingCategory] !== null;
+
   const currentParams = builderState[effectiveCategory];
-  const currentHasResults = builderHasResults[effectiveCategory];
+  const currentHasResults = builderResults[effectiveCategory] !== null;
+  const isUploadRanking = customResult !== null;
+
+  // Determine active ranking indicator text
+  const activeRankingName = (() => {
+    if (activeTab === 'build' && currentHasResults) {
+      return builderResults[effectiveCategory]?.targetName ?? null;
+    }
+    if (activeTab === 'upload' && isUploadRanking) {
+      return customResult?.targetName ?? null;
+    }
+    return null;
+  })();
 
   return (
     <div className="target-panel">
-      {/* Header row: title + mode toggle + tabs */}
+      {/* Header row: title + labeled toggle groups */}
       <div className="target-panel-header">
         <h3>Live Ranking</h3>
 
         <div className="header-controls">
           {/* OE/IE Mode Toggle */}
-          <div className="mode-toggle-inline">
+          <div className="labeled-toggle">
+            <span className="toggle-label">Type</span>
             <div className="toggle-switch">
               <button
                 className={`toggle-option ${measurementMode === 'ie' ? 'active' : ''}`}
@@ -88,7 +108,8 @@ export function TargetPanel({
           </div>
 
           {/* Category picker — always visible */}
-          <div className="category-picker-inline">
+          <div className="labeled-toggle">
+            <span className="toggle-label">Rig</span>
             <div className="toggle-switch">
               {measurementMode === 'ie' ? (
                 <>
@@ -125,22 +146,33 @@ export function TargetPanel({
           </div>
 
           {/* Build / Upload Tab Switcher */}
-          <div className="target-panel-tabs">
-            <button
-              className={`panel-tab ${activeTab === 'build' ? 'active' : ''}`}
-              onClick={() => setActiveTab('build')}
-            >
-              Build
-            </button>
-            <button
-              className={`panel-tab ${activeTab === 'upload' ? 'active' : ''}`}
-              onClick={() => setActiveTab('upload')}
-            >
-              Upload
-            </button>
+          <div className="labeled-toggle">
+            <span className="toggle-label">Mode</span>
+            <div className="target-panel-tabs">
+              <button
+                className={`panel-tab ${activeTab === 'build' ? 'active' : ''}`}
+                onClick={() => setActiveTab('build')}
+              >
+                Build
+              </button>
+              <button
+                className={`panel-tab ${activeTab === 'upload' ? 'active' : ''}`}
+                onClick={() => setActiveTab('upload')}
+              >
+                Upload
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Active ranking indicator */}
+      {activeRankingName && (
+        <div className="ranking-indicator">
+          <span className="ranking-indicator-dot" />
+          Ranking by: {activeRankingName}
+        </div>
+      )}
 
       {/* Tab Content */}
       {activeTab === 'build' ? (
@@ -148,11 +180,14 @@ export function TargetPanel({
 
           <DFTargetBuilder
             category={effectiveCategory}
+            siblingCategory={siblingCategory}
+            siblingParams={siblingParams}
             params={currentParams}
             onParamsChange={(p) => onBuilderParamsChange(effectiveCategory, p)}
             onCalculate={onBuilderCalculate}
             onReset={onBuilderReset}
             isRanking={currentHasResults}
+            isSiblingRanking={siblingHasResults}
           />
         </div>
       ) : (

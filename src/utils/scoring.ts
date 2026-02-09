@@ -92,7 +92,7 @@ export async function loadCurveData(): Promise<LoadedCurveData> {
 
   // Try MessagePack first (smaller, faster)
   try {
-    const response = await fetch(`./data/curves.msgpack?v=${Date.now()}`);
+    const response = await fetch('./data/curves.msgpack');
     if (response.ok) {
       const buffer = await response.arrayBuffer();
       const data = decode(new Uint8Array(buffer)) as CurvesDataMsgpack;
@@ -119,7 +119,7 @@ export async function loadCurveData(): Promise<LoadedCurveData> {
   }
 
   // Fallback to JSON
-  const response = await fetch(`./data/curves.json?v=${Date.now()}`);
+  const response = await fetch('./data/curves.json');
   if (!response.ok) throw new Error('Failed to load measurement data');
 
   const data: CurvesDataJson = await response.json();

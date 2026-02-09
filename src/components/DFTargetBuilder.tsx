@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { buildTargetCurve, CATEGORY_DEFAULTS } from '../utils/shelfFilter';
 import { scoreAllDevices } from '../utils/scoring';
@@ -23,7 +23,7 @@ const RIG_FOR_CATEGORY: Record<CategoryFilter, '711' | '5128'> = {
 };
 
 const CATEGORY_LABELS: Record<CategoryFilter, string> = {
-  iem: 'IEMs',
+  iem: '711 IEMs',
   hp_kb5: 'KB5 (711) OE Headphones',
   hp_5128: 'B&K 5128 OE Headphones',
   iem_5128: 'B&K 5128 IEMs',
@@ -58,20 +58,26 @@ async function loadBaseline(category: CategoryFilter): Promise<FrequencyCurve> {
 
 interface Props {
   category: CategoryFilter;
+  siblingCategory: CategoryFilter;
+  siblingParams: BuilderParams;
   params: BuilderParams;
   onParamsChange: (params: BuilderParams) => void;
   onCalculate: (category: CategoryFilter, result: CalculationResult) => void;
   onReset: (category: CategoryFilter) => void;
   isRanking: boolean;
+  isSiblingRanking: boolean;
 }
 
 export function DFTargetBuilder({
   category,
+  siblingCategory,
+  siblingParams,
   params,
   onParamsChange,
   onCalculate,
   onReset,
   isRanking,
+  isSiblingRanking,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +87,7 @@ export function DFTargetBuilder({
     onParamsChange({ ...params, [key]: value });
   };
 
-  const handleCheck = async () => {
+  const handleCheck = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -112,7 +118,47 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, params, onCalculate]);
+
+  const handleCheckBoth = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const [baseline, siblingBaseline] = await Promise.all([
+        loadBaseline(category),
+        loadBaseline(siblingCategory),
+      ]);
+
+      const modifiedTarget = buildTargetCurve(baseline, params);
+      const siblingModifiedTarget = buildTargetCurve(siblingBaseline, siblingParams);
+      setLastBuiltCurve(modifiedTarget);
+
+      const targetName = `DF (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
+      const siblingTargetName = `DF (Tilt: ${siblingParams.tilt}, Bass: ${siblingParams.bassGain}, Treble: ${siblingParams.trebleGain})`;
+
+      const [result, siblingResult] = await Promise.all([
+        scoreAllDevices(modifiedTarget, RIG_FOR_CATEGORY[category], category === 'iem' ? 'iem' : category, targetName),
+        scoreAllDevices(siblingModifiedTarget, RIG_FOR_CATEGORY[siblingCategory], siblingCategory === 'iem' ? 'iem' : siblingCategory, siblingTargetName),
+      ]);
+
+      onCalculate(category, result);
+      onCalculate(siblingCategory, siblingResult);
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : 'Scoring failed');
+    } finally {
+      setLoading(false);
+    }
+  }, [category, siblingCategory, params, siblingParams, onCalculate]);
+
+  // Auto-re-rank when rig/category changes while ranking is active
+  useEffect(() => {
+    if (isRanking) {
+      handleCheck();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
 
   const handleReset = () => {
     onParamsChange({ ...CATEGORY_DEFAULTS[category] });
@@ -196,7 +242,7 @@ export function DFTargetBuilder({
       <div className="builder-actions">
         {isRanking && (
           <button className="reset-btn" onClick={handleReset}>
-            Reset to Default
+            Reset
           </button>
         )}
 
@@ -205,7 +251,15 @@ export function DFTargetBuilder({
           onClick={handleCheck}
           disabled={loading}
         >
-          {loading ? 'Ranking...' : (isRanking ? 'Re-Check' : 'Check')}
+          {loading ? 'Ranking...' : (isRanking ? 'Re-Rank' : 'Rank')}
+        </button>
+
+        <button
+          className="submit-btn rank-both-btn"
+          onClick={handleCheckBoth}
+          disabled={loading}
+        >
+          {loading ? 'Ranking...' : ((isRanking || isSiblingRanking) ? 'Re-Rank Both Rigs' : 'Rank Both Rigs')}
         </button>
 
         {lastBuiltCurve && (

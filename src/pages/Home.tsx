@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { SimilarityList } from '../components/SimilarityList';
 import { TargetPanel } from '../components/TargetPanel';
 import { CATEGORY_DEFAULTS } from '../utils/shelfFilter';
@@ -96,36 +96,51 @@ export default function Home() {
     }
   }, []);
 
+  // Track which target selections have been loaded to avoid redundant fetches
+  const loadedTargetsRef = useRef<Record<string, string>>({});
+
+  const loadCategoryData = useCallback(async (category: CategoryFilter) => {
+    const targetKey = category === 'iem' || category === 'iem_5128'
+      ? targetSelection.iem
+      : category === 'hp_kb5'
+        ? targetSelection.hp_kb5
+        : targetSelection.hp_5128;
+    const cacheKey = `${category}:${targetKey}`;
+
+    // Skip if already loaded with same target
+    if (loadedTargetsRef.current[category] === cacheKey) return;
+
+    const data = await fetchLatestCategoryData(category, targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128);
+    loadedTargetsRef.current[category] = cacheKey;
+
+    switch (category) {
+      case 'iem': setLatestIemData(data); break;
+      case 'hp_kb5': setLatestKb5Data(data); break;
+      case 'hp_5128': setLatest5128Data(data); break;
+      case 'iem_5128': setLatestIem5128Data(data); break;
+    }
+
+    if (data) {
+      setLastUpdate(data.generatedAt);
+      setTotalIEMs(data.totalDevices);
+    }
+  }, [fetchLatestCategoryData, targetSelection]);
+
   const loadAllLatestData = useCallback(async () => {
     setLoading(true);
 
-    // Fetch all 4 categories so data is ready when toggling modes
-    const [iemData, kb5Data, hp5128Data, iem5128Data] = await Promise.all([
-      fetchLatestCategoryData('iem', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
-      fetchLatestCategoryData('hp_kb5', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
-      fetchLatestCategoryData('hp_5128', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
-      fetchLatestCategoryData('iem_5128', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
-    ]);
-
-    setLatestIemData(iemData);
-    setLatestKb5Data(kb5Data);
-    setLatest5128Data(hp5128Data);
-    setLatestIem5128Data(iem5128Data);
-
-    const anyData = iemData || kb5Data || hp5128Data || iem5128Data;
-    if (anyData) {
-      setLastUpdate(anyData.generatedAt);
-    }
-
-    const currentData = categoryFilter === 'iem' ? iemData :
-                        categoryFilter === 'hp_kb5' ? kb5Data :
-                        categoryFilter === 'iem_5128' ? iem5128Data : hp5128Data;
-    if (currentData) {
-      setTotalIEMs(currentData.totalDevices);
+    // Load active category first for fast initial render
+    if (measurementMode === 'ie') {
+      await loadCategoryData('iem');
+      // Load the sibling column in background
+      loadCategoryData('iem_5128');
+    } else {
+      await loadCategoryData('hp_kb5');
+      loadCategoryData('hp_5128');
     }
 
     setLoading(false);
-  }, [fetchLatestCategoryData, targetSelection, categoryFilter]);
+  }, [loadCategoryData, measurementMode]);
 
   // ============================================================================
   // EFFECTS
@@ -147,10 +162,20 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reload data when target selection changes
+  // Reload data when target selection changes — only re-fetch affected categories
   useEffect(() => {
-    loadAllLatestData();
-  }, [targetSelection, loadAllLatestData]);
+    // Invalidate cache so changed targets get re-fetched
+    loadedTargetsRef.current = {};
+    const loadData = async () => {
+      if (measurementMode === 'ie') {
+        await Promise.all([loadCategoryData('iem'), loadCategoryData('iem_5128')]);
+      } else {
+        await Promise.all([loadCategoryData('hp_kb5'), loadCategoryData('hp_5128')]);
+      }
+    };
+    loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetSelection]);
 
   // Update count when category filter changes
   useEffect(() => {
@@ -166,7 +191,7 @@ export default function Home() {
   // HANDLERS
   // ============================================================================
 
-  const handleModeChange = (mode: MeasurementMode) => {
+  const handleModeChange = async (mode: MeasurementMode) => {
     setMeasurementMode(mode);
 
     // Reset mobile category filter if invalid for new mode
@@ -175,6 +200,13 @@ export default function Home() {
     }
     if (mode === 'oe' && (categoryFilter === 'iem' || categoryFilter === 'iem_5128')) {
       setCategoryFilter('hp_kb5');
+    }
+
+    // Load both categories for the new mode in parallel
+    if (mode === 'ie') {
+      await Promise.all([loadCategoryData('iem'), loadCategoryData('iem_5128')]);
+    } else {
+      await Promise.all([loadCategoryData('hp_kb5'), loadCategoryData('hp_5128')]);
     }
   };
 
@@ -187,6 +219,17 @@ export default function Home() {
       setTargetSelection(prev => ({ ...prev, hp_5128: value as HP5128Target }));
     }
   };
+
+  // Unified OE target toggle — sets both KB5 and 5128 targets at once
+  const handleOETargetToggle = (mode: 'harman' | 'df') => {
+    setTargetSelection(prev => ({
+      ...prev,
+      hp_kb5: mode === 'harman' ? 'harman' : 'kemar',
+      hp_5128: mode === 'harman' ? 'harman' : 'df',
+    }));
+  };
+
+  const oeTargetMode: 'harman' | 'df' = targetSelection.hp_kb5 === 'harman' ? 'harman' : 'df';
 
   // Builder handlers
   const handleBuilderParamsChange = (category: CategoryFilter, params: BuilderParams) => {
@@ -205,18 +248,15 @@ export default function Home() {
 
   const handleUploadCalculate = (result: CalculationResult | null) => {
     setCustomResult(result);
+    if (result) {
+      // Clear all builder results to avoid confusion — only one ranking source at a time
+      setBuilderResults({ iem: null, hp_kb5: null, hp_5128: null, iem_5128: null });
+    }
   };
 
   // ============================================================================
   // DERIVED STATE
   // ============================================================================
-
-  const builderHasResults = {
-    iem: builderResults.iem !== null,
-    hp_kb5: builderResults.hp_kb5 !== null,
-    hp_5128: builderResults.hp_5128 !== null,
-    iem_5128: builderResults.iem_5128 !== null,
-  };
 
   // For Latest tab: determine which categories should show builder results vs pre-scored
   const getLatestIemDevices = () => {
@@ -240,7 +280,8 @@ export default function Home() {
   // RENDER
   // ============================================================================
 
-  if (loading && !latestIemData) {
+  const primaryData = measurementMode === 'ie' ? latestIemData : latestKb5Data;
+  if (loading && !primaryData) {
     return (
       <div className="home">
         <div className="loading">Loading...</div>
@@ -273,65 +314,44 @@ export default function Home() {
 
       {/* Target Selectors - Toggle Sliders */}
       <div className="target-selectors">
-        {measurementMode === 'ie' && (
-          <div className="target-toggle">
-            <span className="target-label">IEM:</span>
-            <div className="toggle-switch">
-              <button
-                className={`toggle-option ${targetSelection.iem === 'harman' ? 'active' : ''}`}
-                onClick={() => handleTargetChange('iem', 'harman')}
-              >
-                Harman 2019
-              </button>
-              <button
-                className={`toggle-option ${targetSelection.iem === 'iso' ? 'active' : ''}`}
-                onClick={() => handleTargetChange('iem', 'iso')}
-              >
-                ISO 11904-2 DF
-              </button>
-            </div>
+        <div className="target-toggle">
+          <span className="target-label">
+            {measurementMode === 'ie' ? 'In-Ear Target Type' : 'Over-Ear Target Type'}
+          </span>
+          <div className="toggle-switch">
+            {measurementMode === 'ie' ? (
+              <>
+                <button
+                  className={`toggle-option ${targetSelection.iem === 'harman' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('iem', 'harman')}
+                >
+                  Harman
+                </button>
+                <button
+                  className={`toggle-option ${targetSelection.iem === 'iso' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('iem', 'iso')}
+                >
+                  DF
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={`toggle-option ${oeTargetMode === 'harman' ? 'active' : ''}`}
+                  onClick={() => handleOETargetToggle('harman')}
+                >
+                  Harman
+                </button>
+                <button
+                  className={`toggle-option ${oeTargetMode === 'df' ? 'active' : ''}`}
+                  onClick={() => handleOETargetToggle('df')}
+                >
+                  DF
+                </button>
+              </>
+            )}
           </div>
-        )}
-
-        {measurementMode === 'oe' && (
-          <>
-            <div className="target-toggle">
-              <span className="target-label">KB5:</span>
-              <div className="toggle-switch">
-                <button
-                  className={`toggle-option ${targetSelection.hp_kb5 === 'harman' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('hp_kb5', 'harman')}
-                >
-                  Harman 2018
-                </button>
-                <button
-                  className={`toggle-option ${targetSelection.hp_kb5 === 'kemar' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('hp_kb5', 'kemar')}
-                >
-                  KEMAR DF
-                </button>
-              </div>
-            </div>
-
-            <div className="target-toggle">
-              <span className="target-label">5128:</span>
-              <div className="toggle-switch">
-                <button
-                  className={`toggle-option ${targetSelection.hp_5128 === 'harman' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('hp_5128', 'harman')}
-                >
-                  Harman 2018
-                </button>
-                <button
-                  className={`toggle-option ${targetSelection.hp_5128 === 'df' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('hp_5128', 'df')}
-                >
-                  5128 DF
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        </div>
       </div>
 
       {/* Category Filters - Mobile Only */}
@@ -374,12 +394,12 @@ export default function Home() {
         measurementMode={measurementMode}
         onModeChange={handleModeChange}
         builderState={builderState}
-        builderHasResults={builderHasResults}
+        builderResults={builderResults}
         onBuilderParamsChange={handleBuilderParamsChange}
         onBuilderCalculate={handleBuilderCalculate}
         onBuilderReset={handleBuilderReset}
         onUploadCalculate={handleUploadCalculate}
-        isUploadRanking={!!customResult}
+        customResult={customResult}
       />
 
       <SimilarityList

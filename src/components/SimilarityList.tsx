@@ -1,5 +1,6 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import type { CalculationResult, ScoredIEM, LatestDevice, CategoryFilter, MeasurementMode, BuilderResults } from '../types';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const PAGE_SIZE = 25;
 
@@ -91,11 +92,17 @@ export default function SimilarityList({
 }: SimilarityListProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Check if any data is available
-  const hasAnyData = (latestIemDevices && latestIemDevices.length > 0) ||
-                     (latestKb5Devices && latestKb5Devices.length > 0) ||
-                     (latest5128Devices && latest5128Devices.length > 0) ||
-                     (latestIem5128Devices && latestIem5128Devices.length > 0);
+  // Check if any displayable data exists for the current mode
+  const hasBuilderData = measurementMode === 'ie'
+    ? !!builderResults?.iem || !!builderResults?.iem_5128
+    : !!builderResults?.hp_kb5 || !!builderResults?.hp_5128;
+  const hasCustomData = results && results.length > 0;
+  const hasLatestData = measurementMode === 'ie'
+    ? (latestIemDevices && latestIemDevices.length > 0) ||
+      (latestIem5128Devices && latestIem5128Devices.length > 0)
+    : (latestKb5Devices && latestKb5Devices.length > 0) ||
+      (latest5128Devices && latest5128Devices.length > 0);
+  const hasAnyData = hasBuilderData || hasCustomData || hasLatestData;
 
   if (!hasAnyData) {
     return <div className="loading-results">Loading latest devices...</div>;
@@ -167,16 +174,17 @@ interface TargetColumnProps {
   onLoadMore: () => void;
 }
 
-function TargetColumn({ 
-  data, 
-  showCloneCoupler, 
+function TargetColumn({
+  data,
+  showCloneCoupler,
   hideDuplicates,
   searchTerm,
-  onToggleClone, 
+  onToggleClone,
   onToggleDupes,
-  showCount, 
-  onLoadMore 
+  showCount,
+  onLoadMore
 }: TargetColumnProps) {
+  const isMobile = useIsMobile();
   
   // 1. Filter by Quality (Clone Coupler)
   const allItems = data.ranked || [];
@@ -289,11 +297,12 @@ function TargetColumn({
 
       <ul>
         {displayedItems.map((iem: ScoredIEM, index: number) => (
-          <SimilarityRow 
+          <SimilarityRow
             key={`${iem.id}-${index}`}
             iem={iem}
             index={index}
-            isMobile={window.innerWidth <= 768}
+            isMobile={isMobile}
+            animIndex={index}
           />
         ))}
       </ul>
@@ -306,9 +315,12 @@ function TargetColumn({
   );
 }
 
-function SimilarityRow({ iem, index, isMobile }: { iem: ScoredIEM, index: number, isMobile: boolean }) {
+function SimilarityRow({ iem, index, isMobile, animIndex }: { iem: ScoredIEM, index: number, isMobile: boolean, animIndex?: number }) {
   return (
-    <li className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''}`}>
+    <li
+      className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''}`}
+      style={animIndex !== undefined && animIndex < 15 ? { '--i': animIndex } as React.CSSProperties : undefined}
+    >
       <div className="row-main">
         <span className="rank">{index + 1}.</span>
         <span className="iem-name">{iem.name}</span>
@@ -371,7 +383,21 @@ interface LatestTabViewProps {
 }
 
 function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, categoryFilter, measurementMode, searchTerm, onSearchChange, builderResults, customResults }: LatestTabViewProps) {
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = useIsMobile();
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounce search input — update parent after 250ms of no typing
+  const handleSearchChange = useCallback((value: string) => {
+    setLocalSearch(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => onSearchChange(value), 250);
+  }, [onSearchChange]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, []);
 
   // Get devices for current category filter (for mobile view)
   const getMobileDevices = (): LatestDevice[] => {
@@ -396,8 +422,8 @@ function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, 
           type="text"
           className="search-input"
           placeholder="Search by model name..."
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={localSearch}
+          onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>
 
@@ -436,15 +462,16 @@ interface LatestMobileViewProps {
 function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  // Prepare devices with rank and sort chronologically
-  let preparedDevices = prepareLatestDevices(devices);
-  
+
+  // Memoize expensive sort/rank computation
+  const rankedDevices = useMemo(() => prepareLatestDevices(devices), [devices]);
+
   // Filter by search term
-  if (searchTerm && searchTerm.trim()) {
+  const preparedDevices = useMemo(() => {
+    if (!searchTerm || !searchTerm.trim()) return rankedDevices;
     const term = searchTerm.toLowerCase().trim();
-    preparedDevices = preparedDevices.filter(d => d.name.toLowerCase().includes(term));
-  }
+    return rankedDevices.filter(d => d.name.toLowerCase().includes(term));
+  }, [rankedDevices, searchTerm]);
   
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
@@ -472,9 +499,10 @@ function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
     >
       <ul>
         {displayedDevices.map((device, index) => (
-          <LatestDeviceRow 
+          <LatestDeviceRow
             key={`${device.id}-${index}`}
             device={device}
+            animIndex={index}
           />
         ))}
       </ul>
@@ -542,9 +570,11 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     iem: PAGE_SIZE, hp_kb5: PAGE_SIZE, hp_5128: PAGE_SIZE, iem_5128: PAGE_SIZE
   });
 
-  // Prepare devices with rank and sort chronologically, then filter by search
-  const prepareAndFilter = (devices: LatestDevice[]): LatestDeviceWithRank[] => {
-    let prepared = prepareLatestDevices(devices);
+  // Memoize expensive sort/rank computation per device array
+  const memoizedPrepare = useCallback((devices: LatestDevice[]) => prepareLatestDevices(devices), []);
+
+  const prepareAndFilter = useCallback((devices: LatestDevice[]): LatestDeviceWithRank[] => {
+    let prepared = memoizedPrepare(devices);
 
     if (searchTerm && searchTerm.trim()) {
       const term = searchTerm.toLowerCase().trim();
@@ -552,7 +582,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     }
 
     return prepared;
-  };
+  }, [memoizedPrepare, searchTerm]);
 
   const renderLatestColumn = (
     devices: LatestDeviceWithRank[],
@@ -576,6 +606,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
                 <LatestDeviceRow
                   key={`${device.id}-${index}`}
                   device={device}
+                  animIndex={index}
                 />
               ))}
             </ul>
@@ -632,16 +663,23 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     // Custom upload results override both columns if present
     const hasCustom = customResults && customResults.length > 0;
 
+    const col1Ranked = hasCustom || !!iemBuilderResult;
+    const col2Ranked = !!iem5128BuilderResult;
+    const onlyOneRanked = (col1Ranked || col2Ranked) && !(col1Ranked && col2Ranked);
+
+    const col1 = hasCustom
+      ? renderBuilderColumn(customResults![0], 'iem')
+      : iemBuilderResult
+        ? renderBuilderColumn(iemBuilderResult, 'iem')
+        : renderLatestColumn(preparedIem, 'iem', 'IEMs (711)');
+
+    const col2 = iem5128BuilderResult
+      ? renderBuilderColumn(iem5128BuilderResult, 'iem_5128')
+      : renderLatestColumn(preparedIem5128, 'iem_5128', '5128 IE');
+
     return (
-      <div className="latest-two-columns">
-        {hasCustom
-          ? renderBuilderColumn(customResults![0], 'iem')
-          : iemBuilderResult
-            ? renderBuilderColumn(iemBuilderResult, 'iem')
-            : renderLatestColumn(preparedIem, 'iem', 'IEMs (711)')}
-        {iem5128BuilderResult
-          ? renderBuilderColumn(iem5128BuilderResult, 'iem_5128')
-          : renderLatestColumn(preparedIem5128, 'iem_5128', '5128 IE')}
+      <div className={`latest-two-columns${onlyOneRanked ? ' single-ranked' : ''}`}>
+        {onlyOneRanked ? (col1Ranked ? col1 : col2) : <>{col1}{col2}</>}
       </div>
     );
   } else {
@@ -651,16 +689,23 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     const hp5128BuilderResult = builderResults?.hp_5128;
     const hasCustom = customResults && customResults.length > 0;
 
+    const col1Ranked = hasCustom || !!kb5BuilderResult;
+    const col2Ranked = !!hp5128BuilderResult;
+    const onlyOneRanked = (col1Ranked || col2Ranked) && !(col1Ranked && col2Ranked);
+
+    const col1 = hasCustom
+      ? renderBuilderColumn(customResults![0], 'hp_kb5')
+      : kb5BuilderResult
+        ? renderBuilderColumn(kb5BuilderResult, 'hp_kb5')
+        : renderLatestColumn(preparedKb5, 'hp_kb5', 'KB5 (711) OE');
+
+    const col2 = hp5128BuilderResult
+      ? renderBuilderColumn(hp5128BuilderResult, 'hp_5128')
+      : renderLatestColumn(prepared5128, 'hp_5128', 'B&K 5128 OE');
+
     return (
-      <div className="latest-two-columns">
-        {hasCustom
-          ? renderBuilderColumn(customResults![0], 'hp_kb5')
-          : kb5BuilderResult
-            ? renderBuilderColumn(kb5BuilderResult, 'hp_kb5')
-            : renderLatestColumn(preparedKb5, 'hp_kb5', 'KB5 (711) OE')}
-        {hp5128BuilderResult
-          ? renderBuilderColumn(hp5128BuilderResult, 'hp_5128')
-          : renderLatestColumn(prepared5128, 'hp_5128', 'B&K 5128 OE')}
+      <div className={`latest-two-columns${onlyOneRanked ? ' single-ranked' : ''}`}>
+        {onlyOneRanked ? (col1Ranked ? col1 : col2) : <>{col1}{col2}</>}
       </div>
     );
   }
@@ -668,13 +713,17 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
 
 interface LatestDeviceRowProps {
   device: LatestDeviceWithRank;
+  animIndex?: number;
 }
 
-function LatestDeviceRow({ device }: LatestDeviceRowProps) {
-  const isMobile = window.innerWidth <= 768;
-  
+function LatestDeviceRow({ device, animIndex }: LatestDeviceRowProps) {
+  const isMobile = useIsMobile();
+
   return (
-    <li className={`quality-${device.quality} ${isMobile ? 'mobile-stack' : ''}`}>
+    <li
+      className={`quality-${device.quality} ${isMobile ? 'mobile-stack' : ''}`}
+      style={animIndex !== undefined && animIndex < 15 ? { '--i': animIndex } as React.CSSProperties : undefined}
+    >
       <div className="row-main">
         <span className="iem-name">{device.name}</span>
         <span className="rank-badge">Rank {device.ppiRank}</span>
