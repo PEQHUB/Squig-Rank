@@ -1,69 +1,72 @@
 import { useState, useEffect, useCallback } from 'react';
 import { SimilarityList } from '../components/SimilarityList';
-import { TargetSubmission } from '../components/TargetSubmission';
-import type { CalculationResult, ActiveViewType, LatestResultsData, CategoryFilter, ResultsData, TargetSelection, IEMTarget, KEMARTarget } from '../types';
+import { TargetPanel } from '../components/TargetPanel';
+import { CATEGORY_DEFAULTS } from '../utils/shelfFilter';
+import type {
+  CalculationResult,
+  LatestResultsData,
+  CategoryFilter,
+  TargetSelection,
+  IEMTarget,
+  KEMARTarget,
+  HP5128Target,
+  MeasurementMode,
+  BuilderState,
+  BuilderResults,
+  BuilderParams,
+} from '../types';
 
 export default function Home() {
-  const [results, setResults] = useState<CalculationResult[] | null>(null);
-  const [hpKb5Results, setHpKb5Results] = useState<CalculationResult[] | null>(null);
-  const [hp5128Results, setHp5128Results] = useState<CalculationResult[] | null>(null);
-  
   // Latest tab state - separate data per category
   const [latestIemData, setLatestIemData] = useState<LatestResultsData | null>(null);
   const [latestKb5Data, setLatestKb5Data] = useState<LatestResultsData | null>(null);
   const [latest5128Data, setLatest5128Data] = useState<LatestResultsData | null>(null);
-  
-  const [activeType, setActiveType] = useState<ActiveViewType>('latest');
+  const [latestIem5128Data, setLatestIem5128Data] = useState<LatestResultsData | null>(null);
+
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('iem');
-  
-  // Target selection state - default to ISO/KEMAR DF
+
+  // OE/IE measurement mode toggle
+  const [measurementMode, setMeasurementMode] = useState<MeasurementMode>('ie');
+
+  // Target selection state - default to ISO/KEMAR DF/5128 DF
   const [targetSelection, setTargetSelection] = useState<TargetSelection>({
     iem: 'iso',
-    hp_kb5: 'kemar'
+    hp_kb5: 'kemar',
+    hp_5128: 'df'
   });
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [totalIEMs, setTotalIEMs] = useState<number>(0);
-  
-  // Custom Ranking State
+
+  // Custom Upload Ranking State
   const [customResult, setCustomResult] = useState<CalculationResult | null>(null);
 
-  // Fetch standard results (for non-latest tabs)
-  async function fetchResults(type: ActiveViewType): Promise<ResultsData | null> {
-    try {
-      let file: string;
-      switch (type) {
-        case 'latest':
-          return null;
-        case 'iem':
-          file = './data/results.json';
-          break;
-        case 'hp_kb5':
-          file = './data/results_hp_kb5.json';
-          break;
-        case 'hp_5128':
-          file = './data/results_hp_5128.json';
-          break;
-      }
-      const response = await fetch(file);
-      if (!response.ok) {
-        if (type !== 'iem') return null;
-        throw new Error('Results not available yet');
-      }
-      return await response.json() as ResultsData;
-    } catch (e) {
-      console.warn(`Failed to load ${type} results`, e);
-      return null;
-    }
-  }
+  // DF Target Builder State
+  const [builderState, setBuilderState] = useState<BuilderState>({
+    iem: { ...CATEGORY_DEFAULTS.iem },
+    hp_kb5: { ...CATEGORY_DEFAULTS.hp_kb5 },
+    hp_5128: { ...CATEGORY_DEFAULTS.hp_5128 },
+    iem_5128: { ...CATEGORY_DEFAULTS.iem_5128 },
+  });
 
-  // Fetch latest results for a specific category and target
+  const [builderResults, setBuilderResults] = useState<BuilderResults>({
+    iem: null,
+    hp_kb5: null,
+    hp_5128: null,
+    iem_5128: null,
+  });
+
+  // ============================================================================
+  // DATA FETCHING
+  // ============================================================================
+
   const fetchLatestCategoryData = useCallback(async (
-    category: CategoryFilter, 
-    iemTarget: IEMTarget, 
-    kemarTarget: KEMARTarget
+    category: CategoryFilter,
+    iemTarget: IEMTarget,
+    kemarTarget: KEMARTarget,
+    hp5128Target: HP5128Target
   ): Promise<LatestResultsData | null> => {
     try {
       let file: string;
@@ -75,7 +78,10 @@ export default function Home() {
           file = `./data/results_latest_hp_kb5_${kemarTarget}.json`;
           break;
         case 'hp_5128':
-          file = './data/results_latest_hp_5128.json';
+          file = `./data/results_latest_hp_5128_${hp5128Target}.json`;
+          break;
+        case 'iem_5128':
+          file = `./data/results_latest_iem_5128_${iemTarget}.json`;
           break;
       }
       const response = await fetch(file);
@@ -90,54 +96,49 @@ export default function Home() {
     }
   }, []);
 
-  // Load all latest data for the three categories
   const loadAllLatestData = useCallback(async () => {
     setLoading(true);
-    
-    const [iemData, kb5Data, hp5128Data] = await Promise.all([
-      fetchLatestCategoryData('iem', targetSelection.iem, targetSelection.hp_kb5),
-      fetchLatestCategoryData('hp_kb5', targetSelection.iem, targetSelection.hp_kb5),
-      fetchLatestCategoryData('hp_5128', targetSelection.iem, targetSelection.hp_kb5)
+
+    // Fetch all 4 categories so data is ready when toggling modes
+    const [iemData, kb5Data, hp5128Data, iem5128Data] = await Promise.all([
+      fetchLatestCategoryData('iem', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
+      fetchLatestCategoryData('hp_kb5', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
+      fetchLatestCategoryData('hp_5128', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
+      fetchLatestCategoryData('iem_5128', targetSelection.iem, targetSelection.hp_kb5, targetSelection.hp_5128),
     ]);
-    
+
     setLatestIemData(iemData);
     setLatestKb5Data(kb5Data);
     setLatest5128Data(hp5128Data);
-    
-    // Set meta info from whichever data loaded
-    const anyData = iemData || kb5Data || hp5128Data;
+    setLatestIem5128Data(iem5128Data);
+
+    const anyData = iemData || kb5Data || hp5128Data || iem5128Data;
     if (anyData) {
       setLastUpdate(anyData.generatedAt);
     }
-    
-    // Update total count based on current category
-    const currentData = categoryFilter === 'iem' ? iemData : 
-                        categoryFilter === 'hp_kb5' ? kb5Data : hp5128Data;
+
+    const currentData = categoryFilter === 'iem' ? iemData :
+                        categoryFilter === 'hp_kb5' ? kb5Data :
+                        categoryFilter === 'iem_5128' ? iem5128Data : hp5128Data;
     if (currentData) {
       setTotalIEMs(currentData.totalDevices);
     }
-    
+
     setLoading(false);
   }, [fetchLatestCategoryData, targetSelection, categoryFilter]);
+
+  // ============================================================================
+  // EFFECTS
+  // ============================================================================
 
   // Initial load
   useEffect(() => {
     async function initLoad() {
       setLoading(true);
       try {
-        // Load latest tab data by default
         await loadAllLatestData();
       } catch (e: unknown) {
         setError(e instanceof Error ? e.message : 'Unknown error');
-        
-        // Fallback to IEM tab if latest not available
-        const iemData = await fetchResults('iem');
-        if (iemData) {
-          setResults(iemData.results);
-          setLastUpdate(iemData.generatedAt);
-          setTotalIEMs(iemData.totalIEMs);
-          setActiveType('iem');
-        }
       } finally {
         setLoading(false);
       }
@@ -146,87 +147,100 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reload data when target selection changes (for latest tab)
+  // Reload data when target selection changes
   useEffect(() => {
-    if (activeType === 'latest') {
-      loadAllLatestData();
-    }
-  }, [targetSelection, activeType, loadAllLatestData]);
+    loadAllLatestData();
+  }, [targetSelection, loadAllLatestData]);
 
   // Update count when category filter changes
   useEffect(() => {
-    if (activeType === 'latest') {
-      const currentData = categoryFilter === 'iem' ? latestIemData : 
-                          categoryFilter === 'hp_kb5' ? latestKb5Data : latest5128Data;
-      if (currentData) {
-        setTotalIEMs(currentData.totalDevices);
-      }
+    const currentData = categoryFilter === 'iem' ? latestIemData :
+                        categoryFilter === 'hp_kb5' ? latestKb5Data :
+                        categoryFilter === 'iem_5128' ? latestIem5128Data : latest5128Data;
+    if (currentData) {
+      setTotalIEMs(currentData.totalDevices);
     }
-  }, [categoryFilter, activeType, latestIemData, latestKb5Data, latest5128Data]);
+  }, [categoryFilter, latestIemData, latestKb5Data, latest5128Data, latestIem5128Data]);
 
-  const handleTypeChange = async (type: ActiveViewType) => {
-    setActiveType(type);
-    setCustomResult(null);
-    
-    if (type === 'latest') {
-      // Data already loaded via useEffect
-      const currentData = categoryFilter === 'iem' ? latestIemData : 
-                          categoryFilter === 'hp_kb5' ? latestKb5Data : latest5128Data;
-      if (currentData) {
-        setTotalIEMs(currentData.totalDevices);
-        setLastUpdate(currentData.generatedAt);
-      }
-    } else {
-      setLoading(true);
-      const data = await fetchResults(type);
-      if (data) {
-        switch (type) {
-          case 'iem':
-            setResults(data.results);
-            break;
-          case 'hp_kb5':
-            setHpKb5Results(data.results);
-            break;
-          case 'hp_5128':
-            setHp5128Results(data.results);
-            break;
-        }
-        setTotalIEMs(data.totalIEMs);
-        setLastUpdate(data.generatedAt);
-      }
-      setLoading(false);
+  // ============================================================================
+  // HANDLERS
+  // ============================================================================
+
+  const handleModeChange = (mode: MeasurementMode) => {
+    setMeasurementMode(mode);
+
+    // Reset mobile category filter if invalid for new mode
+    if (mode === 'ie' && (categoryFilter === 'hp_kb5' || categoryFilter === 'hp_5128')) {
+      setCategoryFilter('iem');
+    }
+    if (mode === 'oe' && (categoryFilter === 'iem' || categoryFilter === 'iem_5128')) {
+      setCategoryFilter('hp_kb5');
     }
   };
 
-  const handleTargetChange = (category: 'iem' | 'hp_kb5', value: string) => {
+  const handleTargetChange = (category: 'iem' | 'hp_kb5' | 'hp_5128', value: string) => {
     if (category === 'iem') {
       setTargetSelection(prev => ({ ...prev, iem: value as IEMTarget }));
-    } else {
+    } else if (category === 'hp_kb5') {
       setTargetSelection(prev => ({ ...prev, hp_kb5: value as KEMARTarget }));
-    }
-  };
-  
-  const getTypeLabel = (type: ActiveViewType): string => {
-    switch (type) {
-      case 'latest': return 'Latest Devices';
-      case 'iem': return 'IEM';
-      case 'hp_kb5': return 'KEMAR (711) OE Headphone';
-      case 'hp_5128': return 'B&K 5128 OE Headphone';
-    }
-  };
-  
-  const getCurrentResults = (): CalculationResult[] | null => {
-    switch (activeType) {
-      case 'latest': return null;
-      case 'iem': return results;
-      case 'hp_kb5': return hpKb5Results;
-      case 'hp_5128': return hp5128Results;
+    } else {
+      setTargetSelection(prev => ({ ...prev, hp_5128: value as HP5128Target }));
     }
   };
 
+  // Builder handlers
+  const handleBuilderParamsChange = (category: CategoryFilter, params: BuilderParams) => {
+    setBuilderState(prev => ({ ...prev, [category]: params }));
+  };
 
+  const handleBuilderCalculate = (category: CategoryFilter, result: CalculationResult) => {
+    setBuilderResults(prev => ({ ...prev, [category]: result }));
+    // Clear upload-based custom result when builder produces results
+    setCustomResult(null);
+  };
 
-  if (loading && !results && !latestIemData) {
+  const handleBuilderReset = (category: CategoryFilter) => {
+    setBuilderResults(prev => ({ ...prev, [category]: null }));
+  };
+
+  const handleUploadCalculate = (result: CalculationResult | null) => {
+    setCustomResult(result);
+  };
+
+  // ============================================================================
+  // DERIVED STATE
+  // ============================================================================
+
+  const builderHasResults = {
+    iem: builderResults.iem !== null,
+    hp_kb5: builderResults.hp_kb5 !== null,
+    hp_5128: builderResults.hp_5128 !== null,
+    iem_5128: builderResults.iem_5128 !== null,
+  };
+
+  // For Latest tab: determine which categories should show builder results vs pre-scored
+  const getLatestIemDevices = () => {
+    if (builderResults.iem) return undefined;
+    return latestIemData?.devices;
+  };
+  const getLatestKb5Devices = () => {
+    if (builderResults.hp_kb5) return undefined;
+    return latestKb5Data?.devices;
+  };
+  const getLatest5128Devices = () => {
+    if (builderResults.hp_5128) return undefined;
+    return latest5128Data?.devices;
+  };
+  const getLatestIem5128Devices = () => {
+    if (builderResults.iem_5128) return undefined;
+    return latestIem5128Data?.devices;
+  };
+
+  // ============================================================================
+  // RENDER
+  // ============================================================================
+
+  if (loading && !latestIemData) {
     return (
       <div className="home">
         <div className="loading">Loading...</div>
@@ -234,7 +248,7 @@ export default function Home() {
     );
   }
 
-  if (error || (!results && !latestIemData && !latestKb5Data && !latest5128Data)) {
+  if (error || (!latestIemData && !latestKb5Data && !latest5128Data && !latestIem5128Data)) {
     return (
       <div className="home">
         <div className="error">
@@ -247,75 +261,50 @@ export default function Home() {
 
   return (
     <div className="home">
-      <p className="subtitle">{getTypeLabel(activeType)} Preference Prediction Index Rankings</p>
+      <p className="subtitle">Latest Devices Preference Prediction Index Rankings</p>
       <div className="meta">
-        <span>{totalIEMs.toLocaleString()} {activeType === 'latest' ? 'Devices' : activeType === 'iem' ? 'IEMs' : 'Headphones'} scanned</span>
+        <span>{totalIEMs.toLocaleString()} Devices scanned</span>
         {lastUpdate && (
           <span className="last-update">
             Updated {new Date(lastUpdate).toLocaleString()}
           </span>
         )}
       </div>
-      
-      <div className="type-tabs">
-        <button 
-          className={`tab-btn ${activeType === 'latest' ? 'active' : ''}`}
-          onClick={() => handleTypeChange('latest')}
-        >
-          Latest
-        </button>
-        <button 
-          className={`tab-btn ${activeType === 'iem' ? 'active' : ''}`}
-          onClick={() => handleTypeChange('iem')}
-        >
-          IEMs
-        </button>
-        <button 
-          className={`tab-btn ${activeType === 'hp_kb5' ? 'active' : ''}`}
-          onClick={() => handleTypeChange('hp_kb5')}
-        >
-          KEMAR (711) OE
-        </button>
-        <button 
-          className={`tab-btn ${activeType === 'hp_5128' ? 'active' : ''}`}
-          onClick={() => handleTypeChange('hp_5128')}
-        >
-          B&K 5128 OE
-        </button>
-      </div>
 
-      {activeType === 'latest' && (
-        <>
-          {/* Target Selectors - Toggle Sliders */}
-          <div className="target-selectors">
-            <div className="target-toggle">
-              <span className="target-label">IEM:</span>
-              <div className="toggle-switch">
-                <button 
-                  className={`toggle-option ${targetSelection.iem === 'harman' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('iem', 'harman')}
-                >
-                  Harman 2019
-                </button>
-                <button 
-                  className={`toggle-option ${targetSelection.iem === 'iso' ? 'active' : ''}`}
-                  onClick={() => handleTargetChange('iem', 'iso')}
-                >
-                  ISO 11904-2 DF
-                </button>
-              </div>
+      {/* Target Selectors - Toggle Sliders */}
+      <div className="target-selectors">
+        {measurementMode === 'ie' && (
+          <div className="target-toggle">
+            <span className="target-label">IEM:</span>
+            <div className="toggle-switch">
+              <button
+                className={`toggle-option ${targetSelection.iem === 'harman' ? 'active' : ''}`}
+                onClick={() => handleTargetChange('iem', 'harman')}
+              >
+                Harman 2019
+              </button>
+              <button
+                className={`toggle-option ${targetSelection.iem === 'iso' ? 'active' : ''}`}
+                onClick={() => handleTargetChange('iem', 'iso')}
+              >
+                ISO 11904-2 DF
+              </button>
             </div>
-            
+          </div>
+        )}
+
+        {measurementMode === 'oe' && (
+          <>
             <div className="target-toggle">
-              <span className="target-label">KEMAR:</span>
+              <span className="target-label">KB5:</span>
               <div className="toggle-switch">
-                <button 
+                <button
                   className={`toggle-option ${targetSelection.hp_kb5 === 'harman' ? 'active' : ''}`}
                   onClick={() => handleTargetChange('hp_kb5', 'harman')}
                 >
                   Harman 2018
                 </button>
-                <button 
+                <button
                   className={`toggle-option ${targetSelection.hp_kb5 === 'kemar' ? 'active' : ''}`}
                   onClick={() => handleTargetChange('hp_kb5', 'kemar')}
                 >
@@ -323,21 +312,52 @@ export default function Home() {
                 </button>
               </div>
             </div>
-          </div>
 
-          {/* Category Filters - Mobile Only */}
-          <div className="category-filters mobile-only">
+            <div className="target-toggle">
+              <span className="target-label">5128:</span>
+              <div className="toggle-switch">
+                <button
+                  className={`toggle-option ${targetSelection.hp_5128 === 'harman' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('hp_5128', 'harman')}
+                >
+                  Harman 2018
+                </button>
+                <button
+                  className={`toggle-option ${targetSelection.hp_5128 === 'df' ? 'active' : ''}`}
+                  onClick={() => handleTargetChange('hp_5128', 'df')}
+                >
+                  5128 DF
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Category Filters - Mobile Only */}
+      <div className="category-filters mobile-only">
+        {measurementMode === 'ie' ? (
+          <>
             <button
               className={`filter-btn ${categoryFilter === 'iem' ? 'active' : ''}`}
               onClick={() => setCategoryFilter('iem')}
             >
-              IEMs
+              IEMs (711)
             </button>
+            <button
+              className={`filter-btn ${categoryFilter === 'iem_5128' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('iem_5128')}
+            >
+              5128 IE
+            </button>
+          </>
+        ) : (
+          <>
             <button
               className={`filter-btn ${categoryFilter === 'hp_kb5' ? 'active' : ''}`}
               onClick={() => setCategoryFilter('hp_kb5')}
             >
-              KEMAR (711) OE
+              KB5 (711) OE
             </button>
             <button
               className={`filter-btn ${categoryFilter === 'hp_5128' ? 'active' : ''}`}
@@ -345,25 +365,32 @@ export default function Home() {
             >
               B&K 5128 OE
             </button>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
 
-      {activeType !== 'latest' && (
-        <TargetSubmission 
-          onCalculate={setCustomResult} 
-          isRanking={!!customResult}
-          activeType={activeType}
-        />
-      )}
-      
-      <SimilarityList 
-        results={customResult ? [customResult] : getCurrentResults() || []}
-        isLatestTab={activeType === 'latest'}
+      {/* Target Panel — Live Ranking */}
+      <TargetPanel
+        measurementMode={measurementMode}
+        onModeChange={handleModeChange}
+        builderState={builderState}
+        builderHasResults={builderHasResults}
+        onBuilderParamsChange={handleBuilderParamsChange}
+        onBuilderCalculate={handleBuilderCalculate}
+        onBuilderReset={handleBuilderReset}
+        onUploadCalculate={handleUploadCalculate}
+        isUploadRanking={!!customResult}
+      />
+
+      <SimilarityList
+        results={customResult ? [customResult] : []}
         categoryFilter={categoryFilter}
-        latestIemDevices={activeType === 'latest' ? latestIemData?.devices : undefined}
-        latestKb5Devices={activeType === 'latest' ? latestKb5Data?.devices : undefined}
-        latest5128Devices={activeType === 'latest' ? latest5128Data?.devices : undefined}
+        measurementMode={measurementMode}
+        latestIemDevices={getLatestIemDevices()}
+        latestKb5Devices={getLatestKb5Devices()}
+        latest5128Devices={getLatest5128Devices()}
+        latestIem5128Devices={getLatestIem5128Devices()}
+        builderResults={builderResults}
       />
     </div>
   );

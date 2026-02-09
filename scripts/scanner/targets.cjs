@@ -44,11 +44,17 @@ function loadTargets() {
       let type = 'iem';
 
       // Detect HP Targets
-      if (fileName.includes('Harman 2018')) {
+      if (fileName.includes('Harman 2018 OE Filters')) {
+        // Harman-filtered 5128 target (e.g. "5128 DF ... (Harman 2018 OE Filters) Target.txt")
+        baseName = '5128 Harman 2018';
+        type = 'headphone';
+        variant = '5128';
+      }
+      else if (fileName.includes('Harman 2018')) {
         baseName = 'Harman 2018';
         variant = 'kb5';  // Harman 2018 is KB5/711-based, only for KEMAR measurements
         type = 'headphone';
-      } 
+      }
       else if (fileName.startsWith('5128 DF')) {
         baseName = '5128 DF (Tilted)';
         type = 'headphone';

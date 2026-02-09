@@ -19,12 +19,13 @@ const targets = require('./targets.cjs');
  * @param {Array} targetGroups - Array of target groups
  * @param {string} type - 'iem' or 'headphone'
  * @param {string|null} pinnaFilter - For headphones: 'kb5' or '5128' to filter by pinna
+ * @param {string|null} rigFilter - For IEMs: '5128' to only include 5128-rig IEMs (no cross-rig comp)
  */
-function scorePhones(phones, targetGroups, type, pinnaFilter = null) {
+function scorePhones(phones, targetGroups, type, pinnaFilter = null, rigFilter = null) {
   const results = [];
   const desiredType = type;
-  
-  const label = pinnaFilter ? `${type}s (${pinnaFilter})` : `${type}s`;
+
+  const label = rigFilter ? `${type}s (rig:${rigFilter})` : pinnaFilter ? `${type}s (${pinnaFilter})` : `${type}s`;
   console.log(`\n--- Scoring ${label} (${phones.length}) ---`);
   
   for (const group of targetGroups) {
@@ -73,26 +74,42 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null) {
       continue;
     }
 
-    // Standard logic for IEMs
-    console.log(`  Scoring: ${group.name}`);
-    
+    // Standard logic for IEMs (with optional rig filter)
+    console.log(`  Scoring: ${group.name}${rigFilter ? ` [rig:${rigFilter}]` : ''}`);
+
     const scored = phones
       .filter(phone => phone.frequencyData && phone.frequencyData.frequencies.length >= 10)
       .filter(phone => phone.type === desiredType)
+      .filter(phone => {
+        // Apply rig filter for IEMs if specified
+        if (rigFilter && desiredType === 'iem') {
+          const is5128Rig = config.RIG_5128_DOMAINS.includes(phone.subdomain) || phone.rig === '5128';
+          if (rigFilter === '5128') return is5128Rig;
+          return !is5128Rig; // rigFilter === '711'
+        }
+        return true;
+      })
       .map(phone => {
         let targetVariant = 'default';
         let targetData = null;
 
         if (desiredType === 'iem') {
-          const is5128Rig = config.RIG_5128_DOMAINS.includes(phone.subdomain) || 
-                            phone.rig === '5128';
-          
-          if (is5128Rig) {
-            targetVariant = '5128';
-            targetData = group.variants['5128'];
+          if (rigFilter) {
+            // With rig filter, all devices are same rig — use matching target variant
+            targetVariant = rigFilter;
+            targetData = group.variants[rigFilter];
           } else {
-            targetVariant = '711';
-            targetData = group.variants['711'];
+            // Without rig filter (all IEMs), use cross-rig compensation
+            const is5128Rig = config.RIG_5128_DOMAINS.includes(phone.subdomain) ||
+                              phone.rig === '5128';
+
+            if (is5128Rig) {
+              targetVariant = '5128';
+              targetData = group.variants['5128'];
+            } else {
+              targetVariant = '711';
+              targetData = group.variants['711'];
+            }
           }
         } else {
           targetData = group.variants['default'] || Object.values(group.variants)[0];
@@ -153,9 +170,13 @@ function generateResults(phones, targetGroups) {
   const hpKb5 = headphones.filter(p => p.pinna === 'kb5');
   const hp5128 = headphones.filter(p => p.pinna === '5128');
   
-  // Score IEMs
+  // Score IEMs (all rigs)
   const resultsIEM = scorePhones(iems, targetGroups, 'iem');
-  
+
+  // Score IEMs - 5128 rig only
+  const iems5128 = iems.filter(p => config.RIG_5128_DOMAINS.includes(p.subdomain) || p.rig === '5128');
+  const resultsIEM5128 = scorePhones(iems, targetGroups, 'iem', null, '5128');
+
   // Score Headphones - split by pinna type
   const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
   const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
@@ -177,6 +198,15 @@ function generateResults(phones, targetGroups) {
     results: resultsHpKb5
   };
   
+  // Generate IEM 5128 output
+  const outputIEM5128 = {
+    generatedAt: new Date().toISOString(),
+    totalIEMs: iems5128.length,
+    domainsScanned: config.SUBDOMAINS.length,
+    rigType: '5128',
+    results: resultsIEM5128
+  };
+
   // Generate HP 5128 (B&K 5128) output
   const outputHp5128 = {
     generatedAt: new Date().toISOString(),
@@ -185,17 +215,19 @@ function generateResults(phones, targetGroups) {
     rigType: '5128',
     results: resultsHp5128
   };
-  
+
   fs.writeFileSync(config.RESULTS_IEM_PATH, JSON.stringify(outputIEM, null, 2));
+  fs.writeFileSync(config.RESULTS_IEM_5128_PATH, JSON.stringify(outputIEM5128, null, 2));
   fs.writeFileSync(config.RESULTS_HP_KB5_PATH, JSON.stringify(outputHpKb5, null, 2));
   fs.writeFileSync(config.RESULTS_HP_5128_PATH, JSON.stringify(outputHp5128, null, 2));
-  
+
   console.log(`\nResults saved:`);
-  console.log(`  IEMs: ${config.RESULTS_IEM_PATH} (${iems.length} entries)`);
+  console.log(`  IEMs (all): ${config.RESULTS_IEM_PATH} (${iems.length} entries)`);
+  console.log(`  IEMs (5128): ${config.RESULTS_IEM_5128_PATH} (${iems5128.length} entries)`);
   console.log(`  Headphones KB5: ${config.RESULTS_HP_KB5_PATH} (${hpKb5.length} entries)`);
   console.log(`  Headphones 5128: ${config.RESULTS_HP_5128_PATH} (${hp5128.length} entries)`);
-  
-  return { iems: resultsIEM, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128 };
+
+  return { iems: resultsIEM, iems5128: resultsIEM5128, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128 };
 }
 
 /**
@@ -203,11 +235,14 @@ function generateResults(phones, targetGroups) {
  * Pre-sorted by firstSeen for the "Latest" tab
  * 
  * Files generated:
- * - results_latest_iem_harman.json     (IEMs with Harman 2019)
- * - results_latest_iem_iso.json        (IEMs with ISO 11904-2 DF)
- * - results_latest_hp_kb5_harman.json  (KEMAR KB5 with Harman 2018)
- * - results_latest_hp_kb5_kemar.json   (KEMAR KB5 with KEMAR DF)
- * - results_latest_hp_5128.json        (B&K 5128 with 5128 DF)
+ * - results_latest_iem_harman.json          (IEMs with Harman 2019)
+ * - results_latest_iem_iso.json             (IEMs with ISO 11904-2 DF)
+ * - results_latest_iem_5128_harman.json     (5128 IEMs with Harman 2019)
+ * - results_latest_iem_5128_iso.json        (5128 IEMs with ISO 11904-2 DF)
+ * - results_latest_hp_kb5_harman.json       (KEMAR KB5 with Harman 2018)
+ * - results_latest_hp_kb5_kemar.json        (KEMAR KB5 with KEMAR DF)
+ * - results_latest_hp_5128_harman.json      (B&K 5128 with Harman 2018)
+ * - results_latest_hp_5128_df.json          (B&K 5128 with 5128 DF)
  */
 function generateLatestResults(phones, targetGroups) {
   cache.ensureDirs();
@@ -222,6 +257,7 @@ function generateLatestResults(phones, targetGroups) {
   
   // Get all scored results from all categories
   const resultsIEM = scorePhones(iems, targetGroups, 'iem');
+  const resultsIEM5128 = scorePhones(iems, targetGroups, 'iem', null, '5128');
   const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
   const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
   
@@ -262,12 +298,17 @@ function generateLatestResults(phones, targetGroups) {
       harman: 'Harman 2019 Target',
       iso: 'ISO 11904-2 DF (Tilt_ -0.8dB_Oct, B₁₀₅ 3dB)-Compensated'
     },
+    iem_5128: {
+      harman: 'Harman 2019 Target',
+      iso: 'ISO 11904-2 DF (Tilt_ -0.8dB_Oct, B₁₀₅ 3dB)-Compensated'
+    },
     hp_kb5: {
       harman: 'Harman 2018',
       kemar: 'KEMAR DF (Tilted)'
     },
     hp_5128: {
-      default: '5128 DF (Tilted)'
+      harman: '5128 Harman 2018',
+      df: '5128 DF (Tilted)'
     }
   };
   
@@ -289,6 +330,22 @@ function generateLatestResults(phones, targetGroups) {
     }
   }
   
+  // Generate IEM 5128 files (2 targets)
+  for (const [targetKey, targetName] of Object.entries(targetMappings.iem_5128)) {
+    const targetGroup = resultsIEM5128.find(r => r.targetName === targetName);
+    if (targetGroup) {
+      writeLatestFile(
+        `results_latest_iem_5128_${targetKey}.json`,
+        targetGroup.ranked,
+        'iem_5128',
+        'B&K 5128 IEMs'
+      );
+      totalFiles++;
+    } else {
+      console.log(`  Warning: Target "${targetName}" not found for IEM 5128`);
+    }
+  }
+
   // Generate KEMAR KB5 files (2 targets)
   for (const [targetKey, targetName] of Object.entries(targetMappings.hp_kb5)) {
     const targetGroup = resultsHpKb5.find(r => r.targetName === targetName);
@@ -305,18 +362,20 @@ function generateLatestResults(phones, targetGroups) {
     }
   }
   
-  // Generate B&K 5128 file (1 target)
-  const hp5128TargetGroup = resultsHp5128.find(r => r.targetName === targetMappings.hp_5128.default);
-  if (hp5128TargetGroup) {
-    writeLatestFile(
-      'results_latest_hp_5128.json',
-      hp5128TargetGroup.ranked,
-      'hp_5128',
-      'B&K 5128 OE'
-    );
-    totalFiles++;
-  } else {
-    console.log(`  Warning: Target "${targetMappings.hp_5128.default}" not found for B&K 5128`);
+  // Generate B&K 5128 files (2 targets: harman + df)
+  for (const [targetKey, targetName] of Object.entries(targetMappings.hp_5128)) {
+    const targetGroup = resultsHp5128.find(r => r.targetName === targetName);
+    if (targetGroup) {
+      writeLatestFile(
+        `results_latest_hp_5128_${targetKey}.json`,
+        targetGroup.ranked,
+        'hp_5128',
+        'B&K 5128 OE'
+      );
+      totalFiles++;
+    } else {
+      console.log(`  Warning: Target "${targetName}" not found for B&K 5128`);
+    }
   }
   
   console.log(`  Total: ${totalFiles} files generated`);

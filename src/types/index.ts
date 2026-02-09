@@ -1,8 +1,8 @@
-// Active view type for the UI
-export type ActiveViewType = 'latest' | 'iem' | 'hp_kb5' | 'hp_5128';
+// Category filter for selecting which measurement category to view
+export type CategoryFilter = 'iem' | 'hp_kb5' | 'hp_5128' | 'iem_5128';
 
-// Category filter for Latest tab
-export type CategoryFilter = 'iem' | 'hp_kb5' | 'hp_5128';
+// OE/IE measurement mode toggle
+export type MeasurementMode = 'oe' | 'ie';
 
 // Target selection for IEMs
 export type IEMTarget = 'harman' | 'iso';
@@ -10,11 +10,14 @@ export type IEMTarget = 'harman' | 'iso';
 // Target selection for KEMAR KB5 headphones
 export type KEMARTarget = 'harman' | 'kemar';
 
+// Target selection for B&K 5128 headphones
+export type HP5128Target = 'harman' | 'df';
+
 // Combined target selection state
 export interface TargetSelection {
   iem: IEMTarget;
   hp_kb5: KEMARTarget;
-  // hp_5128 has only one target, no selection needed
+  hp_5128: HP5128Target;
 }
 
 // Phone book entry types from squig.link
@@ -127,7 +130,7 @@ export interface ScanProgress {
 
 // Latest device with category metadata
 export interface LatestDevice extends ScoredIEM {
-  category: 'iem' | 'hp_kb5' | 'hp_5128';
+  category: 'iem' | 'hp_kb5' | 'hp_5128' | 'iem_5128';
   categoryLabel: string;
   targetName: string;
 }
@@ -148,4 +151,31 @@ export interface ResultsData {
   domainsScanned?: number;
   rigType?: string;
   results: CalculationResult[];
+}
+
+// ============================================================================
+// DF TARGET BUILDER TYPES
+// ============================================================================
+
+// Builder parameter state for a single category
+export interface BuilderParams {
+  tilt: number;       // dB/octave (e.g. -0.8)
+  bassGain: number;   // dB for low shelf at 105 Hz
+  trebleGain: number; // dB for high shelf at 2500 Hz
+}
+
+// Per-category builder parameter state
+export interface BuilderState {
+  iem: BuilderParams;
+  hp_kb5: BuilderParams;
+  hp_5128: BuilderParams;
+  iem_5128: BuilderParams;
+}
+
+// Per-category builder scoring results
+export interface BuilderResults {
+  iem: CalculationResult | null;
+  hp_kb5: CalculationResult | null;
+  hp_5128: CalculationResult | null;
+  iem_5128: CalculationResult | null;
 }

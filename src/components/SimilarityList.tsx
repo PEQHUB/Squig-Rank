@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import type { CalculationResult, ScoredIEM, LatestDevice, CategoryFilter } from '../types';
+import { useState, useRef, useCallback } from 'react';
+import type { CalculationResult, ScoredIEM, LatestDevice, CategoryFilter, MeasurementMode, BuilderResults } from '../types';
 
 const PAGE_SIZE = 25;
 
 interface SimilarityListProps {
   results: CalculationResult[];
-  isLatestTab?: boolean;
   categoryFilter?: CategoryFilter;
+  measurementMode?: MeasurementMode;
   latestIemDevices?: LatestDevice[];
   latestKb5Devices?: LatestDevice[];
   latest5128Devices?: LatestDevice[];
+  latestIem5128Devices?: LatestDevice[];
+  builderResults?: BuilderResults;
 }
 
 // Extended type with PPI rank for Latest tab
@@ -77,139 +79,40 @@ function prepareLatestDevices(devices: LatestDevice[]): LatestDeviceWithRank[] {
   });
 }
 
-export default function SimilarityList({ 
-  results, 
-  isLatestTab = false, 
+export default function SimilarityList({
+  results,
   categoryFilter = 'iem',
+  measurementMode = 'ie',
   latestIemDevices,
   latestKb5Devices,
-  latest5128Devices
+  latest5128Devices,
+  latestIem5128Devices,
+  builderResults
 }: SimilarityListProps) {
-  const [activeColumn, setActiveColumn] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // State for filters
-  const [showCloneCoupler, setShowCloneCoupler] = useState<boolean[]>([]);
-  const [hideDuplicates, setHideDuplicates] = useState<boolean[]>([]);
-  const [showCounts, setShowCounts] = useState<number[]>([]);
 
-  // Update filters when results change
-  useEffect(() => {
-    if (results.length > 0) {
-      setShowCloneCoupler(results.map(() => true));
-      setHideDuplicates(results.map(() => true));
-      setShowCounts(results.map(() => PAGE_SIZE));
-    }
-  }, [results]);
+  // Check if any data is available
+  const hasAnyData = (latestIemDevices && latestIemDevices.length > 0) ||
+                     (latestKb5Devices && latestKb5Devices.length > 0) ||
+                     (latest5128Devices && latest5128Devices.length > 0) ||
+                     (latestIem5128Devices && latestIem5128Devices.length > 0);
 
-  const isMobile = window.innerWidth <= 768;
-
-  const handleNext = () => {
-    setActiveColumn((prev) => (prev + 1) % results.length);
-  };
-
-  const handlePrev = () => {
-    setActiveColumn((prev) => (prev - 1 + results.length) % results.length);
-  };
-
-  const toggleCloneCoupler = (targetIndex: number) => {
-    setShowCloneCoupler(prev => {
-      const newFilters = [...prev];
-      newFilters[targetIndex] = !newFilters[targetIndex];
-      return newFilters;
-    });
-  };
-  
-  const toggleDuplicates = (targetIndex: number) => {
-    setHideDuplicates(prev => {
-      const newFilters = [...prev];
-      newFilters[targetIndex] = !newFilters[targetIndex];
-      return newFilters;
-    });
-  };
-
-  const handleLoadMore = (targetIndex: number) => {
-    setShowCounts(prev => {
-      const newCounts = [...prev];
-      newCounts[targetIndex] += PAGE_SIZE;
-      return newCounts;
-    });
-  };
-
-  // Render Latest tab
-  if (isLatestTab) {
-    // Check if any data is available
-    const hasAnyData = (latestIemDevices && latestIemDevices.length > 0) ||
-                       (latestKb5Devices && latestKb5Devices.length > 0) ||
-                       (latest5128Devices && latest5128Devices.length > 0);
-    
-    if (!hasAnyData) {
-      return <div className="loading-results">Loading latest devices...</div>;
-    }
-    
-    return <LatestTabView 
-      iemDevices={latestIemDevices || []}
-      kb5Devices={latestKb5Devices || []}
-      hp5128Devices={latest5128Devices || []}
-      categoryFilter={categoryFilter} 
-      searchTerm={searchTerm}
-      onSearchChange={setSearchTerm}
-    />;
+  if (!hasAnyData) {
+    return <div className="loading-results">Loading latest devices...</div>;
   }
 
-  // Render normal tabs
-  if (!results || results.length === 0) {
-    return <div className="loading-results">Loading rankings...</div>;
-  }
-
-  return (
-    <div className="similarity-list">
-      <div className="search-container">
-        <span className="search-icon">🔍</span>
-        <input 
-          type="text" 
-          className="search-input" 
-          placeholder="Search by model name..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {isMobile ? (
-        <div className="mobile-view">
-          <button onClick={handlePrev} className="nav-button">&#9664;</button>
-          
-          <TargetColumn
-            data={results[activeColumn]}
-            showCloneCoupler={showCloneCoupler[activeColumn]}
-            hideDuplicates={hideDuplicates[activeColumn]}
-            searchTerm={searchTerm}
-            onToggleClone={() => toggleCloneCoupler(activeColumn)}
-            onToggleDupes={() => toggleDuplicates(activeColumn)}
-            showCount={showCounts[activeColumn]}
-            onLoadMore={() => handleLoadMore(activeColumn)}
-          />
-          <button onClick={handleNext} className="nav-button">&#9654;</button>
-        </div>
-      ) : (
-        <div className={`desktop-view ${results.length === 1 ? 'single-column' : ''}`}>
-          {results.map((result, index) => (
-            <TargetColumn
-              key={result.targetName}
-              data={result}
-              showCloneCoupler={showCloneCoupler[index]}
-              hideDuplicates={hideDuplicates[index]}
-              searchTerm={searchTerm}
-              onToggleClone={() => toggleCloneCoupler(index)}
-              onToggleDupes={() => toggleDuplicates(index)}
-              showCount={showCounts[index]}
-              onLoadMore={() => handleLoadMore(index)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <LatestTabView
+    iemDevices={latestIemDevices || []}
+    kb5Devices={latestKb5Devices || []}
+    hp5128Devices={latest5128Devices || []}
+    iem5128Devices={latestIem5128Devices || []}
+    categoryFilter={categoryFilter}
+    measurementMode={measurementMode}
+    searchTerm={searchTerm}
+    onSearchChange={setSearchTerm}
+    builderResults={builderResults}
+    customResults={results}
+  />;
 }
 
 
@@ -458,47 +361,67 @@ interface LatestTabViewProps {
   iemDevices: LatestDevice[];
   kb5Devices: LatestDevice[];
   hp5128Devices: LatestDevice[];
+  iem5128Devices: LatestDevice[];
   categoryFilter: CategoryFilter;
+  measurementMode: MeasurementMode;
   searchTerm: string;
   onSearchChange: (term: string) => void;
+  builderResults?: BuilderResults;
+  customResults?: CalculationResult[];
 }
 
-function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, categoryFilter, searchTerm, onSearchChange }: LatestTabViewProps) {
+function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, categoryFilter, measurementMode, searchTerm, onSearchChange, builderResults, customResults }: LatestTabViewProps) {
   const isMobile = window.innerWidth <= 768;
-  
+
   // Get devices for current category filter (for mobile view)
   const getMobileDevices = (): LatestDevice[] => {
     switch (categoryFilter) {
       case 'iem': return iemDevices;
       case 'hp_kb5': return kb5Devices;
       case 'hp_5128': return hp5128Devices;
+      case 'iem_5128': return iem5128Devices;
     }
   };
-  
+
+  // Check if current mobile category has builder results
+  const mobileBuilderResult = builderResults?.[categoryFilter] ?? null;
+  // Check for custom upload results
+  const mobileCustomResult = (customResults && customResults.length > 0) ? customResults[0] : null;
+
   return (
     <div className="similarity-list latest-tab">
       <div className="search-container">
         <span className="search-icon">🔍</span>
-        <input 
-          type="text" 
-          className="search-input" 
-          placeholder="Search by model name..." 
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search by model name..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-      
+
       {isMobile ? (
-        <LatestMobileView
-          devices={getMobileDevices()}
-          searchTerm={searchTerm}
-        />
+        mobileBuilderResult ? (
+          <LatestMobileBuilderView result={mobileBuilderResult} searchTerm={searchTerm} />
+        ) : mobileCustomResult ? (
+          <LatestMobileBuilderView result={mobileCustomResult} searchTerm={searchTerm} />
+        ) : (
+          <LatestMobileView
+            devices={getMobileDevices()}
+            searchTerm={searchTerm}
+          />
+        )
       ) : (
-        <LatestThreeColumns
+        <LatestTwoColumns
+          measurementMode={measurementMode}
           iemDevices={iemDevices}
           kb5Devices={kb5Devices}
           hp5128Devices={hp5128Devices}
+          iem5128Devices={iem5128Devices}
           searchTerm={searchTerm}
+          builderResults={builderResults}
+          customResults={customResults}
         />
       )}
     </div>
@@ -562,6 +485,26 @@ function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
   );
 }
 
+// Mobile view for builder results on Latest tab
+function LatestMobileBuilderView({ result, searchTerm }: { result: CalculationResult; searchTerm: string }) {
+  const [showCloneCoupler, setShowCloneCoupler] = useState(true);
+  const [hideDuplicates, setHideDuplicates] = useState(true);
+  const [showCount, setShowCount] = useState(PAGE_SIZE);
+
+  return (
+    <TargetColumn
+      data={result}
+      showCloneCoupler={showCloneCoupler}
+      hideDuplicates={hideDuplicates}
+      searchTerm={searchTerm}
+      onToggleClone={() => setShowCloneCoupler(prev => !prev)}
+      onToggleDupes={() => setHideDuplicates(prev => !prev)}
+      showCount={showCount}
+      onLoadMore={() => setShowCount(prev => prev + PAGE_SIZE)}
+    />
+  );
+}
+
 // Empty state component
 function LatestEmptyState({ category }: { category: string }) {
   return (
@@ -572,48 +515,57 @@ function LatestEmptyState({ category }: { category: string }) {
   );
 }
 
-interface LatestThreeColumnsProps {
+interface LatestTwoColumnsProps {
+  measurementMode: MeasurementMode;
   iemDevices: LatestDevice[];
   kb5Devices: LatestDevice[];
   hp5128Devices: LatestDevice[];
+  iem5128Devices: LatestDevice[];
   searchTerm: string;
+  builderResults?: BuilderResults;
+  customResults?: CalculationResult[];
 }
 
-function LatestThreeColumns({ iemDevices, kb5Devices, hp5128Devices, searchTerm }: LatestThreeColumnsProps) {
-  const [currentPage, setCurrentPage] = useState<{iem: number, hp_kb5: number, hp_5128: number}>({
-    iem: 1,
-    hp_kb5: 1,
-    hp_5128: 1
+function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devices, iem5128Devices, searchTerm, builderResults, customResults }: LatestTwoColumnsProps) {
+  const [currentPage, setCurrentPage] = useState<Record<string, number>>({
+    iem: 1, hp_kb5: 1, hp_5128: 1, iem_5128: 1
   });
-  
+
+  // Builder-ranked column state (separate from chronological pagination)
+  const [builderShowClone, setBuilderShowClone] = useState<Record<string, boolean>>({
+    iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
+  });
+  const [builderHideDupes, setBuilderHideDupes] = useState<Record<string, boolean>>({
+    iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
+  });
+  const [builderShowCounts, setBuilderShowCounts] = useState<Record<string, number>>({
+    iem: PAGE_SIZE, hp_kb5: PAGE_SIZE, hp_5128: PAGE_SIZE, iem_5128: PAGE_SIZE
+  });
+
   // Prepare devices with rank and sort chronologically, then filter by search
   const prepareAndFilter = (devices: LatestDevice[]): LatestDeviceWithRank[] => {
     let prepared = prepareLatestDevices(devices);
-    
+
     if (searchTerm && searchTerm.trim()) {
       const term = searchTerm.toLowerCase().trim();
       prepared = prepared.filter(d => d.name.toLowerCase().includes(term));
     }
-    
+
     return prepared;
   };
-  
-  const preparedIem = prepareAndFilter(iemDevices);
-  const preparedKb5 = prepareAndFilter(kb5Devices);
-  const prepared5128 = prepareAndFilter(hp5128Devices);
-  
-  const renderColumn = (
-    devices: LatestDeviceWithRank[], 
-    category: 'iem' | 'hp_kb5' | 'hp_5128',
+
+  const renderLatestColumn = (
+    devices: LatestDeviceWithRank[],
+    category: string,
     label: string
   ) => {
-    const page = currentPage[category];
+    const page = currentPage[category] || 1;
     const startIndex = (page - 1) * PAGE_SIZE;
     const endIndex = startIndex + PAGE_SIZE;
     const pageDevices = devices.slice(startIndex, endIndex);
     const totalPages = Math.ceil(devices.length / PAGE_SIZE);
     const totalDevices = devices.length;
-    
+
     return (
       <div className="latest-column active">
         <h3>{label} ({totalDevices})</h3>
@@ -629,15 +581,15 @@ function LatestThreeColumns({ iemDevices, kb5Devices, hp5128Devices, searchTerm 
             </ul>
             {totalPages > 1 && (
               <div className="pagination-controls">
-                <button 
-                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.max(1, prev[category] - 1) }))}
+                <button
+                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.max(1, (prev[category] || 1) - 1) }))}
                   disabled={page === 1}
                 >
                   Prev
                 </button>
                 <span>{page} / {totalPages}</span>
-                <button 
-                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.min(totalPages, prev[category] + 1) }))}
+                <button
+                  onClick={() => setCurrentPage(prev => ({ ...prev, [category]: Math.min(totalPages, (prev[category] || 1) + 1) }))}
                   disabled={page === totalPages}
                 >
                   Next
@@ -651,14 +603,67 @@ function LatestThreeColumns({ iemDevices, kb5Devices, hp5128Devices, searchTerm 
       </div>
     );
   };
-  
-  return (
-    <div className="latest-three-columns">
-      {renderColumn(preparedIem, 'iem', 'IEMs')}
-      {renderColumn(preparedKb5, 'hp_kb5', 'KEMAR (711) OE')}
-      {renderColumn(prepared5128, 'hp_5128', 'B&K 5128 OE')}
-    </div>
-  );
+
+  const renderBuilderColumn = (
+    result: CalculationResult,
+    category: string
+  ) => {
+    return (
+      <TargetColumn
+        data={result}
+        showCloneCoupler={builderShowClone[category] ?? true}
+        hideDuplicates={builderHideDupes[category] ?? true}
+        searchTerm={searchTerm}
+        onToggleClone={() => setBuilderShowClone(prev => ({ ...prev, [category]: !(prev[category] ?? true) }))}
+        onToggleDupes={() => setBuilderHideDupes(prev => ({ ...prev, [category]: !(prev[category] ?? true) }))}
+        showCount={builderShowCounts[category] ?? PAGE_SIZE}
+        onLoadMore={() => setBuilderShowCounts(prev => ({ ...prev, [category]: (prev[category] ?? PAGE_SIZE) + PAGE_SIZE }))}
+      />
+    );
+  };
+
+  // Determine which 2 columns to show based on measurement mode
+  if (measurementMode === 'ie') {
+    const preparedIem = prepareAndFilter(iemDevices);
+    const preparedIem5128 = prepareAndFilter(iem5128Devices);
+    const iemBuilderResult = builderResults?.iem;
+    const iem5128BuilderResult = builderResults?.iem_5128;
+
+    // Custom upload results override both columns if present
+    const hasCustom = customResults && customResults.length > 0;
+
+    return (
+      <div className="latest-two-columns">
+        {hasCustom
+          ? renderBuilderColumn(customResults![0], 'iem')
+          : iemBuilderResult
+            ? renderBuilderColumn(iemBuilderResult, 'iem')
+            : renderLatestColumn(preparedIem, 'iem', 'IEMs (711)')}
+        {iem5128BuilderResult
+          ? renderBuilderColumn(iem5128BuilderResult, 'iem_5128')
+          : renderLatestColumn(preparedIem5128, 'iem_5128', '5128 IE')}
+      </div>
+    );
+  } else {
+    const preparedKb5 = prepareAndFilter(kb5Devices);
+    const prepared5128 = prepareAndFilter(hp5128Devices);
+    const kb5BuilderResult = builderResults?.hp_kb5;
+    const hp5128BuilderResult = builderResults?.hp_5128;
+    const hasCustom = customResults && customResults.length > 0;
+
+    return (
+      <div className="latest-two-columns">
+        {hasCustom
+          ? renderBuilderColumn(customResults![0], 'hp_kb5')
+          : kb5BuilderResult
+            ? renderBuilderColumn(kb5BuilderResult, 'hp_kb5')
+            : renderLatestColumn(preparedKb5, 'hp_kb5', 'KB5 (711) OE')}
+        {hp5128BuilderResult
+          ? renderBuilderColumn(hp5128BuilderResult, 'hp_5128')
+          : renderLatestColumn(prepared5128, 'hp_5128', 'B&K 5128 OE')}
+      </div>
+    );
+  }
 }
 
 interface LatestDeviceRowProps {
