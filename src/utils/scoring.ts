@@ -6,7 +6,7 @@
  */
 
 import { decode } from '@msgpack/msgpack';
-import { parseFrequencyResponse, calculatePPI, logInterpolate } from './ppi';
+import { calculatePPI, logInterpolate } from './ppi';
 import type { CalculationResult, ScoredIEM, FrequencyCurve, CategoryFilter } from '../types';
 
 // ============================================================================
