@@ -481,7 +481,7 @@ interface LatestMobileViewProps {
 function LatestMobileView({ devices, searchTerm, onFindSimilar }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const [showCloneCoupler, setShowCloneCoupler] = useState(true);
-  const [hideDuplicates, setHideDuplicates] = useState(true);
+  const [hideDuplicates, setHideDuplicates] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive sort/rank computation
@@ -649,7 +649,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
     iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
   });
   const [latestHideDupes, setLatestHideDupes] = useState<Record<string, boolean>>({
-    iem: true, hp_kb5: true, hp_5128: true, iem_5128: true
+    iem: false, hp_kb5: false, hp_5128: false, iem_5128: false
   });
 
   // Memoize expensive sort/rank computation per device array
