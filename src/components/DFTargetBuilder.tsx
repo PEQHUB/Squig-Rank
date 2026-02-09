@@ -8,11 +8,22 @@ import type { BaselinePresetKey, BaselineSelection, BuilderParams, CalculationRe
 // BASELINE LOADING
 // ============================================================================
 
-const BASELINE_FILES: Record<CategoryFilter, string> = {
+const BASELINE_FILES: Record<string, string> = {
   iem: './targets/df-baselines/ISO 11904-2 DF  Target.txt',
   hp_kb5: './targets/df-baselines/KEMAR DF (KB50xx)  Target.txt',
   hp_5128: './targets/df-baselines/5128 DF  Target.txt',
   iem_5128: './targets/df-baselines/JM-1 DF  Target.txt',
+  iso_11904_1: './targets/df-baselines/ISO 11904-1 DF  Target.txt',
+  iec_60318_7: './targets/df-baselines/IEC 60318-7 DF  Target.txt',
+  kemar_kb006x: './targets/df-baselines/KEMAR DF (KB006x)  Target.txt',
+  kemar_kb50xx_smoothed: './targets/df-baselines/KEMAR DF (KB50xx, SquigLink Smoothed)  Target.txt',
+  '4128': './targets/df-baselines/4128 DF  Target.txt',
+  hmsii3_innerfidelity: './targets/df-baselines/HMSii.3 DF (InnerFidelity)  Target.txt',
+  hmsii3_rtings: './targets/df-baselines/HMSii.3 DF (RTINGS)  Target.txt',
+  harman_in_room: './targets/df-baselines/Harman In-Room Flat  Target.txt',
+  wip_df_hrtf_5128: './targets/df-baselines/WIP DF HRTF (5128)  Target.txt',
+  ief_neutral_2023: './targets/df-baselines/IEF Neutral 2023 Target Target.txt',
+  ief_neutral_2020: './targets/df-baselines/IEF Neutral 2020 Target Target.txt',
 };
 
 const RIG_FOR_CATEGORY: Record<CategoryFilter, '711' | '5128'> = {
@@ -34,6 +45,17 @@ const BASELINE_LABELS: Record<BaselinePresetKey, string> = {
   hp_kb5: 'KEMAR DF (KB50xx)',
   hp_5128: '5128 DF',
   iem_5128: 'JM-1 DF',
+  iso_11904_1: 'ISO 11904-1 DF',
+  iec_60318_7: 'IEC 60318-7 DF',
+  kemar_kb006x: 'KEMAR DF (KB006x)',
+  kemar_kb50xx_smoothed: 'KEMAR DF (KB50xx, Smoothed)',
+  '4128': '4128 DF',
+  hmsii3_innerfidelity: 'HMSii.3 DF (InnerFidelity)',
+  hmsii3_rtings: 'HMSii.3 DF (RTINGS)',
+  harman_in_room: 'Harman In-Room Flat',
+  wip_df_hrtf_5128: 'WIP DF HRTF (5128)',
+  ief_neutral_2023: 'IEF Neutral 2023',
+  ief_neutral_2020: 'IEF Neutral 2020',
 };
 
 // Module-level cache for fetched baselines
@@ -300,6 +322,7 @@ export function DFTargetBuilder({
           </button>
           {dropdownOpen && (
             <div className="baseline-dropdown-menu">
+              {/* Default category presets */}
               {(['iem', 'hp_kb5', 'hp_5128', 'iem_5128'] as BaselinePresetKey[]).map(key => (
                 <button
                   key={key}
@@ -313,6 +336,27 @@ export function DFTargetBuilder({
                 >
                   {BASELINE_LABELS[key]}
                   {key === category && <span className="baseline-default-tag">default</span>}
+                </button>
+              ))}
+              <div className="baseline-dropdown-divider" />
+              {/* Additional baselines */}
+              {([
+                'iso_11904_1', 'iec_60318_7', 'kemar_kb006x', 'kemar_kb50xx_smoothed',
+                '4128', 'hmsii3_innerfidelity', 'hmsii3_rtings',
+                'harman_in_room', 'wip_df_hrtf_5128',
+                'ief_neutral_2023', 'ief_neutral_2020',
+              ] as BaselinePresetKey[]).map(key => (
+                <button
+                  key={key}
+                  className={`baseline-dropdown-item ${
+                    baselineSelection.type === 'preset' && baselineSelection.presetKey === key ? 'active' : ''
+                  }`}
+                  onClick={() => {
+                    onBaselineChange({ type: 'preset', presetKey: key });
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {BASELINE_LABELS[key]}
                 </button>
               ))}
             </div>

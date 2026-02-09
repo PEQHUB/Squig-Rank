@@ -173,7 +173,12 @@ export interface BuilderState {
 }
 
 // Baseline selection for a single category
-export type BaselinePresetKey = 'iem' | 'hp_kb5' | 'hp_5128' | 'iem_5128';
+export type BaselinePresetKey =
+  | 'iem' | 'hp_kb5' | 'hp_5128' | 'iem_5128'
+  | 'iso_11904_1' | 'iec_60318_7' | 'kemar_kb006x' | 'kemar_kb50xx_smoothed'
+  | '4128' | 'hmsii3_innerfidelity' | 'hmsii3_rtings'
+  | 'harman_in_room' | 'wip_df_hrtf_5128'
+  | 'ief_neutral_2023' | 'ief_neutral_2020';
 
 export interface BaselineSelection {
   type: 'preset' | 'custom';
