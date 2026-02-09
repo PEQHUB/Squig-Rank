@@ -285,6 +285,13 @@ export default function Home() {
     }
   };
 
+  const handleCombinedCalculate = useCallback((result: CalculationResult) => {
+    // Clear all builder results (since we're using a single combined view)
+    setBuilderResults({ iem: null, hp_kb5: null, hp_5128: null, iem_5128: null });
+    // Store in customResult — this displays as a single centered column
+    setCustomResult(result);
+  }, []);
+
   const handleFindSimilar = useCallback(async (iem: ScoredIEM) => {
     // LatestDevice objects from pre-scored JSON don't have frequencyData,
     // so we look up the device's raw db array from the curve data cache.
@@ -454,6 +461,7 @@ export default function Home() {
         onBuilderReset={handleBuilderReset}
         onBaselineChange={handleBaselineChange}
         onUploadCalculate={handleUploadCalculate}
+        onCalculateCombined={handleCombinedCalculate}
         customResult={customResult}
         activeTab={panelTab}
         onTabChange={setPanelTab}

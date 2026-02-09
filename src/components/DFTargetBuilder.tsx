@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { buildTargetCurve, CATEGORY_DEFAULTS } from '../utils/shelfFilter';
-import { scoreAllDevices } from '../utils/scoring';
+import { scoreAllDevices, scoreAllDevicesCombined } from '../utils/scoring';
 import type { BaselinePresetKey, BaselineSelection, BuilderParams, CalculationResult, CategoryFilter, FrequencyCurve } from '../types';
 
 // ============================================================================
@@ -89,6 +89,7 @@ interface Props {
   baselineSelection: BaselineSelection;
   siblingBaselineSelection: BaselineSelection;
   onBaselineChange: (selection: BaselineSelection) => void;
+  onCalculateCombined: (result: CalculationResult) => void;
 }
 
 export function DFTargetBuilder({
@@ -104,6 +105,7 @@ export function DFTargetBuilder({
   baselineSelection,
   siblingBaselineSelection,
   onBaselineChange,
+  onCalculateCombined,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -214,6 +216,28 @@ export function DFTargetBuilder({
       setLoading(false);
     }
   }, [category, siblingCategory, params, siblingParams, baselineSelection, siblingBaselineSelection, onCalculate]);
+
+  const handleCheckCombined = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const baseline = await resolveBaseline(baselineSelection);
+      const modifiedTarget = buildTargetCurve(baseline, params);
+      setLastBuiltCurve(modifiedTarget);
+
+      const baselineName = getBaselineDisplayName(baselineSelection);
+      const targetName = `${baselineName} (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
+
+      const result = await scoreAllDevicesCombined(modifiedTarget, targetName);
+      onCalculateCombined(result);
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : 'Scoring failed');
+    } finally {
+      setLoading(false);
+    }
+  }, [category, params, baselineSelection, onCalculateCombined]);
 
   // Auto-re-rank when rig/category changes while ranking is active
   useEffect(() => {
@@ -387,6 +411,14 @@ export function DFTargetBuilder({
           disabled={loading}
         >
           {loading ? 'Ranking...' : ((isRanking || isSiblingRanking) ? 'Re-Rank Both Rigs' : 'Rank Both Rigs')}
+        </button>
+
+        <button
+          className="submit-btn rank-together-btn"
+          onClick={handleCheckCombined}
+          disabled={loading}
+        >
+          {loading ? 'Ranking...' : 'Rank Together'}
         </button>
 
         {lastBuiltCurve && (

@@ -29,6 +29,7 @@ interface Props {
   onBuilderReset: (category: CategoryFilter) => void;
   onBaselineChange: (category: CategoryFilter, selection: BaselineSelection) => void;
   onUploadCalculate: (result: CalculationResult | null) => void;
+  onCalculateCombined: (result: CalculationResult) => void;
   customResult: CalculationResult | null;
   activeTab: PanelTab;
   onTabChange: (tab: PanelTab) => void;
@@ -50,6 +51,7 @@ export function TargetPanel({
   onBuilderReset,
   onBaselineChange,
   onUploadCalculate,
+  onCalculateCombined,
   customResult,
   activeTab,
   onTabChange,
@@ -210,6 +212,7 @@ export function TargetPanel({
             baselineSelection={baselineState[effectiveCategory]}
             siblingBaselineSelection={baselineState[siblingCategory]}
             onBaselineChange={(sel) => onBaselineChange(effectiveCategory, sel)}
+            onCalculateCombined={onCalculateCombined}
           />
         </div>
       ) : activeTab === 'upload' ? (

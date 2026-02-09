@@ -213,6 +213,7 @@ export async function scoreAllDevices(
       if (entry.rig !== '5128') continue;
     } else {
       if (entry.type !== 'iem') continue;
+      if (entry.rig === '5128') continue;  // 711 mode: exclude 5128 IEMs
     }
 
     const iemCurve = { frequencies: freqs, db: entry.db };
@@ -250,6 +251,72 @@ export async function scoreAllDevices(
 
   return {
     targetName: `${targetName} (${targetType})`,
+    targetFileName: 'custom.txt',
+    scoringMethod: 'ppi',
+    ranked: scored
+  };
+}
+
+/**
+ * Score ALL IEMs (both 711 and 5128 rigs) against a target curve.
+ * Applies rig-appropriate compensation: 711 comp for 711-rig IEMs, base target for 5128-rig.
+ * Returns a single merged ranked list.
+ */
+export async function scoreAllDevicesCombined(
+  targetCurve: FrequencyCurve,
+  targetName: string
+): Promise<CalculationResult> {
+  const data = await loadCurveData();
+  const freqs = data.frequencies;
+  const comp711 = data.compensation711;
+
+  const getCompensatedTarget = (compArray: number[] | undefined): FrequencyCurve => {
+    if (!compArray) return targetCurve;
+    const alignedTarget = freqs.map(f => logInterpolate(targetCurve.frequencies, targetCurve.db, f));
+    const newDb = alignedTarget.map((val, i) => {
+      const comp = compArray[i] || 0;
+      return val + comp;
+    });
+    return { frequencies: freqs, db: newDb };
+  };
+
+  const targetBase = targetCurve;
+  const targetPlus711Comp = getCompensatedTarget(comp711);
+
+  const scored: ScoredIEM[] = [];
+
+  for (const entry of data.entries) {
+    if (entry.type !== 'iem') continue;  // IEMs only, both rigs
+
+    const iemCurve = { frequencies: freqs, db: entry.db };
+    const iemRig = entry.rig;
+
+    // Apply 711 compensation for 711-rig IEMs, base target for 5128
+    const activeTarget = iemRig === '711' ? targetPlus711Comp : targetBase;
+
+    const result = calculatePPI(iemCurve, activeTarget);
+
+    scored.push({
+      id: entry.id,
+      name: entry.name,
+      similarity: result.ppi,
+      stdev: result.stdev,
+      slope: result.slope,
+      avgError: result.avgError,
+      price: entry.price,
+      quality: entry.quality,
+      type: entry.type,
+      sourceDomain: `${entry.id.split('::')[0]}.squig.link`,
+      rig: iemRig,
+      pinna: entry.pinna as any,
+      frequencyData: iemCurve
+    });
+  }
+
+  scored.sort((a, b) => b.similarity - a.similarity);
+
+  return {
+    targetName: `${targetName} (All Rigs)`,
     targetFileName: 'custom.txt',
     scoringMethod: 'ppi',
     ranked: scored
