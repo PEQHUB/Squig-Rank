@@ -108,10 +108,12 @@ interface Props {
   onReset: (category: CategoryFilter) => void;
   isRanking: boolean;
   isSiblingRanking: boolean;
+  isCombinedRanking: boolean;
   baselineSelection: BaselineSelection;
   siblingBaselineSelection: BaselineSelection;
   onBaselineChange: (selection: BaselineSelection) => void;
   onCalculateCombined: (result: CalculationResult) => void;
+  onResetCombined: () => void;
 }
 
 export function DFTargetBuilder({
@@ -124,10 +126,12 @@ export function DFTargetBuilder({
   onReset,
   isRanking,
   isSiblingRanking,
+  isCombinedRanking,
   baselineSelection,
   siblingBaselineSelection,
   onBaselineChange,
   onCalculateCombined,
+  onResetCombined,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -282,6 +286,14 @@ export function DFTargetBuilder({
     onBaselineChange({ type: 'preset', presetKey: category as BaselinePresetKey });
     setLastBuiltCurve(null);
     onReset(category);
+    // Also clear sibling results so "Rank Both Rigs" results are fully cleared
+    if (isSiblingRanking) {
+      onReset(siblingCategory);
+    }
+    // Clear combined "Rank Together" results
+    if (isCombinedRanking) {
+      onResetCombined();
+    }
   };
 
   const handleDownload = () => {
@@ -435,7 +447,7 @@ export function DFTargetBuilder({
       {error && <p className="upload-error">{error}</p>}
 
       <div className="builder-actions">
-        {isRanking && (
+        {(isRanking || isSiblingRanking || isCombinedRanking) && (
           <button className="reset-btn" onClick={handleReset}>
             Reset
           </button>

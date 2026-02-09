@@ -292,6 +292,10 @@ export default function Home() {
     setCustomResult(result);
   }, []);
 
+  const handleResetCombined = useCallback(() => {
+    setCustomResult(null);
+  }, []);
+
   const handleFindSimilar = useCallback(async (iem: ScoredIEM) => {
     // LatestDevice objects from pre-scored JSON don't have frequencyData,
     // so we look up the device's raw db array from the curve data cache.
@@ -462,6 +466,7 @@ export default function Home() {
         onBaselineChange={handleBaselineChange}
         onUploadCalculate={handleUploadCalculate}
         onCalculateCombined={handleCombinedCalculate}
+        onResetCombined={handleResetCombined}
         customResult={customResult}
         activeTab={panelTab}
         onTabChange={setPanelTab}
