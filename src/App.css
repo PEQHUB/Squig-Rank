@@ -2055,10 +2055,13 @@ body {
   .target-panel {
     padding: 10px 12px;
     border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .target-panel-header {
     gap: 8px;
+    width: 100%;
   }
 
   .target-panel h3 {
@@ -2077,9 +2080,23 @@ body {
     font-size: 8px;
   }
 
+  .panel-content {
+    width: 100%;
+  }
+
+  .df-target-builder {
+    width: 100%;
+  }
+
   .builder-controls {
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .builder-slider {
+    width: 100%;
   }
 
   .builder-slider input[type="range"]::-webkit-slider-thumb {
@@ -2096,11 +2113,14 @@ body {
     flex-wrap: wrap;
     gap: 6px;
     justify-content: center;
+    width: 100%;
   }
 
   .baseline-selector {
     padding: 5px 10px;
     gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .baseline-name {
@@ -2109,6 +2129,15 @@ body {
 
   .baseline-dropdown-menu {
     min-width: 180px;
+  }
+
+  .custom-target-upload {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .iem-search {
+    width: 100%;
   }
 }
 
