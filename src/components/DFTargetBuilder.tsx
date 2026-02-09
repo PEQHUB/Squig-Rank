@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { buildTargetCurve, CATEGORY_DEFAULTS } from '../utils/shelfFilter';
 import { scoreAllDevices } from '../utils/scoring';
-import type { BuilderParams, CalculationResult, CategoryFilter, FrequencyCurve } from '../types';
+import type { BaselinePresetKey, BaselineSelection, BuilderParams, CalculationResult, CategoryFilter, FrequencyCurve } from '../types';
 
 // ============================================================================
 // BASELINE LOADING
@@ -29,27 +29,47 @@ const CATEGORY_LABELS: Record<CategoryFilter, string> = {
   iem_5128: 'B&K 5128 IEMs',
 };
 
+const BASELINE_LABELS: Record<BaselinePresetKey, string> = {
+  iem: 'ISO 11904-2 DF',
+  hp_kb5: 'KEMAR DF (KB50xx)',
+  hp_5128: '5128 DF',
+  iem_5128: 'JM-1 DF',
+};
+
 // Module-level cache for fetched baselines
 const baselineCache = new Map<string, FrequencyCurve>();
 
-async function loadBaseline(category: CategoryFilter): Promise<FrequencyCurve> {
-  const cached = baselineCache.get(category);
+async function loadBaseline(key: BaselinePresetKey): Promise<FrequencyCurve> {
+  const cached = baselineCache.get(key);
   if (cached) return cached;
 
-  const url = BASELINE_FILES[category];
+  const url = BASELINE_FILES[key];
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Baseline DF curve not available for ${CATEGORY_LABELS[category]}. Please add the untilted DF file.`);
+    throw new Error(`Baseline DF curve not available for ${BASELINE_LABELS[key]}.`);
   }
 
   const text = await response.text();
   const curve = parseFrequencyResponse(text);
   if (curve.frequencies.length < 10) {
-    throw new Error(`Invalid baseline curve for ${CATEGORY_LABELS[category]} (need at least 10 frequency points).`);
+    throw new Error(`Invalid baseline curve for ${BASELINE_LABELS[key]} (need at least 10 frequency points).`);
   }
 
-  baselineCache.set(category, curve);
+  baselineCache.set(key, curve);
   return curve;
+}
+
+async function resolveBaseline(selection: BaselineSelection): Promise<FrequencyCurve> {
+  if (selection.type === 'custom' && selection.customCurve) {
+    return selection.customCurve;
+  }
+  return loadBaseline(selection.presetKey!);
+}
+
+function getBaselineDisplayName(sel: BaselineSelection): string {
+  if (sel.type === 'custom' && sel.customName) return sel.customName;
+  if (sel.presetKey) return BASELINE_LABELS[sel.presetKey];
+  return 'Unknown';
 }
 
 // ============================================================================
@@ -66,6 +86,9 @@ interface Props {
   onReset: (category: CategoryFilter) => void;
   isRanking: boolean;
   isSiblingRanking: boolean;
+  baselineSelection: BaselineSelection;
+  siblingBaselineSelection: BaselineSelection;
+  onBaselineChange: (selection: BaselineSelection) => void;
 }
 
 export function DFTargetBuilder({
@@ -78,13 +101,54 @@ export function DFTargetBuilder({
   onReset,
   isRanking,
   isSiblingRanking,
+  baselineSelection,
+  siblingBaselineSelection,
+  onBaselineChange,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastBuiltCurve, setLastBuiltCurve] = useState<FrequencyCurve | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const baselineFileRef = useRef<HTMLInputElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   const handleParamChange = (key: keyof BuilderParams, value: number) => {
     onParamsChange({ ...params, [key]: value });
+  };
+
+  const handleBaselineFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      const curve = parseFrequencyResponse(content);
+      if (curve.frequencies.length < 10) {
+        setError('Custom baseline needs at least 10 frequency points.');
+        return;
+      }
+      setError(null);
+      onBaselineChange({
+        type: 'custom',
+        customCurve: curve,
+        customName: file.name.replace(/\.txt$/i, ''),
+      });
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   const handleCheck = useCallback(async () => {
@@ -92,17 +156,14 @@ export function DFTargetBuilder({
     setError(null);
 
     try {
-      // 1. Load untilted DF baseline for this category
-      const baseline = await loadBaseline(category);
-
-      // 2. Apply tilt + bass shelf + treble shelf
+      const baseline = await resolveBaseline(baselineSelection);
       const modifiedTarget = buildTargetCurve(baseline, params);
       setLastBuiltCurve(modifiedTarget);
 
-      // 3. Score all devices
       const rigType = RIG_FOR_CATEGORY[category];
       const activeType = category === 'iem' ? 'iem' : category;
-      const targetName = `DF (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
+      const baselineName = getBaselineDisplayName(baselineSelection);
+      const targetName = `${baselineName} (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
 
       const result = await scoreAllDevices(
         modifiedTarget,
@@ -118,7 +179,7 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  }, [category, params, onCalculate]);
+  }, [category, params, baselineSelection, onCalculate]);
 
   const handleCheckBoth = useCallback(async () => {
     setLoading(true);
@@ -126,16 +187,18 @@ export function DFTargetBuilder({
 
     try {
       const [baseline, siblingBaseline] = await Promise.all([
-        loadBaseline(category),
-        loadBaseline(siblingCategory),
+        resolveBaseline(baselineSelection),
+        resolveBaseline(siblingBaselineSelection),
       ]);
 
       const modifiedTarget = buildTargetCurve(baseline, params);
       const siblingModifiedTarget = buildTargetCurve(siblingBaseline, siblingParams);
       setLastBuiltCurve(modifiedTarget);
 
-      const targetName = `DF (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
-      const siblingTargetName = `DF (Tilt: ${siblingParams.tilt}, Bass: ${siblingParams.bassGain}, Treble: ${siblingParams.trebleGain})`;
+      const baselineName = getBaselineDisplayName(baselineSelection);
+      const siblingBaselineName = getBaselineDisplayName(siblingBaselineSelection);
+      const targetName = `${baselineName} (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
+      const siblingTargetName = `${siblingBaselineName} (Tilt: ${siblingParams.tilt}, Bass: ${siblingParams.bassGain}, Treble: ${siblingParams.trebleGain})`;
 
       const [result, siblingResult] = await Promise.all([
         scoreAllDevices(modifiedTarget, RIG_FOR_CATEGORY[category], category === 'iem' ? 'iem' : category, targetName),
@@ -150,7 +213,7 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  }, [category, siblingCategory, params, siblingParams, onCalculate]);
+  }, [category, siblingCategory, params, siblingParams, baselineSelection, siblingBaselineSelection, onCalculate]);
 
   // Auto-re-rank when rig/category changes while ranking is active
   useEffect(() => {
@@ -160,8 +223,17 @@ export function DFTargetBuilder({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
+  // Auto-re-rank when baseline changes while ranking is active
+  useEffect(() => {
+    if (isRanking) {
+      handleCheck();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baselineSelection]);
+
   const handleReset = () => {
     onParamsChange({ ...CATEGORY_DEFAULTS[category] });
+    onBaselineChange({ type: 'preset', presetKey: category as BaselinePresetKey });
     setLastBuiltCurve(null);
     onReset(category);
   };
@@ -186,6 +258,61 @@ export function DFTargetBuilder({
       <p className="subtitle" style={{ marginBottom: '12px' }}>
         Adjust the DF target curve for {CATEGORY_LABELS[category]} and press Check to rank.
       </p>
+
+      {/* Baseline Selector Row */}
+      <div className="baseline-selector">
+        <span className="baseline-label">Baseline</span>
+        <span className="baseline-name">{getBaselineDisplayName(baselineSelection)}</span>
+
+        <div className="baseline-dropdown-wrapper" ref={dropdownRef}>
+          <button
+            className="baseline-dropdown-btn"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            title="Choose a preset baseline"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 5L6 8L9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {dropdownOpen && (
+            <div className="baseline-dropdown-menu">
+              {(['iem', 'hp_kb5', 'hp_5128', 'iem_5128'] as BaselinePresetKey[]).map(key => (
+                <button
+                  key={key}
+                  className={`baseline-dropdown-item ${
+                    baselineSelection.type === 'preset' && baselineSelection.presetKey === key ? 'active' : ''
+                  }`}
+                  onClick={() => {
+                    onBaselineChange({ type: 'preset', presetKey: key });
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {BASELINE_LABELS[key]}
+                  {key === category && <span className="baseline-default-tag">default</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <input
+          type="file"
+          ref={baselineFileRef}
+          accept=".txt"
+          onChange={handleBaselineFileUpload}
+          style={{ display: 'none' }}
+        />
+        <button
+          className="baseline-upload-btn"
+          onClick={() => baselineFileRef.current?.click()}
+          title="Upload custom baseline .txt"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 2V8M3 5L6 2L9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M2 10H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+      </div>
 
       <div className="builder-controls">
         {/* Tilt Slider */}

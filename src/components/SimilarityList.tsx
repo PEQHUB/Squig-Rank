@@ -13,6 +13,7 @@ interface SimilarityListProps {
   latest5128Devices?: LatestDevice[];
   latestIem5128Devices?: LatestDevice[];
   builderResults?: BuilderResults;
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
 // Extended type with PPI rank for Latest tab
@@ -88,7 +89,8 @@ export default function SimilarityList({
   latestKb5Devices,
   latest5128Devices,
   latestIem5128Devices,
-  builderResults
+  builderResults,
+  onFindSimilar
 }: SimilarityListProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -119,6 +121,7 @@ export default function SimilarityList({
     onSearchChange={setSearchTerm}
     builderResults={builderResults}
     customResults={results}
+    onFindSimilar={onFindSimilar}
   />;
 }
 
@@ -172,6 +175,7 @@ interface TargetColumnProps {
   onToggleDupes: () => void;
   showCount: number;
   onLoadMore: () => void;
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
 function TargetColumn({
@@ -182,7 +186,8 @@ function TargetColumn({
   onToggleClone,
   onToggleDupes,
   showCount,
-  onLoadMore
+  onLoadMore,
+  onFindSimilar
 }: TargetColumnProps) {
   const isMobile = useIsMobile();
   
@@ -303,6 +308,7 @@ function TargetColumn({
             index={index}
             isMobile={isMobile}
             animIndex={index}
+            onFindSimilar={onFindSimilar}
           />
         ))}
       </ul>
@@ -315,7 +321,7 @@ function TargetColumn({
   );
 }
 
-function SimilarityRow({ iem, index, isMobile, animIndex }: { iem: ScoredIEM, index: number, isMobile: boolean, animIndex?: number }) {
+function SimilarityRow({ iem, index, isMobile, animIndex, onFindSimilar }: { iem: ScoredIEM, index: number, isMobile: boolean, animIndex?: number, onFindSimilar?: (iem: ScoredIEM) => void }) {
   return (
     <li
       className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''}`}
@@ -328,7 +334,7 @@ function SimilarityRow({ iem, index, isMobile, animIndex }: { iem: ScoredIEM, in
           {iem.similarity.toFixed(1)}
         </span>
       </div>
-      
+
       <div className="row-details">
         {iem.rig && (
           <span className={`rig-badge rig-${iem.rig}`}>
@@ -347,6 +353,15 @@ function SimilarityRow({ iem, index, isMobile, animIndex }: { iem: ScoredIEM, in
         >
           View Graph
         </a>
+        {onFindSimilar && (
+          <button
+            className="find-similar-btn"
+            onClick={() => onFindSimilar(iem)}
+            title="Find IEMs similar to this one"
+          >
+            Find Similar
+          </button>
+        )}
       </div>
     </li>
   );
@@ -380,9 +395,10 @@ interface LatestTabViewProps {
   onSearchChange: (term: string) => void;
   builderResults?: BuilderResults;
   customResults?: CalculationResult[];
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
-function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, categoryFilter, measurementMode, searchTerm, onSearchChange, builderResults, customResults }: LatestTabViewProps) {
+function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, categoryFilter, measurementMode, searchTerm, onSearchChange, builderResults, customResults, onFindSimilar }: LatestTabViewProps) {
   const isMobile = useIsMobile();
   const [localSearch, setLocalSearch] = useState(searchTerm);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -429,9 +445,9 @@ function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, 
 
       {isMobile ? (
         mobileBuilderResult ? (
-          <LatestMobileBuilderView result={mobileBuilderResult} searchTerm={searchTerm} />
+          <LatestMobileBuilderView result={mobileBuilderResult} searchTerm={searchTerm} onFindSimilar={onFindSimilar} />
         ) : mobileCustomResult ? (
-          <LatestMobileBuilderView result={mobileCustomResult} searchTerm={searchTerm} />
+          <LatestMobileBuilderView result={mobileCustomResult} searchTerm={searchTerm} onFindSimilar={onFindSimilar} />
         ) : (
           <LatestMobileView
             devices={getMobileDevices()}
@@ -448,6 +464,7 @@ function LatestTabView({ iemDevices, kb5Devices, hp5128Devices, iem5128Devices, 
           searchTerm={searchTerm}
           builderResults={builderResults}
           customResults={customResults}
+          onFindSimilar={onFindSimilar}
         />
       )}
     </div>
@@ -514,7 +531,7 @@ function LatestMobileView({ devices, searchTerm }: LatestMobileViewProps) {
 }
 
 // Mobile view for builder results on Latest tab
-function LatestMobileBuilderView({ result, searchTerm }: { result: CalculationResult; searchTerm: string }) {
+function LatestMobileBuilderView({ result, searchTerm, onFindSimilar }: { result: CalculationResult; searchTerm: string; onFindSimilar?: (iem: ScoredIEM) => void }) {
   const [showCloneCoupler, setShowCloneCoupler] = useState(true);
   const [hideDuplicates, setHideDuplicates] = useState(true);
   const [showCount, setShowCount] = useState(PAGE_SIZE);
@@ -529,6 +546,7 @@ function LatestMobileBuilderView({ result, searchTerm }: { result: CalculationRe
       onToggleDupes={() => setHideDuplicates(prev => !prev)}
       showCount={showCount}
       onLoadMore={() => setShowCount(prev => prev + PAGE_SIZE)}
+      onFindSimilar={onFindSimilar}
     />
   );
 }
@@ -552,9 +570,10 @@ interface LatestTwoColumnsProps {
   searchTerm: string;
   builderResults?: BuilderResults;
   customResults?: CalculationResult[];
+  onFindSimilar?: (iem: ScoredIEM) => void;
 }
 
-function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devices, iem5128Devices, searchTerm, builderResults, customResults }: LatestTwoColumnsProps) {
+function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devices, iem5128Devices, searchTerm, builderResults, customResults, onFindSimilar }: LatestTwoColumnsProps) {
   const [currentPage, setCurrentPage] = useState<Record<string, number>>({
     iem: 1, hp_kb5: 1, hp_5128: 1, iem_5128: 1
   });
@@ -649,6 +668,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
         onToggleDupes={() => setBuilderHideDupes(prev => ({ ...prev, [category]: !(prev[category] ?? true) }))}
         showCount={builderShowCounts[category] ?? PAGE_SIZE}
         onLoadMore={() => setBuilderShowCounts(prev => ({ ...prev, [category]: (prev[category] ?? PAGE_SIZE) + PAGE_SIZE }))}
+        onFindSimilar={onFindSimilar}
       />
     );
   };

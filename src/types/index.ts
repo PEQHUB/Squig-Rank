@@ -172,6 +172,24 @@ export interface BuilderState {
   iem_5128: BuilderParams;
 }
 
+// Baseline selection for a single category
+export type BaselinePresetKey = 'iem' | 'hp_kb5' | 'hp_5128' | 'iem_5128';
+
+export interface BaselineSelection {
+  type: 'preset' | 'custom';
+  presetKey?: BaselinePresetKey;
+  customCurve?: FrequencyCurve;
+  customName?: string;
+}
+
+// Per-category baseline selection state
+export interface BaselineState {
+  iem: BaselineSelection;
+  hp_kb5: BaselineSelection;
+  hp_5128: BaselineSelection;
+  iem_5128: BaselineSelection;
+}
+
 // Per-category builder scoring results
 export interface BuilderResults {
   iem: CalculationResult | null;

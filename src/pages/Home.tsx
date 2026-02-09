@@ -14,7 +14,19 @@ import type {
   BuilderState,
   BuilderResults,
   BuilderParams,
+  BaselineState,
+  BaselineSelection,
+  ScoredIEM,
 } from '../types';
+
+export type PanelTab = 'build' | 'upload' | 'similar';
+
+export interface FindSimilarDevice {
+  id: string;
+  name: string;
+  rig: '711' | '5128';
+  db: number[];
+}
 
 export default function Home() {
   // Latest tab state - separate data per category
@@ -57,6 +69,20 @@ export default function Home() {
     hp_5128: null,
     iem_5128: null,
   });
+
+  // Baseline selection state — per-rig, persists across rig switches
+  const [baselineState, setBaselineState] = useState<BaselineState>({
+    iem: { type: 'preset', presetKey: 'iem' },
+    hp_kb5: { type: 'preset', presetKey: 'hp_kb5' },
+    hp_5128: { type: 'preset', presetKey: 'hp_5128' },
+    iem_5128: { type: 'preset', presetKey: 'iem_5128' },
+  });
+
+  // Panel tab state (lifted from TargetPanel for cross-component coordination)
+  const [panelTab, setPanelTab] = useState<PanelTab>('build');
+
+  // Find Similar: external device selection from SimilarityList rows
+  const [findSimilarDevice, setFindSimilarDevice] = useState<FindSimilarDevice | null>(null);
 
   // ============================================================================
   // DATA FETCHING
@@ -246,6 +272,10 @@ export default function Home() {
     setBuilderResults(prev => ({ ...prev, [category]: null }));
   };
 
+  const handleBaselineChange = (category: CategoryFilter, selection: BaselineSelection) => {
+    setBaselineState(prev => ({ ...prev, [category]: selection }));
+  };
+
   const handleUploadCalculate = (result: CalculationResult | null) => {
     setCustomResult(result);
     if (result) {
@@ -253,6 +283,16 @@ export default function Home() {
       setBuilderResults({ iem: null, hp_kb5: null, hp_5128: null, iem_5128: null });
     }
   };
+
+  const handleFindSimilar = useCallback((iem: ScoredIEM) => {
+    setFindSimilarDevice({
+      id: iem.id,
+      name: iem.name,
+      rig: iem.rig || '711',
+      db: iem.frequencyData.db,
+    });
+    setPanelTab('similar');
+  }, []);
 
   // ============================================================================
   // DERIVED STATE
@@ -395,11 +435,16 @@ export default function Home() {
         onModeChange={handleModeChange}
         builderState={builderState}
         builderResults={builderResults}
+        baselineState={baselineState}
         onBuilderParamsChange={handleBuilderParamsChange}
         onBuilderCalculate={handleBuilderCalculate}
         onBuilderReset={handleBuilderReset}
+        onBaselineChange={handleBaselineChange}
         onUploadCalculate={handleUploadCalculate}
         customResult={customResult}
+        activeTab={panelTab}
+        onTabChange={setPanelTab}
+        findSimilarDevice={findSimilarDevice}
       />
 
       <SimilarityList
@@ -411,6 +456,7 @@ export default function Home() {
         latest5128Devices={getLatest5128Devices()}
         latestIem5128Devices={getLatestIem5128Devices()}
         builderResults={builderResults}
+        onFindSimilar={panelTab === 'similar' ? handleFindSimilar : undefined}
       />
     </div>
   );

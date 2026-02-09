@@ -1628,7 +1628,7 @@ body {
   border: 1px solid var(--glass-border);
   margin-bottom: 20px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Header row: title + inline controls */
@@ -1779,6 +1779,127 @@ body {
   color: var(--text-muted);
   text-align: center;
   margin-bottom: 8px !important;
+}
+
+/* Baseline Selector Row */
+.baseline-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+}
+
+.baseline-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.baseline-name {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.baseline-dropdown-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.baseline-dropdown-btn,
+.baseline-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.baseline-dropdown-btn:hover,
+.baseline-upload-btn:hover {
+  background: var(--glass-3);
+  border-color: var(--glass-border-light);
+  color: var(--text-primary);
+}
+
+.baseline-upload-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.baseline-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  background: rgba(20, 20, 35, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  z-index: 100;
+  box-shadow: var(--shadow-xl);
+  animation: fadeIn 0.15s ease-out;
+}
+
+.baseline-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  gap: 8px;
+}
+
+.baseline-dropdown-item:hover {
+  background: var(--glass-2);
+  color: var(--text-primary);
+}
+
+.baseline-dropdown-item.active {
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+}
+
+.baseline-default-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background: var(--glass-1);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
 }
 
 .builder-controls {
@@ -1976,6 +2097,19 @@ body {
     gap: 6px;
     justify-content: center;
   }
+
+  .baseline-selector {
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .baseline-name {
+    font-size: 11px;
+  }
+
+  .baseline-dropdown-menu {
+    min-width: 180px;
+  }
 }
 
 /* ============================================
@@ -2023,6 +2157,226 @@ body {
 @keyframes iconBounce {
   0%, 100% { transform: translateY(-50%) scale(1); }
   50% { transform: translateY(-50%) scale(1.15); }
+}
+
+/* ============================================
+   FIND SIMILAR BUTTON (on IEM rows)
+   ============================================ */
+
+.find-similar-btn {
+  background: rgba(124, 138, 255, 0.12);
+  border: 1px solid rgba(124, 138, 255, 0.25);
+  color: var(--accent-primary);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.find-similar-btn:hover {
+  background: rgba(124, 138, 255, 0.22);
+  border-color: var(--accent-primary);
+}
+
+/* ============================================
+   IEM SEARCH (Find Similar)
+   ============================================ */
+
+.iem-search {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.iem-search-input-wrapper {
+  position: relative;
+}
+
+.iem-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.iem-search-input {
+  width: 100%;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px 10px 34px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.iem-search-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: var(--glass-2);
+}
+
+.iem-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.iem-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: rgba(20, 20, 35, 0.95);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: var(--shadow-xl);
+}
+
+.iem-search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  gap: 8px;
+}
+
+.iem-search-item:last-child {
+  border-bottom: none;
+}
+
+.iem-search-item:hover {
+  background: var(--glass-2);
+}
+
+.iem-search-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iem-search-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.iem-search-rig-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.iem-search-rig-badge.rig-711 {
+  background: rgba(124, 138, 255, 0.15);
+  color: var(--accent-primary);
+}
+
+.iem-search-rig-badge.rig-5128 {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--score-excellent);
+}
+
+.iem-search-item-domain {
+  font-size: 10px;
+  color: var(--text-muted);
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iem-search-no-results {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.iem-search-selected {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.iem-search-selected-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.iem-search-selected-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.iem-search-selected-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iem-search-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Scrollbar for dropdown */
+.iem-search-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+
+.iem-search-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.iem-search-dropdown::-webkit-scrollbar-thumb {
+  background: var(--glass-border-light);
+  border-radius: 4px;
 }
 
 /* ============================================

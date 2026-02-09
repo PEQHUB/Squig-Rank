@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { DFTargetBuilder } from './DFTargetBuilder';
 import { TargetSubmission } from './TargetSubmission';
+import { IEMSearch } from './IEMSearch';
 import type {
+  BaselineSelection,
+  BaselineState,
   BuilderParams,
   BuilderResults,
   BuilderState,
@@ -9,23 +12,27 @@ import type {
   CategoryFilter,
   MeasurementMode,
 } from '../types';
+import type { PanelTab, FindSimilarDevice } from '../pages/Home';
 
 // ============================================================================
 // TYPES
 // ============================================================================
-
-type PanelTab = 'build' | 'upload';
 
 interface Props {
   measurementMode: MeasurementMode;
   onModeChange: (mode: MeasurementMode) => void;
   builderState: BuilderState;
   builderResults: BuilderResults;
+  baselineState: BaselineState;
   onBuilderParamsChange: (category: CategoryFilter, params: BuilderParams) => void;
   onBuilderCalculate: (category: CategoryFilter, result: CalculationResult) => void;
   onBuilderReset: (category: CategoryFilter) => void;
+  onBaselineChange: (category: CategoryFilter, selection: BaselineSelection) => void;
   onUploadCalculate: (result: CalculationResult | null) => void;
   customResult: CalculationResult | null;
+  activeTab: PanelTab;
+  onTabChange: (tab: PanelTab) => void;
+  findSimilarDevice?: FindSimilarDevice | null;
 }
 
 // ============================================================================
@@ -37,14 +44,17 @@ export function TargetPanel({
   onModeChange,
   builderState,
   builderResults,
+  baselineState,
   onBuilderParamsChange,
   onBuilderCalculate,
   onBuilderReset,
+  onBaselineChange,
   onUploadCalculate,
   customResult,
+  activeTab,
+  onTabChange,
+  findSimilarDevice,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<PanelTab>('build');
-
   // Category picker for the builder
   const [builderCategory, setBuilderCategory] = useState<CategoryFilter>('iem');
 
@@ -76,6 +86,9 @@ export function TargetPanel({
       return builderResults[effectiveCategory]?.targetName ?? null;
     }
     if (activeTab === 'upload' && isUploadRanking) {
+      return customResult?.targetName ?? null;
+    }
+    if (activeTab === 'similar' && isUploadRanking) {
       return customResult?.targetName ?? null;
     }
     return null;
@@ -145,21 +158,27 @@ export function TargetPanel({
             </div>
           </div>
 
-          {/* Build / Upload Tab Switcher */}
+          {/* Build / Upload / Similar Tab Switcher */}
           <div className="labeled-toggle">
             <span className="toggle-label">Mode</span>
             <div className="target-panel-tabs">
               <button
                 className={`panel-tab ${activeTab === 'build' ? 'active' : ''}`}
-                onClick={() => setActiveTab('build')}
+                onClick={() => onTabChange('build')}
               >
                 Build
               </button>
               <button
                 className={`panel-tab ${activeTab === 'upload' ? 'active' : ''}`}
-                onClick={() => setActiveTab('upload')}
+                onClick={() => onTabChange('upload')}
               >
                 Upload
+              </button>
+              <button
+                className={`panel-tab ${activeTab === 'similar' ? 'active' : ''}`}
+                onClick={() => onTabChange('similar')}
+              >
+                Similar
               </button>
             </div>
           </div>
@@ -188,14 +207,27 @@ export function TargetPanel({
             onReset={onBuilderReset}
             isRanking={currentHasResults}
             isSiblingRanking={siblingHasResults}
+            baselineSelection={baselineState[effectiveCategory]}
+            siblingBaselineSelection={baselineState[siblingCategory]}
+            onBaselineChange={(sel) => onBaselineChange(effectiveCategory, sel)}
           />
         </div>
-      ) : (
+      ) : activeTab === 'upload' ? (
         <div className="panel-content">
           <TargetSubmission
             onCalculate={onUploadCalculate}
             isRanking={isUploadRanking}
             category={effectiveCategory}
+          />
+        </div>
+      ) : (
+        <div className="panel-content">
+          <IEMSearch
+            onCalculate={onUploadCalculate}
+            isRanking={isUploadRanking}
+            category={effectiveCategory}
+            measurementMode={measurementMode}
+            externalDevice={findSimilarDevice}
           />
         </div>
       )}
