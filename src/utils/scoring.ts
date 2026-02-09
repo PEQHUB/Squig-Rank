@@ -222,16 +222,10 @@ export async function scoreAllDevices(
 
     let activeTarget = targetBase;
 
-    // Only apply compensation for IEMs (not for headphones)
+    // Apply 711 compensation for all 711 IEMs (not for headphones or 5128 IEMs)
     if (!isHeadphoneMode) {
-      if (targetType === '711') {
-        if (iemRig === '5128') {
-          activeTarget = targetPlus711Comp;
-        }
-      } else {
-        if (iemRig === '711') {
-          activeTarget = targetPlus5128Comp;
-        }
+      if (iemRig === '711') {
+        activeTarget = targetPlus711Comp;
       }
     }
 

@@ -25,6 +25,16 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null, rigFilter =
   const results = [];
   const desiredType = type;
 
+  // Load 711 compensation curve for IEM scoring
+  let comp711Curve = null;
+  if (desiredType === 'iem') {
+    const compensation = targets.loadCompensation();
+    if (compensation['711']) {
+      // Compensation is already aligned to R40 frequencies
+      comp711Curve = compensation['711'];
+    }
+  }
+
   const label = rigFilter ? `${type}s (rig:${rigFilter})` : pinnaFilter ? `${type}s (${pinnaFilter})` : `${type}s`;
   console.log(`\n--- Scoring ${label} (${phones.length}) ---`);
   
@@ -117,7 +127,15 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null, rigFilter =
 
         if (!targetData) return null;
 
-        const ppiResult = frequency.calculatePPI(phone.frequencyData, targetData.curve);
+        // Apply 711 compensation to target when scoring 711 IEMs
+        let scoringTarget = targetData.curve;
+        if (desiredType === 'iem' && targetVariant === '711' && comp711Curve) {
+          const aligned = frequency.alignToR40(targetData.curve);
+          const compensatedDb = aligned.db.map((val, i) => val + (comp711Curve[i] || 0));
+          scoringTarget = { frequencies: aligned.frequencies, db: compensatedDb };
+        }
+
+        const ppiResult = frequency.calculatePPI(phone.frequencyData, scoringTarget);
         
         return {
           id: cache.getEntryKey(phone.subdomain, phone.fileName),
