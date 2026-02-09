@@ -1629,6 +1629,7 @@ body {
   margin-bottom: 20px;
   position: relative;
   overflow: visible;
+  z-index: 10;
 }
 
 /* Header row: title + inline controls */
