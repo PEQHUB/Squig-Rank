@@ -188,8 +188,8 @@ function generateResults(phones, targetGroups) {
   const hpKb5 = headphones.filter(p => p.pinna === 'kb5');
   const hp5128 = headphones.filter(p => p.pinna === '5128');
   
-  // Score IEMs (all rigs)
-  const resultsIEM = scorePhones(iems, targetGroups, 'iem');
+  // Score IEMs (711 rig only)
+  const resultsIEM = scorePhones(iems, targetGroups, 'iem', null, '711');
 
   // Score IEMs - 5128 rig only
   const iems5128 = iems.filter(p => config.RIG_5128_DOMAINS.includes(p.subdomain) || p.rig === '5128');
@@ -273,8 +273,8 @@ function generateLatestResults(phones, targetGroups) {
   const iems = phones.filter(p => p.type === 'iem');
   const headphones = phones.filter(p => p.type === 'headphone');
   
-  // Get all scored results from all categories
-  const resultsIEM = scorePhones(iems, targetGroups, 'iem');
+  // Get all scored results from all categories (711 rig only for IEMs)
+  const resultsIEM = scorePhones(iems, targetGroups, 'iem', null, '711');
   const resultsIEM5128 = scorePhones(iems, targetGroups, 'iem', null, '5128');
   const resultsHpKb5 = scorePhones(headphones, targetGroups, 'headphone', 'kb5');
   const resultsHp5128 = scorePhones(headphones, targetGroups, 'headphone', '5128');
