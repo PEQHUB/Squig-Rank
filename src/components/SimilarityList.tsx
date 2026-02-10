@@ -309,8 +309,8 @@ function TargetColumn({
 function SimilarityRow({ iem, index, isMobile, animIndex, onFindSimilar }: { iem: ScoredIEM, index: number, isMobile: boolean, animIndex?: number, onFindSimilar?: (iem: ScoredIEM) => void }) {
   return (
     <li
-      className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''}`}
-      style={animIndex !== undefined && animIndex < 15 ? { '--i': animIndex } as React.CSSProperties : undefined}
+      className={`quality-${iem.quality} ${isMobile ? 'mobile-stack' : ''} ${animIndex !== undefined ? 'ranked-entry' : ''}`}
+      style={animIndex !== undefined ? { '--i': animIndex } as React.CSSProperties : undefined}
     >
       <div className="row-main">
         <span className="rank">{index + 1}.</span>

@@ -314,8 +314,12 @@ body {
   background: transparent;
   border: 1px solid transparent;
   flex-wrap: nowrap;
-  animation: slideInLeft 0.25s ease-out backwards;
-  animation-delay: calc(var(--i, 15) * 25ms);
+}
+
+/* Staggered fade-in for ranked results only */
+.target-column li.ranked-entry {
+  animation: rankFadeIn 0.3s ease-out backwards;
+  animation-delay: calc(var(--i, 0) * 20ms);
 }
 
 .row-main {
@@ -2154,7 +2158,7 @@ body {
    KEYFRAME ANIMATIONS
    ============================================ */
 
-/* List item staggered entry */
+/* List item staggered entry (legacy, kept for other uses) */
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -2163,6 +2167,18 @@ body {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Ranked results fade-in-up */
+@keyframes rankFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
