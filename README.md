@@ -1,69 +1,45 @@
-# Squiglink Scanner
+# Squig-Rank
 
-Scannerfor IEM frequency response similarity scores.
+Live preference ranking tool for IEMs and headphones. Scores devices against target frequency response curves using the Preference Prediction Index (PPI).
+
+Data sourced from 120+ squig.link measurement databases. ~18,000+ devices across 711 and B&K 5128 measurement rigs.
+
+## PPI Formula
+
+```
+PPI = 100.0795 - (8.5 * STDEV) - (6.796 * |SLOPE|) - (3.475 * AVG_ERROR)
+```
+
+- STDEV: Standard deviation of error curve (20 Hz - 10 kHz)
+- SLOPE: Linear regression slope of error vs log(frequency) (20 Hz - 10 kHz)
+- AVG_ERROR: Mean absolute error in dB (40 Hz - 10 kHz)
+- Curves normalized at 1 kHz, clamped to [0, 100]
 
 ## Features
 
-- Auto-loads all 2 custom targets on page load
-- Scans all squig.link subdomains (17+ domains)
-- Calculates weighted Pearson correlation similarity on-the-fly
-- Displays top 25 IEMs per target in 2 columns (desktop) / 1 column with swipe (mobile)
-- Filters by measurement quality (high/low) per target
-- Tracks errors in local JSON file
-- Sorts ties by price
-- No measurement data storage
-- 5-second API timeout
+- DF target curve builder with tilt, bass, and treble sliders
+- Rank single rig, both rigs side-by-side, or all rigs combined
+- Upload custom target curves for ranking
+- Find acoustically similar devices
+- Hide duplicate measurements
+- Clone coupler filtering
+- Harman and DF target presets
+- 15 DF baseline targets
 
-## Quality Domains
+## Scanning
 
-High quality measurements from:
-- crinacle.squig.link
-- earphonesarchive.squig.link
-- sai.squig.link (all IEMs under [IEMs] brand)
+Automated scanner runs every 20 minutes via GitHub Actions. Incremental with checkpoint/resume, concurrent fetching across domains, and hash-based deduplication.
 
-All other domains are considered low quality.
+## Stack
 
-## Targets
-
-Place your custom target curves in `public/targets/` as `.txt` files with format:
-```
-frequency db
-20 -5
-25 -4
-30 -3
-...
-```
+React, TypeScript, Vite. Deployed to GitHub Pages.
 
 ## Development
 
-```bash
+```
 npm install
 npm run dev
 ```
-
-## Build
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### GitHub Pages
-
-1. Update `homepage` in `package.json`
-2. Run `npm run build`
-3. Push to GitHub
-4. Enable GitHub Pages in repo settings
-
-### Vercel (API Functions)
-
-1. Deploy to Vercel for serverless API functions
-2. Configure environment variables if needed
-
-## Daily Refresh
-
-GitHub Actions runs daily at 3 AM UTC to trigger data refresh.
 
 ## License
 
