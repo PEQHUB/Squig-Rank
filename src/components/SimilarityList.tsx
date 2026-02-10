@@ -190,71 +190,56 @@ function TargetColumn({
   onFindSimilar
 }: TargetColumnProps) {
   const isMobile = useIsMobile();
-  
-  // 1. Filter by Quality (Clone Coupler)
-  const allItems = data.ranked || [];
-  let filteredItems = showCloneCoupler 
-    ? allItems 
-    : allItems.filter(iem => iem.quality === 'high');
 
-  // 1.2 Filter by Search Term
-  if (searchTerm && searchTerm.trim()) {
-    const term = searchTerm.toLowerCase().trim();
-    filteredItems = filteredItems.filter(item => 
-      item.name.toLowerCase().includes(term)
-    );
-  }
+  // Memoize filtering + deduplication (can process 18k+ items)
+  const filteredItems = useMemo(() => {
+    const allItems = data.ranked || [];
 
-  // Pinna filter removed - headphones are now pre-separated by rig type in separate files
+    // 1. Filter by Quality (Clone Coupler)
+    let items = showCloneCoupler
+      ? allItems
+      : allItems.filter(iem => iem.quality === 'high');
 
-  // 2. Filter Duplicates (if enabled)
-  if (hideDuplicates) {
-    const seen = new Map<string, ScoredIEM>();
-    
-    // Sort logic to prioritize High Quality when deduping
-    // We already have them sorted by score from backend, but we want to ensure
-    // we pick the "High Quality" version if scores are similar or identical.
-    // Ideally, we iterate and if we find a better version of an existing key, we replace it.
-    
-    for (const item of filteredItems) {
-      const normalizedName = item.name.toLowerCase().trim();
-      // Default to '711' if rig is undefined to ensure we have a valid key
-      const rigKey = item.rig || '711';
-      // Composite key to allow one entry per rig type per device
-      const key = `${normalizedName}::${rigKey}`;
-      
-      const existing = seen.get(key);
-      
-      if (!existing) {
-        seen.set(key, item);
-      } else {
-        // If we have an existing one, should we replace it?
-        // Logic: prioritize keeping the highest scoring copy.
-        // Since the list is sorted by score descending, 'existing' (first seen) usually has higher score.
-        // We only replace if 'item' has a strictly higher score (unlikely due to sort)
-        // OR if scores are equal/very close, we prefer High Quality as a tiebreaker.
-        
-        const scoreDiff = item.similarity - existing.similarity;
-        
-        if (scoreDiff > 0.0001) {
-            // New item has higher score (unexpected given sort, but safe to handle)
-            seen.set(key, item);
-        } else if (Math.abs(scoreDiff) < 0.0001) {
-            // Scores are essentially equal
-            // Prefer High Quality if existing is Low Quality
-            if (item.quality === 'high' && existing.quality !== 'high') {
-                seen.set(key, item);
-            }
+    // 1.2 Filter by Search Term
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      items = items.filter(item =>
+        item.name.toLowerCase().includes(term)
+      );
+    }
+
+    // 2. Filter Duplicates (if enabled)
+    if (hideDuplicates) {
+      const seen = new Map<string, ScoredIEM>();
+
+      for (const item of items) {
+        const normalizedName = item.name.toLowerCase().trim();
+        const rigKey = item.rig || '711';
+        const key = `${normalizedName}::${rigKey}`;
+
+        const existing = seen.get(key);
+
+        if (!existing) {
+          seen.set(key, item);
+        } else {
+          const scoreDiff = item.similarity - existing.similarity;
+
+          if (scoreDiff > 0.0001) {
+              seen.set(key, item);
+          } else if (Math.abs(scoreDiff) < 0.0001) {
+              if (item.quality === 'high' && existing.quality !== 'high') {
+                  seen.set(key, item);
+              }
+          }
         }
       }
+
+      items = Array.from(seen.values()).sort((a, b) => b.similarity - a.similarity);
     }
-    
-    // Convert back to array (and ensure order is maintained or re-sorted)
-    // Since Map iterates in insertion order, and we inserted in score order,
-    // we should be mostly fine, but let's re-sort to be safe.
-    filteredItems = Array.from(seen.values()).sort((a, b) => b.similarity - a.similarity);
-  }
-  
+
+    return items;
+  }, [data.ranked, showCloneCoupler, hideDuplicates, searchTerm]);
+
   // Slice to current show count
   const displayedItems = filteredItems.slice(0, showCount);
   const hasMore = filteredItems.length > showCount;
@@ -303,7 +288,7 @@ function TargetColumn({
       <ul>
         {displayedItems.map((iem: ScoredIEM, index: number) => (
           <SimilarityRow
-            key={`${iem.id}-${index}`}
+            key={iem.id}
             iem={iem}
             index={index}
             isMobile={isMobile}
@@ -571,7 +556,7 @@ function LatestMobileView({ devices, searchTerm, onFindSimilar }: LatestMobileVi
       <ul>
         {displayedDevices.map((device, index) => (
           <LatestDeviceRow
-            key={`${device.id}-${index}`}
+            key={device.id}
             device={device}
             animIndex={index}
             onFindSimilar={onFindSimilar}
@@ -735,7 +720,7 @@ function LatestTwoColumns({ measurementMode, iemDevices, kb5Devices, hp5128Devic
             <ul>
               {pageDevices.map((device, index) => (
                 <LatestDeviceRow
-                  key={`${device.id}-${index}`}
+                  key={device.id}
                   device={device}
                   animIndex={index}
                   onFindSimilar={onFindSimilar}

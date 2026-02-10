@@ -179,21 +179,14 @@ export async function scoreAllDevices(
   const freqs = data.frequencies;
   const comp711 = data.compensation711;
 
-  // Helper to generate compensated target
-  const getCompensatedTarget = (compArray: number[] | undefined): FrequencyCurve => {
-    if (!compArray) return targetCurve;
+  // Pre-align target to R40 frequencies once (avoids redundant interpolation)
+  const alignedTargetDb = freqs.map(f => logInterpolate(targetCurve.frequencies, targetCurve.db, f));
+  const targetBase: FrequencyCurve = { frequencies: freqs, db: alignedTargetDb };
 
-    const alignedTarget = freqs.map(f => logInterpolate(targetCurve.frequencies, targetCurve.db, f));
-    const newDb = alignedTarget.map((val, i) => {
-      const comp = compArray[i] || 0;
-      return val + comp;
-    });
-
-    return { frequencies: freqs, db: newDb };
-  };
-
-  const targetBase = targetCurve;
-  const targetPlus711Comp = getCompensatedTarget(comp711);
+  // Apply 711 compensation on top of the pre-aligned target
+  const targetPlus711Comp: FrequencyCurve = comp711
+    ? { frequencies: freqs, db: alignedTargetDb.map((val, i) => val + (comp711[i] || 0)) }
+    : targetBase;
 
   // Determine what type of entries to include
   const isHeadphoneMode = activeType === 'hp_kb5' || activeType === 'hp_5128';
@@ -242,7 +235,7 @@ export async function scoreAllDevices(
       type: entry.type,
       sourceDomain: `${entry.id.split('::')[0]}.squig.link`,
       rig: iemRig,
-      pinna: entry.pinna as any,
+      pinna: (entry.pinna ?? undefined) as ScoredIEM['pinna'],
       frequencyData: iemCurve
     });
   }
@@ -270,18 +263,14 @@ export async function scoreAllDevicesCombined(
   const freqs = data.frequencies;
   const comp711 = data.compensation711;
 
-  const getCompensatedTarget = (compArray: number[] | undefined): FrequencyCurve => {
-    if (!compArray) return targetCurve;
-    const alignedTarget = freqs.map(f => logInterpolate(targetCurve.frequencies, targetCurve.db, f));
-    const newDb = alignedTarget.map((val, i) => {
-      const comp = compArray[i] || 0;
-      return val + comp;
-    });
-    return { frequencies: freqs, db: newDb };
-  };
+  // Pre-align target to R40 frequencies once (avoids redundant interpolation)
+  const alignedTargetDb = freqs.map(f => logInterpolate(targetCurve.frequencies, targetCurve.db, f));
+  const targetBase: FrequencyCurve = { frequencies: freqs, db: alignedTargetDb };
 
-  const targetBase = targetCurve;
-  const targetPlus711Comp = getCompensatedTarget(comp711);
+  // Apply 711 compensation on top of the pre-aligned target
+  const targetPlus711Comp: FrequencyCurve = comp711
+    ? { frequencies: freqs, db: alignedTargetDb.map((val, i) => val + (comp711[i] || 0)) }
+    : targetBase;
 
   const scored: ScoredIEM[] = [];
 
@@ -308,7 +297,7 @@ export async function scoreAllDevicesCombined(
       type: entry.type,
       sourceDomain: `${entry.id.split('::')[0]}.squig.link`,
       rig: iemRig,
-      pinna: entry.pinna as any,
+      pinna: (entry.pinna ?? undefined) as ScoredIEM['pinna'],
       frequencyData: iemCurve
     });
   }

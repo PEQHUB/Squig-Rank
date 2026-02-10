@@ -51,20 +51,14 @@ export function logInterpolate(freqs: number[], dbs: number[], targetFreq: numbe
   return dbs[low] + t * (dbs[high] - dbs[low]);
 }
 
-function alignToR40(curve: FrequencyCurve): FrequencyCurve {
+/** Align curve to R40 grid and normalize at refFreq in a single pass */
+function alignAndNormalize(curve: FrequencyCurve, refFreq = 1000): FrequencyCurve {
   if (!curve.frequencies.length) {
-    return { frequencies: [...R40_FREQUENCIES], db: R40_FREQUENCIES.map(() => 0) };
+    return { frequencies: R40_FREQUENCIES, db: R40_FREQUENCIES.map(() => 0) };
   }
-  const alignedDb = R40_FREQUENCIES.map(f => logInterpolate(curve.frequencies, curve.db, f));
-  return { frequencies: [...R40_FREQUENCIES], db: alignedDb };
-}
-
-function normalizeCurve(curve: FrequencyCurve, refFreq = 1000): FrequencyCurve {
   const refDb = logInterpolate(curve.frequencies, curve.db, refFreq);
-  return {
-    frequencies: [...curve.frequencies],
-    db: curve.db.map(d => d - refDb)
-  };
+  const db = R40_FREQUENCIES.map(f => logInterpolate(curve.frequencies, curve.db, f) - refDb);
+  return { frequencies: R40_FREQUENCIES, db };
 }
 
 export interface PPIResult {
@@ -78,12 +72,9 @@ export interface PPIResult {
  * Calculate PPI score for an IEM against any target curve
  */
 export function calculatePPI(iemCurve: FrequencyCurve, targetCurve: FrequencyCurve): PPIResult {
-  // Align both curves to R40 and normalize at 1kHz
-  const iemAligned = alignToR40(iemCurve);
-  const iemNorm = normalizeCurve(iemAligned);
-  
-  const targetAligned = alignToR40(targetCurve);
-  const targetNorm = normalizeCurve(targetAligned);
+  // Align both curves to R40 grid and normalize at 1kHz in a single pass
+  const iemNorm = alignAndNormalize(iemCurve);
+  const targetNorm = alignAndNormalize(targetCurve);
   
   // Calculate error at each PPI frequency point
   const errors: number[] = [];

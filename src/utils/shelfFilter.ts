@@ -132,7 +132,7 @@ export function buildTargetCurve(baseline: FrequencyCurve, params: BuilderParams
   });
 
   return {
-    frequencies: [...baseline.frequencies],
+    frequencies: baseline.frequencies,
     db,
   };
 }
