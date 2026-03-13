@@ -1,9 +1,28 @@
 {
-  "generatedAt": "2026-03-13T12:01:37.747Z",
-  "totalDevices": 842,
+  "generatedAt": "2026-03-13T13:23:34.287Z",
+  "totalDevices": 843,
   "category": "hp_kb5",
   "categoryLabel": "KEMAR (711) OE",
   "devices": [
+    {
+      "id": "flare::Speedo Waterproof Headphones",
+      "name": "Speedo Waterproof Headphones",
+      "similarity": 19.776782435527338,
+      "stdev": 5.308046546928297,
+      "slope": -1.0425850535436312,
+      "avgError": 8.086018386100609,
+      "price": null,
+      "quality": "low",
+      "sourceDomain": "flare.squig.link",
+      "type": "headphone",
+      "rig": "711",
+      "targetVariant": "kb5",
+      "pinna": "kb5",
+      "firstSeen": "2026-03-13T13:23:16.855Z",
+      "lastSeen": "2026-03-13T13:23:16.855Z",
+      "category": "hp_kb5",
+      "categoryLabel": "KEMAR (711) OE"
+    },
     {
       "id": "sai::HE400se-G V2",
       "name": "[Unbranded] HE400se Gold V2",
@@ -7676,7 +7695,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-03-04T15:56:53.899Z",
+      "lastSeen": "2026-03-13T13:23:15.936Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -7771,7 +7790,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-03-04T15:56:53.900Z",
+      "lastSeen": "2026-03-13T13:23:15.939Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
