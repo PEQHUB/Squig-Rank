@@ -1,9 +1,47 @@
 {
-  "generatedAt": "2026-04-18T07:19:45.890Z",
-  "totalDevices": 19406,
+  "generatedAt": "2026-04-18T08:10:11.230Z",
+  "totalDevices": 19408,
   "category": "iem",
   "categoryLabel": "IEMs",
   "devices": [
+    {
+      "id": "bassaudio::QOA Frigg Netral",
+      "name": "QOA Frigg",
+      "similarity": 58.7508836634759,
+      "stdev": 2.6036661833570696,
+      "slope": 1.1547201979418007,
+      "avgError": 3.26617994612274,
+      "price": null,
+      "quality": "low",
+      "sourceDomain": "bassaudio.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-04-18T08:09:53.614Z",
+      "lastSeen": "2026-04-18T08:09:53.614Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
+    {
+      "id": "bassaudio::QOA Loki",
+      "name": "QOA Loki",
+      "similarity": 54.840207666374305,
+      "stdev": 3.3829243443096555,
+      "slope": 0.7110463018016665,
+      "avgError": 3.353140932359566,
+      "price": null,
+      "quality": "low",
+      "sourceDomain": "bassaudio.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-04-18T08:09:53.460Z",
+      "lastSeen": "2026-04-18T08:09:53.460Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
     {
       "id": "enemyspider::CCAX",
       "name": "CCA Xyrra Stock Tip",
@@ -57,7 +95,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-17T11:05:09.906Z",
-      "lastSeen": "2026-04-17T11:05:09.906Z",
+      "lastSeen": "2026-04-18T08:09:52.711Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -114,7 +152,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-16T11:12:42.929Z",
-      "lastSeen": "2026-04-17T11:05:08.129Z",
+      "lastSeen": "2026-04-18T08:09:52.613Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -133,7 +171,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-16T11:12:41.572Z",
-      "lastSeen": "2026-04-17T11:05:08.046Z",
+      "lastSeen": "2026-04-18T08:09:52.507Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -152,7 +190,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-16T08:00:03.358Z",
-      "lastSeen": "2026-04-17T11:05:09.961Z",
+      "lastSeen": "2026-04-18T08:09:53.682Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -228,7 +266,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-15T08:12:44.913Z",
-      "lastSeen": "2026-04-17T11:05:08.178Z",
+      "lastSeen": "2026-04-18T08:09:52.675Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -475,7 +513,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-13T11:57:51.809Z",
-      "lastSeen": "2026-04-17T11:05:09.937Z",
+      "lastSeen": "2026-04-18T08:09:53.651Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -494,7 +532,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-13T11:57:50.962Z",
-      "lastSeen": "2026-04-17T11:05:08.153Z",
+      "lastSeen": "2026-04-18T08:09:52.644Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -1501,7 +1539,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-09T08:52:30.938Z",
-      "lastSeen": "2026-04-17T11:05:08.106Z",
+      "lastSeen": "2026-04-18T08:09:52.583Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -1767,7 +1805,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-04-07T06:51:09.846Z",
-      "lastSeen": "2026-04-17T11:05:08.074Z",
+      "lastSeen": "2026-04-18T08:09:52.545Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -4731,7 +4769,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-30T08:54:58.544Z",
-      "lastSeen": "2026-04-17T11:05:08.048Z",
+      "lastSeen": "2026-04-18T08:09:52.509Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -5415,7 +5453,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-26T11:17:41.039Z",
-      "lastSeen": "2026-04-17T11:05:08.179Z",
+      "lastSeen": "2026-04-18T08:09:52.677Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -5510,7 +5548,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-25T10:33:38.326Z",
-      "lastSeen": "2026-04-17T11:05:08.179Z",
+      "lastSeen": "2026-04-18T08:09:52.677Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -6403,7 +6441,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-17T07:14:08.131Z",
-      "lastSeen": "2026-04-17T11:05:08.178Z",
+      "lastSeen": "2026-04-18T08:09:52.676Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -7562,7 +7600,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-06T06:29:13.689Z",
-      "lastSeen": "2026-04-17T11:05:08.157Z",
+      "lastSeen": "2026-04-18T08:09:52.646Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -7581,7 +7619,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-06T05:36:33.654Z",
-      "lastSeen": "2026-04-17T11:05:08.075Z",
+      "lastSeen": "2026-04-18T08:09:52.547Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -7980,7 +8018,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-03-02T04:29:30.532Z",
-      "lastSeen": "2026-04-17T11:05:08.179Z",
+      "lastSeen": "2026-04-18T08:09:52.677Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8322,7 +8360,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-28T04:09:55.341Z",
-      "lastSeen": "2026-04-17T11:05:08.129Z",
+      "lastSeen": "2026-04-18T08:09:52.613Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8702,7 +8740,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-26T10:11:00.095Z",
-      "lastSeen": "2026-04-17T11:05:08.182Z",
+      "lastSeen": "2026-04-18T08:09:52.680Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8721,7 +8759,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-26T10:10:59.885Z",
-      "lastSeen": "2026-04-17T11:05:08.181Z",
+      "lastSeen": "2026-04-18T08:09:52.679Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8740,7 +8778,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-26T10:10:59.509Z",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.679Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8892,7 +8930,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-25T08:05:10.955Z",
-      "lastSeen": "2026-04-17T11:05:09.908Z",
+      "lastSeen": "2026-04-18T08:09:53.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -8949,7 +8987,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-24T09:35:50.111Z",
-      "lastSeen": "2026-04-17T11:05:09.962Z",
+      "lastSeen": "2026-04-18T08:09:53.683Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -9291,7 +9329,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-21T09:37:22.255Z",
-      "lastSeen": "2026-04-17T11:05:08.132Z",
+      "lastSeen": "2026-04-18T08:09:52.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -13832,7 +13870,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.622Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -14459,7 +14497,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.907Z",
+      "lastSeen": "2026-04-18T08:09:53.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -14649,7 +14687,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.618Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -14782,7 +14820,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.012Z",
+      "lastSeen": "2026-04-18T08:09:52.468Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -14991,7 +15029,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.962Z",
+      "lastSeen": "2026-04-18T08:09:53.683Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15067,7 +15105,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.075Z",
+      "lastSeen": "2026-04-18T08:09:52.547Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15523,7 +15561,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.937Z",
+      "lastSeen": "2026-04-18T08:09:53.651Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15561,7 +15599,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.050Z",
+      "lastSeen": "2026-04-18T08:09:52.512Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15580,7 +15618,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.181Z",
+      "lastSeen": "2026-04-18T08:09:52.680Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15694,7 +15732,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.075Z",
+      "lastSeen": "2026-04-18T08:09:52.547Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15789,7 +15827,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.911Z",
+      "lastSeen": "2026-04-18T08:09:53.621Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -15846,7 +15884,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.620Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16131,7 +16169,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.645Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16321,7 +16359,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.614Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16796,7 +16834,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.012Z",
+      "lastSeen": "2026-04-18T08:09:52.467Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16815,7 +16853,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.908Z",
+      "lastSeen": "2026-04-18T08:09:53.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16834,7 +16872,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.906Z",
+      "lastSeen": "2026-04-18T08:09:53.614Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -16872,7 +16910,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.645Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -17100,7 +17138,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.131Z",
+      "lastSeen": "2026-04-18T08:09:52.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -17157,7 +17195,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.614Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -17233,7 +17271,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.911Z",
+      "lastSeen": "2026-04-18T08:09:53.620Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -17309,7 +17347,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.911Z",
+      "lastSeen": "2026-04-18T08:09:53.621Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -17518,7 +17556,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.678Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -18221,7 +18259,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.618Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -18639,7 +18677,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.155Z",
+      "lastSeen": "2026-04-18T08:09:52.644Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -18981,7 +19019,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.132Z",
+      "lastSeen": "2026-04-18T08:09:52.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -19190,7 +19228,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.047Z",
+      "lastSeen": "2026-04-18T08:09:52.508Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -19627,7 +19665,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.621Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -19665,7 +19703,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.178Z",
+      "lastSeen": "2026-04-18T08:09:52.676Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -20197,7 +20235,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.907Z",
+      "lastSeen": "2026-04-18T08:09:53.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -20710,7 +20748,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.181Z",
+      "lastSeen": "2026-04-18T08:09:52.679Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21280,7 +21318,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.132Z",
+      "lastSeen": "2026-04-18T08:09:52.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21318,7 +21356,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.937Z",
+      "lastSeen": "2026-04-18T08:09:53.651Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21451,7 +21489,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.907Z",
+      "lastSeen": "2026-04-18T08:09:53.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21508,7 +21546,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.646Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21565,7 +21603,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.911Z",
+      "lastSeen": "2026-04-18T08:09:53.621Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21698,7 +21736,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.907Z",
+      "lastSeen": "2026-04-18T08:09:53.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -21717,7 +21755,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.961Z",
+      "lastSeen": "2026-04-18T08:09:53.682Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -22002,7 +22040,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.679Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -22040,7 +22078,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.645Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -22154,7 +22192,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.051Z",
+      "lastSeen": "2026-04-18T08:09:52.512Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -22173,7 +22211,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.178Z",
+      "lastSeen": "2026-04-18T08:09:52.676Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -23104,7 +23142,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.614Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -23275,7 +23313,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.961Z",
+      "lastSeen": "2026-04-18T08:09:53.683Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -23503,7 +23541,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.908Z",
+      "lastSeen": "2026-04-18T08:09:53.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -24092,7 +24130,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.678Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -24168,7 +24206,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.075Z",
+      "lastSeen": "2026-04-18T08:09:52.546Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -24301,7 +24339,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.047Z",
+      "lastSeen": "2026-04-18T08:09:52.508Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -24339,7 +24377,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.619Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -24434,7 +24472,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.913Z",
+      "lastSeen": "2026-04-18T08:09:53.623Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -25004,7 +25042,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.153Z",
+      "lastSeen": "2026-04-18T08:09:52.644Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -25175,7 +25213,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.179Z",
+      "lastSeen": "2026-04-18T08:09:52.677Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -25384,7 +25422,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.678Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -25764,7 +25802,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.911Z",
+      "lastSeen": "2026-04-18T08:09:53.620Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -26182,7 +26220,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.621Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -26391,7 +26429,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -26638,7 +26676,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.049Z",
+      "lastSeen": "2026-04-18T08:09:52.510Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -27455,7 +27493,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.131Z",
+      "lastSeen": "2026-04-18T08:09:52.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -27645,7 +27683,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.131Z",
+      "lastSeen": "2026-04-18T08:09:52.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -27987,7 +28025,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.049Z",
+      "lastSeen": "2026-04-18T08:09:52.510Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -28424,7 +28462,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.622Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -28633,7 +28671,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.180Z",
+      "lastSeen": "2026-04-18T08:09:52.678Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -29849,7 +29887,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.048Z",
+      "lastSeen": "2026-04-18T08:09:52.509Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -30571,7 +30609,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.620Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -31084,7 +31122,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.913Z",
+      "lastSeen": "2026-04-18T08:09:53.623Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -31654,7 +31692,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.157Z",
+      "lastSeen": "2026-04-18T08:09:52.646Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -31806,7 +31844,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.618Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -31863,7 +31901,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.614Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -32015,7 +32053,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.908Z",
+      "lastSeen": "2026-04-18T08:09:53.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -32414,7 +32452,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.048Z",
+      "lastSeen": "2026-04-18T08:09:52.509Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -32813,7 +32851,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.074Z",
+      "lastSeen": "2026-04-18T08:09:52.546Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -33041,7 +33079,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.130Z",
+      "lastSeen": "2026-04-18T08:09:52.613Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -33136,7 +33174,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.645Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -33573,7 +33611,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.618Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -33649,7 +33687,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.050Z",
+      "lastSeen": "2026-04-18T08:09:52.511Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -33744,7 +33782,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.156Z",
+      "lastSeen": "2026-04-18T08:09:52.646Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -34295,7 +34333,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.181Z",
+      "lastSeen": "2026-04-18T08:09:52.680Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -35321,7 +35359,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.618Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -35682,7 +35720,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.913Z",
+      "lastSeen": "2026-04-18T08:09:53.623Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -35910,7 +35948,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.619Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -36195,7 +36233,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.075Z",
+      "lastSeen": "2026-04-18T08:09:52.547Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -36613,7 +36651,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.619Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -36746,7 +36784,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.907Z",
+      "lastSeen": "2026-04-18T08:09:53.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -36803,7 +36841,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.050Z",
+      "lastSeen": "2026-04-18T08:09:52.511Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -37297,7 +37335,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.013Z",
+      "lastSeen": "2026-04-18T08:09:52.468Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -37487,7 +37525,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.910Z",
+      "lastSeen": "2026-04-18T08:09:53.619Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -38399,7 +38437,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.962Z",
+      "lastSeen": "2026-04-18T08:09:53.683Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -38931,7 +38969,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.011Z",
+      "lastSeen": "2026-04-18T08:09:52.466Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -40299,7 +40337,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.050Z",
+      "lastSeen": "2026-04-18T08:09:52.511Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -47025,7 +47063,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.047Z",
+      "lastSeen": "2026-04-18T08:09:52.507Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -48849,7 +48887,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.131Z",
+      "lastSeen": "2026-04-18T08:09:52.615Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -53637,7 +53675,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.908Z",
+      "lastSeen": "2026-04-18T08:09:53.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -54644,7 +54682,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.622Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -54796,7 +54834,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.912Z",
+      "lastSeen": "2026-04-18T08:09:53.622Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -56012,7 +56050,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.074Z",
+      "lastSeen": "2026-04-18T08:09:52.546Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -58482,7 +58520,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.131Z",
+      "lastSeen": "2026-04-18T08:09:52.616Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -59964,7 +60002,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.179Z",
+      "lastSeen": "2026-04-18T08:09:52.677Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -63973,7 +64011,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:09.909Z",
+      "lastSeen": "2026-04-18T08:09:53.617Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -64068,7 +64106,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-02-05",
-      "lastSeen": "2026-04-17T11:05:08.181Z",
+      "lastSeen": "2026-04-18T08:09:52.680Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
