@@ -202,3 +202,11 @@ export interface BuilderResults {
   hp_5128: CalculationResult | null;
   iem_5128: CalculationResult | null;
 }
+
+// PPI evaluation band range (Hz)
+export interface FrequencyRange {
+  min: number;
+  max: number;
+}
+
+export const DEFAULT_FREQUENCY_RANGE: FrequencyRange = { min: 20, max: 10000 };

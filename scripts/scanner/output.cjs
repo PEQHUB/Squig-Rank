@@ -10,6 +10,44 @@ const frequency = require('./frequency.cjs');
 const targets = require('./targets.cjs');
 
 // ============================================================================
+// DEDUPLICATION
+// ============================================================================
+
+/**
+ * Deduplicate scored entries by case-insensitive name + rig.
+ * Keeps the entry with the highest PPI score per group.
+ * Picks the best display name (mixed-case over ALL-CAPS).
+ */
+function deduplicateScored(scored) {
+  const groups = new Map();
+  for (const entry of scored) {
+    const key = `${entry.name.toLowerCase().trim()}::${entry.rig || '711'}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(entry);
+  }
+
+  const result = [];
+  for (const [key, entries] of groups) {
+    // Sort: highest score first
+    entries.sort((a, b) => b.similarity - a.similarity);
+    const winner = entries[0];
+
+    // Pick the best display name: mixed-case beats ALL-CAPS
+    const bestName = entries.reduce((best, entry) => {
+      if (entry.quality === 'high' && best.quality !== 'high') return entry;
+      if (best.quality === 'high' && entry.quality !== 'high') return best;
+      if (best.name === best.name.toUpperCase() && entry.name !== entry.name.toUpperCase()) return entry;
+      return best;
+    }).name;
+
+    result.push({ ...winner, name: bestName });
+  }
+
+  result.sort((a, b) => b.similarity - a.similarity);
+  return result;
+}
+
+// ============================================================================
 // SCORING
 // ============================================================================
 
@@ -73,13 +111,13 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null, rigFilter =
             lastSeen: phone.lastSeen
           };
         })
-        .sort((a, b) => b.similarity - a.similarity);
+.sort((a, b) => b.similarity - a.similarity);
 
-      results.push({ 
-        targetName: group.name,
-        targetFiles: { [pinnaFilter]: targetData.fileName },
-        scoringMethod: 'ppi', 
-        ranked: scored 
+results.push({
+targetName: group.name,
+targetFiles: { [pinnaFilter]: targetData.fileName },
+scoringMethod: 'ppi',
+ranked: deduplicateScored(scored)
       });
       continue;
     }
@@ -156,16 +194,16 @@ function scorePhones(phones, targetGroups, type, pinnaFilter = null, rigFilter =
         };
       })
       .filter(item => item !== null)
-      .sort((a, b) => b.similarity - a.similarity);
+.sort((a, b) => b.similarity - a.similarity);
 
-    results.push({ 
-      targetName: group.name,
-      targetFiles: Object.entries(group.variants).reduce((acc, [k, v]) => {
-        acc[k] = v.fileName;
-        return acc;
-      }, {}),
-      scoringMethod: 'ppi', 
-      ranked: scored 
+results.push({
+targetName: group.name,
+targetFiles: Object.entries(group.variants).reduce((acc, [k, v]) => {
+acc[k] = v.fileName;
+return acc;
+}, {}),
+scoringMethod: 'ppi',
+ranked: deduplicateScored(scored)
     });
   }
   
@@ -245,7 +283,16 @@ function generateResults(phones, targetGroups) {
   console.log(`  Headphones KB5: ${config.RESULTS_HP_KB5_PATH} (${hpKb5.length} entries)`);
   console.log(`  Headphones 5128: ${config.RESULTS_HP_5128_PATH} (${hp5128.length} entries)`);
 
-  return { iems: resultsIEM, iems5128: resultsIEM5128, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128 };
+  // Collect winning IDs from the primary (first) target group of each category
+// for curves.msgpack dedup. Using only the first target ensures consistency
+// (different targets could pick different winners for the same name group).
+const winningIds = new Set();
+if (resultsIEM[0]) for (const e of resultsIEM[0].ranked) winningIds.add(e.id);
+if (resultsIEM5128[0]) for (const e of resultsIEM5128[0].ranked) winningIds.add(e.id);
+if (resultsHpKb5[0]) for (const e of resultsHpKb5[0].ranked) winningIds.add(e.id);
+if (resultsHp5128[0]) for (const e of resultsHp5128[0].ranked) winningIds.add(e.id);
+
+return { iems: resultsIEM, iems5128: resultsIEM5128, headphonesKb5: resultsHpKb5, headphones5128: resultsHp5128, winningIds };
 }
 
 /**
@@ -408,7 +455,7 @@ function generateLatestResults(phones, targetGroups) {
 /**
  * Generate curves.msgpack for client-side ranking
  */
-async function generateCurves(phones) {
+async function generateCurves(phones, winningIds = null) {
   cache.ensureDirs();
   
   // Dynamic import for ES module
@@ -420,23 +467,28 @@ async function generateCurves(phones) {
   // Build curves data structure
   const entries = [];
   
-  for (const phone of phones) {
-    if (!phone.frequencyData || phone.frequencyData.frequencies.length < 10) continue;
-    
-    const aligned = frequency.alignToR40(phone.frequencyData);
-    const id = cache.getEntryKey(phone.subdomain, phone.fileName);
-    
-    entries.push({
-      id,
-      name: phone.displayName,
-      db: aligned.db.map(v => Math.round(v * 100) / 100),
-      type: phone.type === 'headphone' ? 1 : 0,
-      quality: phone.quality === 'high' ? 1 : 0,
-      price: phone.price,
-      rig: phone.rig === '5128' ? 1 : 0,
-      pinna: phone.pinna
-    });
-  }
+for (const phone of phones) {
+  if (!phone.frequencyData || phone.frequencyData.frequencies.length < 10) continue;
+
+  const id = cache.getEntryKey(phone.subdomain, phone.fileName);
+
+  // When winningIds is provided, only include entries that won dedup
+  // (i.e., the highest-PPI entry per name::rig group)
+  if (winningIds && !winningIds.has(id)) continue;
+
+  const aligned = frequency.alignToR40(phone.frequencyData);
+
+  entries.push({
+    id,
+    name: phone.displayName,
+    db: aligned.db.map(v => Math.round(v * 100) / 100),
+    type: phone.type === 'headphone' ? 1 : 0,
+    quality: phone.quality === 'high' ? 1 : 0,
+    price: phone.price,
+    rig: phone.rig === '5128' ? 1 : 0,
+    pinna: phone.pinna
+  });
+}
   
   const data = {
     meta: {

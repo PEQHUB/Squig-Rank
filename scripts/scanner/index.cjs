@@ -112,22 +112,22 @@ async function main() {
   // 8. Generate outputs
   console.log('\n--- Generating Outputs ---');
   
-  // Results (JSON)
-  output.generateResults(allPhonesFromCache, targetGroups);
-  
-  // Latest results (merged from all categories)
-  output.generateLatestResults(allPhonesFromCache, targetGroups);
-  
-  // Curves (MessagePack)
-  try {
-    await output.generateCurves(allPhonesFromCache);
-  } catch (e) {
-    console.warn('MessagePack generation failed, falling back to JSON:', e.message);
-    output.generateCurvesJson(allPhonesFromCache);
-  }
-  
-  // Also generate JSON fallback for development
+// Results (JSON) — returns winningIds for curves dedup
+const { winningIds } = output.generateResults(allPhonesFromCache, targetGroups);
+
+// Latest results (merged from all categories)
+output.generateLatestResults(allPhonesFromCache, targetGroups);
+
+// Curves (MessagePack) — only include entries that won dedup
+try {
+  await output.generateCurves(allPhonesFromCache, winningIds);
+} catch (e) {
+  console.warn('MessagePack generation failed, falling back to JSON:', e.message);
   output.generateCurvesJson(allPhonesFromCache);
+}
+
+// Also generate JSON fallback for development (no dedup — full dataset)
+output.generateCurvesJson(allPhonesFromCache);
   
   // 9. Save final state
   cache.saveCacheIndex(cacheIndex);

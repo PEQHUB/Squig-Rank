@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { loadCurveData } from '../utils/scoring';
 import type { LoadedCurveData } from '../utils/scoring';
 import { scoreAllDevices } from '../utils/scoring';
-import type { CalculationResult, CategoryFilter, MeasurementMode } from '../types';
+import type { CalculationResult, CategoryFilter, FrequencyRange, MeasurementMode } from '../types';
+import { DEFAULT_FREQUENCY_RANGE } from '../types';
 import type { FindSimilarDevice } from '../pages/Home';
 
 // ============================================================================
@@ -15,6 +16,7 @@ interface Props {
   category: CategoryFilter;
   measurementMode: MeasurementMode;
   externalDevice?: FindSimilarDevice | null;
+  bandRange: FrequencyRange;
 }
 
 interface SelectedDevice {
@@ -29,7 +31,7 @@ interface SelectedDevice {
 // COMPONENT
 // ============================================================================
 
-export function IEMSearch({ onCalculate, isRanking, category, measurementMode, externalDevice }: Props) {
+export function IEMSearch({ onCalculate, isRanking, category, measurementMode, externalDevice, bandRange }: Props) {
   const [query, setQuery] = useState('');
   const [selectedDevice, setSelectedDevice] = useState<SelectedDevice | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -102,7 +104,11 @@ export function IEMSearch({ onCalculate, isRanking, category, measurementMode, e
       const targetCurve = { frequencies, db: device.db };
       const targetType = device.rig;
 
-      const result = await scoreAllDevices(targetCurve, targetType, category, device.name);
+      const result = await scoreAllDevices(targetCurve, targetType, category, device.name,
+        bandRange.min !== DEFAULT_FREQUENCY_RANGE.min || bandRange.max !== DEFAULT_FREQUENCY_RANGE.max
+          ? bandRange
+          : undefined
+      );
 
       // Filter out the reference device itself
       result.ranked = result.ranked.filter(r => r.id !== device.id);
@@ -113,7 +119,7 @@ export function IEMSearch({ onCalculate, isRanking, category, measurementMode, e
     } finally {
       setLoading(false);
     }
-  }, [frequencies, category, onCalculate]);
+  }, [frequencies, category, bandRange, onCalculate]);
 
   // Handle device selection
   const handleSelect = (entry: LoadedCurveData['entries'][0]) => {

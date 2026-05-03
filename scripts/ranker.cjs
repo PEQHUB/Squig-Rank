@@ -1,8 +1,8 @@
-const { 
-  logInterpolate, 
-  alignToR40, 
-  normalizeCurve 
+const {
+  logInterpolate,
+  alignToR40
 } = require('./utils.cjs');
+const { findLoudnessOffset, loudnessWeightedCenter } = require('./loudnessNorm.cjs');
 
 // ============================================================================
 // GENERALIZED PPI SCORING (Works with ANY target curve)
@@ -29,33 +29,63 @@ const PPI_FREQUENCIES = [
  * @param {Object} targetCurve - Target curve {frequencies: [], db: []}
  * @returns {Object} {ppi, stdev, slope, avgError}
  */
-function calculatePPI(iemCurve, targetCurve) {
-  // Align both curves to R40 and normalize at 1kHz
+function calculatePPI(iemCurve, targetCurve, bandMin = 20, bandMax = 10000) {
+  // Arbitrary SPL reference — ISO 226 needs absolute SPL for phon computation.
+  // Since our data is in relative dB, we add 70 dB SPL; it cancels after centering.
+  const SPL_REFERENCE = 70;
+
+  // Align both curves to R40, level-match to 60 phon, center using loudness
   const iemAligned = alignToR40(iemCurve);
-  const iemNorm = normalizeCurve(iemAligned);
-  
   const targetAligned = alignToR40(targetCurve);
-  const targetNorm = normalizeCurve(targetAligned);
-  
+
+  const iemSPL = iemAligned.db.map(d => d + SPL_REFERENCE);
+  const targetSPL = targetAligned.db.map(d => d + SPL_REFERENCE);
+
+  const iemOffset = findLoudnessOffset(iemAligned.frequencies, iemSPL, 60);
+  const targetOffset = findLoudnessOffset(targetAligned.frequencies, targetSPL, 60);
+
+  const iemLevelMatched = {
+    frequencies: iemAligned.frequencies,
+    db: iemSPL.map(d => d + iemOffset)
+  };
+  const targetLevelMatched = {
+    frequencies: targetAligned.frequencies,
+    db: targetSPL.map(d => d + targetOffset)
+  };
+
+  const iemCenter = loudnessWeightedCenter(iemLevelMatched.frequencies, iemLevelMatched.db);
+  const targetCenter = loudnessWeightedCenter(targetLevelMatched.frequencies, targetLevelMatched.db);
+
+  const iemNorm = {
+    frequencies: iemLevelMatched.frequencies,
+    db: iemLevelMatched.db.map(d => d - iemCenter)
+  };
+  const targetNorm = {
+    frequencies: targetLevelMatched.frequencies,
+    db: targetLevelMatched.db.map(d => d - targetCenter)
+  };
+
   // Calculate error at each PPI frequency point
   const errors = [];
   const absErrors = [];
   const lnFreqs = [];
-  
+
   for (const freq of PPI_FREQUENCIES) {
     const iemDb = logInterpolate(iemNorm.frequencies, iemNorm.db, freq);
     const targetDb = logInterpolate(targetNorm.frequencies, targetNorm.db, freq);
-    
+
     const error = iemDb - targetDb;
-    
-    // For STDEV and SLOPE: use 20Hz - 10kHz
-    if (freq <= 10000) {
+
+    // For STDEV and SLOPE: use [bandMin, bandMax]
+    if (freq >= bandMin && freq <= bandMax) {
       errors.push(error);
       lnFreqs.push(Math.log(freq));
     }
-    
-    // For AVG_ERROR: use 40Hz - 10kHz
-    if (freq >= 40 && freq <= 10000) {
+
+    // For AVG_ERROR: use 40Hz floor when bandMin <= 40Hz (original PPI spec),
+    // otherwise respect bandMin if user narrows above 40Hz.
+    const avgErrorMin = bandMin <= 40 ? 40 : bandMin;
+    if (freq >= avgErrorMin && freq <= bandMax) {
       absErrors.push(Math.abs(error));
     }
   }

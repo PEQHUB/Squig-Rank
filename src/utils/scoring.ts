@@ -7,7 +7,7 @@
 
 import { decode } from '@msgpack/msgpack';
 import { calculatePPI, logInterpolate } from './ppi';
-import type { CalculationResult, ScoredIEM, FrequencyCurve, CategoryFilter } from '../types';
+import type { CalculationResult, ScoredIEM, FrequencyCurve, CategoryFilter, FrequencyRange } from '../types';
 
 // ============================================================================
 // TYPES
@@ -173,7 +173,8 @@ export async function scoreAllDevices(
   targetCurve: FrequencyCurve,
   targetType: '711' | '5128',
   activeType: CategoryFilter,
-  targetName: string
+  targetName: string,
+  bandRange?: FrequencyRange
 ): Promise<CalculationResult> {
   const data = await loadCurveData();
   const freqs = data.frequencies;
@@ -228,7 +229,7 @@ export async function scoreAllDevices(
       }
     }
 
-    const result = calculatePPI(iemCurve, activeTarget);
+    const result = calculatePPI(iemCurve, activeTarget, bandRange?.min, bandRange?.max);
 
     scored.push({
       id: entry.id,
@@ -264,7 +265,8 @@ export async function scoreAllDevices(
  */
 export async function scoreAllDevicesCombined(
   targetCurve: FrequencyCurve,
-  targetName: string
+  targetName: string,
+  bandRange?: FrequencyRange
 ): Promise<CalculationResult> {
   const data = await loadCurveData();
   const freqs = data.frequencies;
@@ -294,7 +296,7 @@ export async function scoreAllDevicesCombined(
     // Apply 711 compensation for 711-rig IEMs, base target for 5128
     const activeTarget = iemRig === '711' ? targetPlus711Comp : targetBase;
 
-    const result = calculatePPI(iemCurve, activeTarget);
+    const result = calculatePPI(iemCurve, activeTarget, bandRange?.min, bandRange?.max);
 
     scored.push({
       id: entry.id,

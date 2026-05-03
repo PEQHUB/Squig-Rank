@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { scoreAllDevices } from '../utils/scoring';
-import type { CalculationResult, CategoryFilter } from '../types';
+import type { CalculationResult, CategoryFilter, FrequencyRange } from '../types';
+import { DEFAULT_FREQUENCY_RANGE } from '../types';
 
 // ============================================================================
 // COMPONENT
@@ -11,9 +12,10 @@ interface Props {
   onCalculate: (results: CalculationResult | null) => void;
   isRanking: boolean;
   category: CategoryFilter;
+  bandRange: FrequencyRange;
 }
 
-export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
+export function TargetSubmission({ onCalculate, isRanking, category, bandRange }: Props) {
   const [targetText, setTargetText] = useState('');
   const [targetName, setTargetName] = useState('My Custom Target');
   const [targetType, setTargetType] = useState<'711' | '5128'>('711');
@@ -53,13 +55,16 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
         throw new Error('Invalid target data (need at least 10 points)');
       }
 
-      // 2. Score all devices using shared pipeline
-      const result = await scoreAllDevices(
-        parsedTarget,
-        targetType,
-        category,
-        targetName
-      );
+        // 2. Score all devices using shared pipeline
+        const result = await scoreAllDevices(
+          parsedTarget,
+          targetType,
+          category,
+          targetName,
+          bandRange.min !== DEFAULT_FREQUENCY_RANGE.min || bandRange.max !== DEFAULT_FREQUENCY_RANGE.max
+            ? bandRange
+            : undefined
+        );
 
       onCalculate(result);
 
@@ -69,7 +74,7 @@ export function TargetSubmission({ onCalculate, isRanking, category }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [targetText, targetType, category, targetName, onCalculate]);
+  }, [targetText, targetType, category, targetName, bandRange, onCalculate]);
 
   const handleReset = () => {
     onCalculate(null);

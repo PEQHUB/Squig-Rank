@@ -481,7 +481,7 @@ interface LatestMobileViewProps {
 function LatestMobileView({ devices, searchTerm, onFindSimilar }: LatestMobileViewProps) {
   const [displayCount, setDisplayCount] = useState(50);
   const [showCloneCoupler, setShowCloneCoupler] = useState(true);
-  const [hideDuplicates, setHideDuplicates] = useState(false);
+const [hideDuplicates, setHideDuplicates] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive sort/rank computation

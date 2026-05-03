@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { findLoudnessOffset } = require('./loudnessNorm.cjs');
 
 // ============================================================================
 // FREQUENCY RESPONSE PARSING

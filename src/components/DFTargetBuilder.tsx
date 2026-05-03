@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { parseFrequencyResponse } from '../utils/ppi';
 import { buildTargetCurve, CATEGORY_DEFAULTS } from '../utils/shelfFilter';
 import { scoreAllDevices, scoreAllDevicesCombined } from '../utils/scoring';
-import type { BaselinePresetKey, BaselineSelection, BuilderParams, CalculationResult, CategoryFilter, FrequencyCurve } from '../types';
+import type { BaselinePresetKey, BaselineSelection, BuilderParams, CalculationResult, CategoryFilter, FrequencyCurve, FrequencyRange } from '../types';
+
+import { FrequencyRangeSlider } from './FrequencyRangeSlider';
+import { DEFAULT_FREQUENCY_RANGE } from '../types';
 
 // ============================================================================
 // BASELINE LOADING
@@ -114,6 +117,8 @@ interface Props {
   onBaselineChange: (selection: BaselineSelection) => void;
   onCalculateCombined: (result: CalculationResult) => void;
   onResetCombined: () => void;
+  bandRange: FrequencyRange;
+  onBandRangeChange: (range: FrequencyRange) => void;
 }
 
 export function DFTargetBuilder({
@@ -132,6 +137,8 @@ export function DFTargetBuilder({
   onBaselineChange,
   onCalculateCombined,
   onResetCombined,
+  bandRange,
+  onBandRangeChange,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -179,6 +186,8 @@ export function DFTargetBuilder({
     e.target.value = '';
   };
 
+  const isCustomBand = bandRange.min !== DEFAULT_FREQUENCY_RANGE.min || bandRange.max !== DEFAULT_FREQUENCY_RANGE.max;
+
   const handleCheck = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -197,7 +206,8 @@ export function DFTargetBuilder({
         modifiedTarget,
         rigType,
         activeType,
-        targetName
+        targetName,
+        isCustomBand ? bandRange : undefined
       );
 
       onCalculate(category, result);
@@ -207,7 +217,7 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  }, [category, params, baselineSelection, onCalculate]);
+  }, [category, params, baselineSelection, bandRange, onCalculate]);
 
   const handleCheckBoth = useCallback(async () => {
     setLoading(true);
@@ -228,10 +238,10 @@ export function DFTargetBuilder({
       const targetName = `${baselineName} (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
       const siblingTargetName = `${siblingBaselineName} (Tilt: ${siblingParams.tilt}, Bass: ${siblingParams.bassGain}, Treble: ${siblingParams.trebleGain})`;
 
-      const [result, siblingResult] = await Promise.all([
-        scoreAllDevices(modifiedTarget, RIG_FOR_CATEGORY[category], category === 'iem' ? 'iem' : category, targetName),
-        scoreAllDevices(siblingModifiedTarget, RIG_FOR_CATEGORY[siblingCategory], siblingCategory === 'iem' ? 'iem' : siblingCategory, siblingTargetName),
-      ]);
+    const [result, siblingResult] = await Promise.all([
+      scoreAllDevices(modifiedTarget, RIG_FOR_CATEGORY[category], category === 'iem' ? 'iem' : category, targetName, isCustomBand ? bandRange : undefined),
+      scoreAllDevices(siblingModifiedTarget, RIG_FOR_CATEGORY[siblingCategory], siblingCategory === 'iem' ? 'iem' : siblingCategory, siblingTargetName, isCustomBand ? bandRange : undefined),
+    ]);
 
       onCalculate(category, result);
       onCalculate(siblingCategory, siblingResult);
@@ -241,7 +251,7 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  }, [category, siblingCategory, params, siblingParams, baselineSelection, siblingBaselineSelection, onCalculate]);
+  }, [category, siblingCategory, params, siblingParams, baselineSelection, siblingBaselineSelection, bandRange, onCalculate]);
 
   const handleCheckCombined = useCallback(async () => {
     setLoading(true);
@@ -255,7 +265,7 @@ export function DFTargetBuilder({
       const baselineName = getBaselineDisplayName(baselineSelection);
       const targetName = `${baselineName} (Tilt: ${params.tilt}, Bass: ${params.bassGain}, Treble: ${params.trebleGain})`;
 
-      const result = await scoreAllDevicesCombined(modifiedTarget, targetName);
+      const result = await scoreAllDevicesCombined(modifiedTarget, targetName, isCustomBand ? bandRange : undefined);
       onCalculateCombined(result);
     } catch (err) {
       console.error(err);
@@ -263,7 +273,7 @@ export function DFTargetBuilder({
     } finally {
       setLoading(false);
     }
-  }, [category, params, baselineSelection, onCalculateCombined]);
+  }, [category, params, baselineSelection, bandRange, onCalculateCombined]);
 
   // Auto-re-rank when rig/category changes while ranking is active
   useEffect(() => {
@@ -284,6 +294,7 @@ export function DFTargetBuilder({
   const handleReset = () => {
     onParamsChange({ ...CATEGORY_DEFAULTS[category] });
     onBaselineChange({ type: 'preset', presetKey: category as BaselinePresetKey });
+    onBandRangeChange({ ...DEFAULT_FREQUENCY_RANGE });
     setLastBuiltCurve(null);
     onReset(category);
     // Also clear sibling results so "Rank Both Rigs" results are fully cleared
@@ -391,10 +402,16 @@ export function DFTargetBuilder({
             <path d="M6 2V8M3 5L6 2L9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M2 10H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
-        </button>
-      </div>
+      </button>
+    </div>
 
-      <div className="builder-controls">
+    {/* PPI Band Range Slider */}
+    <FrequencyRangeSlider
+      value={bandRange}
+      onChange={onBandRangeChange}
+    />
+
+    <div className="builder-controls">
         {/* Tilt Slider */}
         <div className="builder-slider">
           <label>

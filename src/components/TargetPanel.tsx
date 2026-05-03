@@ -10,6 +10,7 @@ import type {
   BuilderState,
   CalculationResult,
   CategoryFilter,
+  FrequencyRange,
   MeasurementMode,
 } from '../types';
 import type { PanelTab, FindSimilarDevice } from '../pages/Home';
@@ -35,6 +36,8 @@ interface Props {
   activeTab: PanelTab;
   onTabChange: (tab: PanelTab) => void;
   findSimilarDevice?: FindSimilarDevice | null;
+  bandRange: FrequencyRange;
+  onBandRangeChange: (range: FrequencyRange) => void;
 }
 
 // ============================================================================
@@ -58,6 +61,8 @@ export function TargetPanel({
   activeTab,
   onTabChange,
   findSimilarDevice,
+  bandRange,
+  onBandRangeChange,
 }: Props) {
   // Category picker for the builder
   const [builderCategory, setBuilderCategory] = useState<CategoryFilter>('iem');
@@ -204,41 +209,45 @@ export function TargetPanel({
       {activeTab === 'build' ? (
         <div className="panel-content">
 
-          <DFTargetBuilder
-            category={effectiveCategory}
-            siblingCategory={siblingCategory}
-            siblingParams={siblingParams}
-            params={currentParams}
-            onParamsChange={(p) => onBuilderParamsChange(effectiveCategory, p)}
-            onCalculate={onBuilderCalculate}
-            onReset={onBuilderReset}
-            isRanking={currentHasResults}
-            isSiblingRanking={siblingHasResults}
-            isCombinedRanking={isUploadRanking}
-            baselineSelection={baselineState[effectiveCategory]}
-            siblingBaselineSelection={baselineState[siblingCategory]}
-            onBaselineChange={(sel) => onBaselineChange(effectiveCategory, sel)}
-            onCalculateCombined={onCalculateCombined}
-            onResetCombined={onResetCombined}
-          />
+        <DFTargetBuilder
+          category={effectiveCategory}
+          siblingCategory={siblingCategory}
+          siblingParams={siblingParams}
+          params={currentParams}
+          onParamsChange={(p) => onBuilderParamsChange(effectiveCategory, p)}
+          onCalculate={onBuilderCalculate}
+          onReset={onBuilderReset}
+          isRanking={currentHasResults}
+          isSiblingRanking={siblingHasResults}
+          isCombinedRanking={isUploadRanking}
+          baselineSelection={baselineState[effectiveCategory]}
+          siblingBaselineSelection={baselineState[siblingCategory]}
+          onBaselineChange={(sel) => onBaselineChange(effectiveCategory, sel)}
+          onCalculateCombined={onCalculateCombined}
+          onResetCombined={onResetCombined}
+          bandRange={bandRange}
+          onBandRangeChange={onBandRangeChange}
+        />
         </div>
       ) : activeTab === 'upload' ? (
         <div className="panel-content">
-          <TargetSubmission
-            onCalculate={onUploadCalculate}
-            isRanking={isUploadRanking}
-            category={effectiveCategory}
-          />
+        <TargetSubmission
+          onCalculate={onUploadCalculate}
+          isRanking={isUploadRanking}
+          category={effectiveCategory}
+          bandRange={bandRange}
+        />
         </div>
       ) : (
         <div className="panel-content">
-          <IEMSearch
-            onCalculate={onUploadCalculate}
-            isRanking={isUploadRanking}
-            category={effectiveCategory}
-            measurementMode={measurementMode}
-            externalDevice={findSimilarDevice}
-          />
+        <IEMSearch
+          onCalculate={onUploadCalculate}
+          isRanking={isUploadRanking}
+          category={effectiveCategory}
+          measurementMode={measurementMode}
+          externalDevice={findSimilarDevice}
+          bandRange={bandRange}
+        />
         </div>
       )}
     </div>

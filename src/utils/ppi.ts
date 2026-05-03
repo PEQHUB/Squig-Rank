@@ -4,6 +4,7 @@
  */
 
 import type { FrequencyCurve } from '../types';
+import { findLoudnessOffset, loudnessWeightedCenter } from './loudnessNorm';
 
 // Standard PPI frequency points (20Hz - 20kHz, 121 points)
 const PPI_FREQUENCIES = [
@@ -59,14 +60,6 @@ function alignToR40(curve: FrequencyCurve): FrequencyCurve {
   return { frequencies: [...R40_FREQUENCIES], db: alignedDb };
 }
 
-function normalizeCurve(curve: FrequencyCurve, refFreq = 1000): FrequencyCurve {
-  const refDb = logInterpolate(curve.frequencies, curve.db, refFreq);
-  return {
-    frequencies: [...curve.frequencies],
-    db: curve.db.map(d => d - refDb)
-  };
-}
-
 export interface PPIResult {
   ppi: number;
   stdev: number;
@@ -75,15 +68,57 @@ export interface PPIResult {
 }
 
 /**
+ * Arbitrary SPL reference added to relative dB data before loudness normalization.
+ * ISO 226 loudness computation needs absolute SPL values to produce meaningful
+ * phon values. Since IEM and target data in SquigRank is in relative dB
+ * (centered near 0), we add this reference before level-matching, then the
+ * centering step removes it. The exact value doesn't affect PPI — only the
+ * relative shape matters.
+ */
+const SPL_REFERENCE = 70;
+
+/**
  * Calculate PPI score for an IEM against any target curve
  */
-export function calculatePPI(iemCurve: FrequencyCurve, targetCurve: FrequencyCurve): PPIResult {
-  // Align both curves to R40 and normalize at 1kHz
+export function calculatePPI(iemCurve: FrequencyCurve, targetCurve: FrequencyCurve, bandMin: number = 20, bandMax: number = 10000): PPIResult {
+  // Align both curves to R40, level-match to same perceived loudness (60 phon),
+  // then center at 0 dB using the loudness-weighted average (not 1 kHz).
+  // This makes the PPI error reflect shape mismatch only, and is robust
+  // against localized dips/peaks at any single frequency.
   const iemAligned = alignToR40(iemCurve);
-  const iemNorm = normalizeCurve(iemAligned);
-  
   const targetAligned = alignToR40(targetCurve);
-  const targetNorm = normalizeCurve(targetAligned);
+
+  // Convert relative dB to absolute SPL by adding reference level.
+  // This is needed for ISO 226 phon computation. The reference cancels
+  // out in the final error calculation after centering.
+  const iemSPL = iemAligned.db.map(d => d + SPL_REFERENCE);
+  const targetSPL = targetAligned.db.map(d => d + SPL_REFERENCE);
+
+  // Level-match: add offsets so both curves have 60 phon perceived loudness
+  const iemOffset = findLoudnessOffset(iemAligned.frequencies, iemSPL, 60);
+  const targetOffset = findLoudnessOffset(targetAligned.frequencies, targetSPL, 60);
+
+  const iemLevelMatched: FrequencyCurve = {
+    frequencies: iemAligned.frequencies,
+    db: iemSPL.map(d => d + iemOffset)
+  };
+  const targetLevelMatched: FrequencyCurve = {
+    frequencies: targetAligned.frequencies,
+    db: targetSPL.map(d => d + targetOffset)
+  };
+
+  // Center at 0 dB using loudness-weighted average (not 1 kHz)
+  const iemCenter = loudnessWeightedCenter(iemLevelMatched.frequencies, iemLevelMatched.db);
+  const targetCenter = loudnessWeightedCenter(targetLevelMatched.frequencies, targetLevelMatched.db);
+
+  const iemNorm: FrequencyCurve = {
+    frequencies: iemLevelMatched.frequencies,
+    db: iemLevelMatched.db.map(d => d - iemCenter)
+  };
+  const targetNorm: FrequencyCurve = {
+    frequencies: targetLevelMatched.frequencies,
+    db: targetLevelMatched.db.map(d => d - targetCenter)
+  };
   
   // Calculate error at each PPI frequency point
   const errors: number[] = [];
@@ -93,17 +128,19 @@ export function calculatePPI(iemCurve: FrequencyCurve, targetCurve: FrequencyCur
   for (const freq of PPI_FREQUENCIES) {
     const iemDb = logInterpolate(iemNorm.frequencies, iemNorm.db, freq);
     const targetDb = logInterpolate(targetNorm.frequencies, targetNorm.db, freq);
-    
+
     const error = iemDb - targetDb;
-    
-    // For STDEV and SLOPE: use 20Hz - 10kHz
-    if (freq <= 10000) {
+
+    // For STDEV and SLOPE: use [bandMin, bandMax]
+    if (freq >= bandMin && freq <= bandMax) {
       errors.push(error);
       lnFreqs.push(Math.log(freq));
     }
-    
-    // For AVG_ERROR: use 40Hz - 10kHz
-    if (freq >= 40 && freq <= 10000) {
+
+    // For AVG_ERROR: use 40Hz floor when bandMin is at or below 40Hz,
+    // matching the original PPI spec. If user narrows above 40Hz, respect that.
+    const avgErrorMin = bandMin <= 40 ? 40 : bandMin;
+    if (freq >= avgErrorMin && freq <= bandMax) {
       absErrors.push(Math.abs(error));
     }
   }

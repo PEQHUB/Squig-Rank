@@ -18,7 +18,9 @@ import type {
   BaselineState,
   BaselineSelection,
   ScoredIEM,
+  FrequencyRange,
 } from '../types';
+import { DEFAULT_FREQUENCY_RANGE } from '../types';
 
 export type PanelTab = 'build' | 'upload' | 'similar';
 
@@ -84,6 +86,9 @@ export default function Home() {
 
   // Find Similar: external device selection from SimilarityList rows
   const [findSimilarDevice, setFindSimilarDevice] = useState<FindSimilarDevice | null>(null);
+
+  // PPI evaluation band range (shared across all scoring paths)
+  const [bandRange, setBandRange] = useState<FrequencyRange>({ ...DEFAULT_FREQUENCY_RANGE });
 
   // ============================================================================
   // DATA FETCHING
@@ -471,6 +476,8 @@ export default function Home() {
         activeTab={panelTab}
         onTabChange={setPanelTab}
         findSimilarDevice={findSimilarDevice}
+        bandRange={bandRange}
+        onBandRangeChange={setBandRange}
       />
 
       <SimilarityList
