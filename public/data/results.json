@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-05T16:18:32.861Z",
-  "totalIEMs": 20670,
+  "generatedAt": "2026-05-05T18:03:27.894Z",
+  "totalIEMs": 20690,
   "domainsScanned": 104,
   "results": [
     {
@@ -77,7 +77,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.713Z"
+          "lastSeen": "2026-05-05T18:02:49.065Z"
         },
         {
           "id": "superreview::Kefine Klean SV silver",
@@ -1300,7 +1300,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.698Z"
+          "lastSeen": "2026-05-05T18:02:47.550Z"
         },
         {
           "id": "jacstone::TinHiFi T2 DLC",
@@ -2569,7 +2569,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.585Z"
+          "lastSeen": "2026-05-05T18:02:45.621Z"
         },
         {
           "id": "dl::Simgot EW300 HBB Red",
@@ -2704,7 +2704,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.593Z"
+          "lastSeen": "2026-05-05T18:02:45.945Z"
         },
         {
           "id": "timmyv::Mangird Xenns Up",
@@ -3399,7 +3399,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.714Z"
+          "lastSeen": "2026-05-05T18:02:49.234Z"
         },
         {
           "id": "jacstone::Moondrop Aria S2",
@@ -3450,7 +3450,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "nymz::SeekReal Airship",
@@ -4413,6 +4413,23 @@
           "pinna": null,
           "firstSeen": "2026-02-01",
           "lastSeen": "2026-04-29T09:05:55.232Z"
+        },
+        {
+          "id": "audioamigo::Thieaudio Hype 4 mk2",
+          "name": "Thieaudio Hype 4 mk2",
+          "similarity": 86.12423812293983,
+          "stdev": 1.2231141576964288,
+          "slope": 0.021115706027485012,
+          "avgError": 0.9828170355331616,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:47.717Z",
+          "lastSeen": "2026-05-05T18:02:47.717Z"
         },
         {
           "id": "crinacle::APP2 Pinna 51",
@@ -5513,7 +5530,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.628Z"
+          "lastSeen": "2026-05-05T18:02:46.820Z"
         },
         {
           "id": "tonedeafmonk::Tangzu Waner SG II Red Lion",
@@ -6819,7 +6836,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.616Z"
+          "lastSeen": "2026-05-05T18:02:46.306Z"
         },
         {
           "id": "practiphile::YU9 Que",
@@ -6904,7 +6921,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.648Z"
+          "lastSeen": "2026-05-05T18:02:47.010Z"
         },
         {
           "id": "smirk::Hisenior Mega5EST",
@@ -7074,7 +7091,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.617Z"
+          "lastSeen": "2026-05-05T18:02:46.307Z"
         },
         {
           "id": "crinacle::Elysian X",
@@ -7244,7 +7261,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.714Z"
+          "lastSeen": "2026-05-05T18:02:49.234Z"
         },
         {
           "id": "tonedeafmonk::TINHiFi C1",
@@ -8399,23 +8416,6 @@
           "lastSeen": "2026-02-05T22:01:39.105Z"
         },
         {
-          "id": "superreview::ThieAudio Hype 4 mk2",
-          "name": "ThieAudio Hype 4 mk2",
-          "similarity": 84.50006875810865,
-          "stdev": 1.3942318363205413,
-          "slope": -0.012262557607910524,
-          "avgError": 1.0489566306945017,
-          "price": 400,
-          "quality": "low",
-          "sourceDomain": "superreview.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-02-01",
-          "lastSeen": "2026-05-01T22:12:02.519Z"
-        },
-        {
           "id": "soundignity::Binary EP321 MEMS",
           "name": "Binary Acoustic EP321 MEMS",
           "similarity": 84.49775690483429,
@@ -8498,7 +8498,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.591Z"
+          "lastSeen": "2026-05-05T18:02:45.942Z"
         },
         {
           "id": "superreview::Kiwi Ears Chorus",
@@ -10179,7 +10179,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.631Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "tonedeafmonk::IvipQ Q-09 Phoenixia",
@@ -11403,7 +11403,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "ianfann::TRUTHEAR NOVA",
@@ -11624,7 +11624,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.609Z"
+          "lastSeen": "2026-05-05T18:02:45.962Z"
         },
         {
           "id": "harpo::Bowie DJ EQ",
@@ -11845,7 +11845,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.598Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "precog::Elysian Annihilator 2023 S2 (Xelastec)",
@@ -12472,7 +12472,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.308Z"
         },
         {
           "id": "obodio::T3+ preprod",
@@ -12540,7 +12540,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.644Z"
+          "lastSeen": "2026-05-05T18:02:47.003Z"
         },
         {
           "id": "soundcheck39::QOA Cloudscape",
@@ -12591,7 +12591,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.701Z"
+          "lastSeen": "2026-05-05T18:02:48.222Z"
         },
         {
           "id": "mmagtech::7Hz Salnotes Zero 2 Foam",
@@ -12625,7 +12625,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.598Z"
+          "lastSeen": "2026-05-05T18:02:45.949Z"
         },
         {
           "id": "iemworld::Fiio FD3 : Black Filter (BAL Teps)",
@@ -12880,7 +12880,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.696Z"
+          "lastSeen": "2026-05-05T18:02:47.547Z"
         },
         {
           "id": "eliseaudio::ZiiGaat x Hangout Odyssey2",
@@ -13524,7 +13524,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.628Z"
+          "lastSeen": "2026-05-05T18:02:46.820Z"
         },
         {
           "id": "audioamigo::BLON BL03",
@@ -13541,7 +13541,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.598Z"
+          "lastSeen": "2026-05-05T18:02:45.949Z"
         },
         {
           "id": "animagus::Elysian Annihilator 2021",
@@ -13592,7 +13592,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.690Z"
+          "lastSeen": "2026-05-05T18:02:47.541Z"
         },
         {
           "id": "practiphile::Tangzu X HBB Heyday",
@@ -13710,7 +13710,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.643Z"
+          "lastSeen": "2026-05-05T18:02:47.001Z"
         },
         {
           "id": "musicafe::EPZ Q5",
@@ -15290,7 +15290,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.647Z"
+          "lastSeen": "2026-05-05T18:02:47.008Z"
         },
         {
           "id": "boizoff::Quarks DSP",
@@ -16735,7 +16735,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:48.564Z"
         },
         {
           "id": "eplv::TRN ORCA_110",
@@ -17278,7 +17278,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.653Z"
+          "lastSeen": "2026-05-05T18:02:47.013Z"
         },
         {
           "id": "flare::ISN H60",
@@ -17482,7 +17482,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:14.147Z",
-          "lastSeen": "2026-04-17T03:51:11.584Z"
+          "lastSeen": "2026-05-05T18:02:45.620Z"
         },
         {
           "id": "crinacle::MH755 S3",
@@ -17870,7 +17870,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.589Z"
+          "lastSeen": "2026-05-05T18:02:45.626Z"
         },
         {
           "id": "theaudiostore::TSMR X 10th Anniversary",
@@ -17989,7 +17989,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.654Z"
+          "lastSeen": "2026-05-05T18:02:47.015Z"
         },
         {
           "id": "animagus::64 Audio U12t Sample 2 (M15)",
@@ -18057,7 +18057,24 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.622Z"
+          "lastSeen": "2026-05-05T18:02:46.311Z"
+        },
+        {
+          "id": "audioamigo::ZiSin 336",
+          "name": "ZiSin 336 Peach Heart Poker",
+          "similarity": 81.6261254374837,
+          "stdev": 1.538825165530298,
+          "slope": 0.1371428561483748,
+          "avgError": 1.2780828216185396,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:49.063Z",
+          "lastSeen": "2026-05-05T18:02:49.063Z"
         },
         {
           "id": "ducbloke::Tansio Mirai Shock Y2B4",
@@ -18108,7 +18125,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.606Z"
+          "lastSeen": "2026-05-05T18:02:45.959Z"
         },
         {
           "id": "superreview::Blon BL05",
@@ -18463,7 +18480,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.663Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "arn::JD7",
@@ -19534,7 +19551,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.588Z"
+          "lastSeen": "2026-05-05T18:02:45.625Z"
         },
         {
           "id": "enemyspider::SLA3 WT",
@@ -19703,7 +19720,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.684Z"
+          "lastSeen": "2026-05-05T18:02:47.535Z"
         },
         {
           "id": "paulwasabii::Tigerism Octave",
@@ -19856,7 +19873,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "aftersound::TANGZU WAN ER",
@@ -20671,7 +20688,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.596Z"
+          "lastSeen": "2026-05-05T18:02:45.948Z"
         },
         {
           "id": "ducbloke::Hidizs MY LIN Red",
@@ -22488,7 +22505,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.714Z"
+          "lastSeen": "2026-05-05T18:02:49.234Z"
         },
         {
           "id": "aftersound::DUNU FALCON ULTRA GOLD",
@@ -23112,7 +23129,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.696Z"
+          "lastSeen": "2026-05-05T18:02:47.548Z"
         },
         {
           "id": "eliseaudio::Penon Rival green brown 5o_",
@@ -23826,7 +23843,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.674Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "soundignity::Elysian Annihilator 2023",
@@ -24948,6 +24965,23 @@
           "lastSeen": "2026-04-29T23:43:48.168Z"
         },
         {
+          "id": "audioamigo::Kinera Phoenixcall 2",
+          "name": "Kinera Celest Phoenixcall 2",
+          "similarity": 79.97366318688125,
+          "stdev": 1.6354701327607601,
+          "slope": -0.19172568468454323,
+          "avgError": 1.4104670306578782,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:46.816Z",
+          "lastSeen": "2026-05-05T18:02:46.816Z"
+        },
+        {
           "id": "superreview::Moondrop Aria Snow",
           "name": "Moondrop Aria: Snow Edition",
           "similarity": 79.97330851279163,
@@ -25573,7 +25607,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.681Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "boizoff::SuperMix 5 (sample 1) (stock silicone tips) ✓",
@@ -26151,7 +26185,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.607Z"
+          "lastSeen": "2026-05-05T18:02:45.960Z"
         },
         {
           "id": "sai::Tangzu Waner (stock white tip)",
@@ -26929,7 +26963,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.683Z"
+          "lastSeen": "2026-05-05T18:02:47.535Z"
         },
         {
           "id": "boizoff::Quarks 2 (TENNMAK SoFoam tips) ✓",
@@ -27098,7 +27132,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.648Z"
+          "lastSeen": "2026-05-05T18:02:47.009Z"
         },
         {
           "id": "ianfann::CVJ K-ES",
@@ -27795,6 +27829,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-15T13:57:34.331Z"
+        },
+        {
+          "id": "audioamigo::GYZIISINE 340",
+          "name": "ZiSin GYZIISINE 340",
+          "similarity": 79.29779019663313,
+          "stdev": 1.767418350063971,
+          "slope": -0.08695671158197997,
+          "avgError": 1.487106767168914,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.897Z",
+          "lastSeen": "2026-05-05T18:02:48.897Z"
         },
         {
           "id": "therollo9::SeeAudio Yume II",
@@ -28928,7 +28979,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.680Z"
+          "lastSeen": "2026-05-05T18:02:47.533Z"
         },
         {
           "id": "crinacle::CE-5",
@@ -29352,7 +29403,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.641Z"
+          "lastSeen": "2026-05-05T18:02:46.999Z"
         },
         {
           "id": "rg::GS Audio GD3A",
@@ -29421,6 +29472,23 @@
           "pinna": null,
           "firstSeen": "2026-02-04",
           "lastSeen": "2026-04-06T21:00:36.235Z"
+        },
+        {
+          "id": "audioamigo::Hidizs My Lin Red",
+          "name": "Hidizs My Lin",
+          "similarity": 78.95634658926821,
+          "stdev": 1.7886639330126581,
+          "slope": -0.13490427781246866,
+          "avgError": 1.4396260454994676,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:46.303Z",
+          "lastSeen": "2026-05-05T18:02:46.303Z"
         },
         {
           "id": "flare::Xenns Mangird Tea 2",
@@ -30031,7 +30099,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.665Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "csi-zone::7hz Sonus S1",
@@ -30794,7 +30862,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-04-16T23:08:49.193Z",
-          "lastSeen": "2026-04-16T23:08:49.193Z"
+          "lastSeen": "2026-05-05T18:02:46.822Z"
         },
         {
           "id": "tonedeafmonk::Tansio Marai HALO",
@@ -30947,7 +31015,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.700Z"
+          "lastSeen": "2026-05-05T18:02:47.719Z"
         },
         {
           "id": "aftersound::TRUTHEAR ZERO II",
@@ -31810,7 +31878,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.650Z"
+          "lastSeen": "2026-05-05T18:02:47.011Z"
         },
         {
           "id": "dl::Duonic",
@@ -32945,7 +33013,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.646Z"
+          "lastSeen": "2026-05-05T18:02:47.006Z"
         },
         {
           "id": "kuulokenurkka::PX7 S2e (ANC ON) **",
@@ -34219,7 +34287,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.669Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "hbb::Sample BL",
@@ -34540,7 +34608,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.608Z"
+          "lastSeen": "2026-05-05T18:02:45.960Z"
         },
         {
           "id": "eliseaudio::TSMR RGB 100 Foam Mod",
@@ -35066,7 +35134,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.632Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "dchpgall::T5 S1 (by 냥냐냥) (LG G8 SBC Codec) (L Only)",
@@ -35456,7 +35524,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.697Z"
+          "lastSeen": "2026-05-05T18:02:47.548Z"
         },
         {
           "id": "superreview::Tripowin Lea",
@@ -35592,7 +35660,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.701Z"
+          "lastSeen": "2026-05-05T18:02:48.223Z"
         },
         {
           "id": "boizoff::Solis II (TENNMAK SoFoam tips) ✓",
@@ -35643,7 +35711,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.691Z"
+          "lastSeen": "2026-05-05T18:02:47.542Z"
         },
         {
           "id": "timmyv::MD Kadenz (A-Stock)",
@@ -35898,6 +35966,23 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:14.783Z"
+        },
+        {
+          "id": "audioamigo::Tipsy M3",
+          "name": "Tipsy Audio M3",
+          "similarity": 77.6478823809703,
+          "stdev": 1.9356151981573555,
+          "slope": 0.036825289906704875,
+          "avgError": 1.6485248243125745,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.220Z",
+          "lastSeen": "2026-05-05T18:02:48.220Z"
         },
         {
           "id": "boizoff::Gate (sample 01) (TENNMAK SoFoam tips) ✓",
@@ -36593,7 +36678,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.649Z"
+          "lastSeen": "2026-05-05T18:02:47.010Z"
         },
         {
           "id": "crinacle::Trinity Brass",
@@ -38392,7 +38477,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.681Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "hbb::Tan Soda",
@@ -38867,7 +38952,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.636Z"
+          "lastSeen": "2026-05-05T18:02:46.828Z"
         },
         {
           "id": "soundcheck39::Intime Sho",
@@ -39697,7 +39782,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.682Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "aden::Forte Ears Mefisto",
@@ -40357,7 +40442,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-22T23:39:59.145Z",
-          "lastSeen": "2026-04-17T03:51:11.690Z"
+          "lastSeen": "2026-05-05T18:02:47.542Z"
         },
         {
           "id": "harpo::Tipsy Tromso",
@@ -42120,7 +42205,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.691Z"
+          "lastSeen": "2026-05-05T18:02:47.543Z"
         },
         {
           "id": "dchpgall::MT1 (by 왈왈)",
@@ -44446,7 +44531,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.824Z",
-          "lastSeen": "2026-04-17T03:51:11.581Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "ducbloke::Roseselsa CJ20 x AndyAudioVault",
@@ -45838,7 +45923,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.685Z"
+          "lastSeen": "2026-05-05T18:02:47.536Z"
         },
         {
           "id": "hbb::Blon jojo",
@@ -45889,7 +45974,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.589Z"
+          "lastSeen": "2026-05-05T18:02:45.627Z"
         },
         {
           "id": "animagus::PMG Audio APX ME",
@@ -46532,23 +46617,6 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-11T19:10:16.491Z"
-        },
-        {
-          "id": "jaytiss::My Linblack",
-          "name": "HIDIZS My LIN",
-          "similarity": 75.65576080465486,
-          "stdev": 2.044570626550142,
-          "slope": 0.2179648551024823,
-          "avgError": 1.601035889033799,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "jaytiss.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-05-01T05:30:48.555Z",
-          "lastSeen": "2026-05-01T05:30:48.555Z"
         },
         {
           "id": "dhrme::EF Free Pro",
@@ -48330,7 +48398,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.652Z"
+          "lastSeen": "2026-05-05T18:02:47.013Z"
         },
         {
           "id": "aftersound::ROSESELSA QUIETSEA 2",
@@ -49837,7 +49905,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.633Z"
+          "lastSeen": "2026-05-05T18:02:46.826Z"
         },
         {
           "id": "ianfann::QOA PROTOTYPE 1",
@@ -51106,7 +51174,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-17T07:14:08.703Z",
-          "lastSeen": "2026-04-17T03:51:11.675Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "vortexreviews::Hidizs MP145 High Frequency Nozzle",
@@ -51784,7 +51852,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.677Z"
+          "lastSeen": "2026-05-05T18:02:47.532Z"
         },
         {
           "id": "hore::KZ Krila Switch 1011",
@@ -52004,7 +52072,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.670Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "hu-fi::Kinera Nott",
@@ -52344,7 +52412,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.620Z"
+          "lastSeen": "2026-05-05T18:02:46.310Z"
         },
         {
           "id": "smirk::U12t M15 (Azla Sedna Short)",
@@ -53716,7 +53784,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.611Z"
+          "lastSeen": "2026-05-05T18:02:45.963Z"
         },
         {
           "id": "aftersound::KZ ZS12 PRO X UUUU",
@@ -53801,7 +53869,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "seanwee::PR2 IV",
@@ -54846,7 +54914,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.665Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "mmagtech::EPZ Q1 PRO TANYA FILTER Foam",
@@ -57240,7 +57308,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.600Z"
+          "lastSeen": "2026-05-05T18:02:45.952Z"
         },
         {
           "id": "flare::ISN H50",
@@ -58987,7 +59055,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.673Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "crinacle::Viento-B C",
@@ -60645,7 +60713,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.581Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "aftersound::4ACOUSTIC SYMPHONIE 2 ON",
@@ -60865,7 +60933,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.599Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "vsg::Campfire Audio Trifecta",
@@ -61102,7 +61170,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.600Z"
+          "lastSeen": "2026-05-05T18:02:45.951Z"
         },
         {
           "id": "dl::TXN Diamond",
@@ -61305,7 +61373,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.613Z"
+          "lastSeen": "2026-05-05T18:02:45.966Z"
         },
         {
           "id": "enemyspider::ZSN PROX",
@@ -63794,7 +63862,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.645Z"
+          "lastSeen": "2026-05-05T18:02:47.005Z"
         },
         {
           "id": "dchpgall::Softears Karma (by 왈왈)",
@@ -65829,7 +65897,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.677Z"
+          "lastSeen": "2026-05-05T18:02:47.531Z"
         },
         {
           "id": "csi-zone::7hz Dioko",
@@ -66610,7 +66678,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.689Z"
+          "lastSeen": "2026-05-05T18:02:47.541Z"
         },
         {
           "id": "ianfann::QKZ X HBB KHAN",
@@ -66695,7 +66763,24 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.686Z"
+          "lastSeen": "2026-05-05T18:02:47.537Z"
+        },
+        {
+          "id": "audioamigo::TinHiFi P2 Ultra",
+          "name": "TinHiFi P2 Ultra",
+          "similarity": 71.96484540627802,
+          "stdev": 2.212989206927319,
+          "slope": 0.49629147976970805,
+          "avgError": 1.7068919246977918,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.054Z",
+          "lastSeen": "2026-05-05T18:02:48.054Z"
         },
         {
           "id": "eplv::1Mii AnkbitE302",
@@ -67065,7 +67150,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.662Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "aftersound::TRN CONCH REFERENCE",
@@ -68369,7 +68454,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.695Z"
+          "lastSeen": "2026-05-05T18:02:47.545Z"
         },
         {
           "id": "smirk::Oriolus Monachaa",
@@ -69436,7 +69521,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.613Z"
+          "lastSeen": "2026-05-05T18:02:45.966Z"
         },
         {
           "id": "superreview::Soncie Meory SW500H",
@@ -69707,7 +69792,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.594Z"
+          "lastSeen": "2026-05-05T18:02:45.946Z"
         },
         {
           "id": "eplv::JVC HA-A50TOff",
@@ -70588,7 +70673,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "melatonin::DIY SK846",
@@ -71499,7 +71584,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.614Z"
+          "lastSeen": "2026-05-05T18:02:45.968Z"
         },
         {
           "id": "soundignity::V14 Clone",
@@ -71753,7 +71838,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.672Z"
+          "lastSeen": "2026-05-05T18:02:47.359Z"
         },
         {
           "id": "audioamigo::KZ Saga Bass+",
@@ -71770,7 +71855,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.632Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "enemyspider::StarRiver BT 00",
@@ -71821,7 +71906,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.624Z"
+          "lastSeen": "2026-05-05T18:02:46.648Z"
         },
         {
           "id": "eplv::NICEHCK Himalaya_Blue",
@@ -72767,7 +72852,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.666Z"
+          "lastSeen": "2026-05-05T18:02:47.357Z"
         },
         {
           "id": "soundcheck39::NiceHCK F1 Pro",
@@ -73225,7 +73310,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.613Z"
+          "lastSeen": "2026-05-05T18:02:45.966Z"
         },
         {
           "id": "eplv::CCZ BC01PRO",
@@ -73512,7 +73597,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.645Z"
+          "lastSeen": "2026-05-05T18:02:47.004Z"
         },
         {
           "id": "paulwasabii::BLON BL-A8v2",
@@ -74086,7 +74171,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.673Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "aftersound::MADOO TYPE 512",
@@ -75678,7 +75763,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-17T07:14:08.506Z",
-          "lastSeen": "2026-04-17T03:51:11.615Z"
+          "lastSeen": "2026-05-05T18:02:46.305Z"
         },
         {
           "id": "crinacle::Starsea 12",
@@ -76882,7 +76967,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.633Z"
+          "lastSeen": "2026-05-05T18:02:46.826Z"
         },
         {
           "id": "hbb::Heart Ele",
@@ -77000,7 +77085,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.663Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "tonedeafmonk::SLIIVO SL41",
@@ -79426,7 +79511,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.611Z"
+          "lastSeen": "2026-05-05T18:02:45.963Z"
         },
         {
           "id": "crinacle::Versa",
@@ -80326,7 +80411,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.674Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "eplv::NFAUDIO RA15Warm",
@@ -81173,7 +81258,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.660Z",
-          "lastSeen": "2026-04-17T03:51:11.580Z"
+          "lastSeen": "2026-05-05T18:02:45.618Z"
         },
         {
           "id": "jaytiss::toppinghane0000",
@@ -81765,7 +81850,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.697Z"
+          "lastSeen": "2026-05-05T18:02:47.548Z"
         },
         {
           "id": "timmyv::Fatfreq Harmony",
@@ -82427,7 +82512,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.637Z"
+          "lastSeen": "2026-05-05T18:02:46.996Z"
         },
         {
           "id": "soundcheck39::CKLVX D62 3,5mm",
@@ -84153,7 +84238,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.615Z"
+          "lastSeen": "2026-05-05T18:02:45.969Z"
         },
         {
           "id": "aden::HiBy Yume Miku",
@@ -85443,6 +85528,23 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:14.204Z"
+        },
+        {
+          "id": "audioamigo::AKG N5005 Bass",
+          "name": "Secret Omar's Secret Weapon",
+          "similarity": 68.06795983940104,
+          "stdev": 2.3620340458988953,
+          "slope": -0.7134731723449567,
+          "avgError": 2.0389890909933874,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:47.531Z",
+          "lastSeen": "2026-05-05T18:02:47.531Z"
         },
         {
           "id": "crinacle::Flamenco Bass",
@@ -87291,7 +87393,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.618Z"
+          "lastSeen": "2026-05-05T18:02:46.308Z"
         },
         {
           "id": "kuulokenurkka::VMK25.2 (ANC ON) **",
@@ -91884,7 +91986,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.986Z",
-          "lastSeen": "2026-04-17T03:51:11.582Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "ducbloke::NiceHCK NX7 MK4 Gold",
@@ -94258,7 +94360,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.633Z"
+          "lastSeen": "2026-05-05T18:02:46.826Z"
         },
         {
           "id": "aftersound::TRI STAR RIVER ALL ON",
@@ -94513,7 +94615,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.603Z"
+          "lastSeen": "2026-05-05T18:02:45.956Z"
         },
         {
           "id": "dchpgall::True S1 (by 냥냐냥) (LG G8 APT-X Codec)",
@@ -94683,7 +94785,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:49.063Z"
         },
         {
           "id": "eliseaudio::Sample 1",
@@ -94970,7 +95072,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.676Z"
+          "lastSeen": "2026-05-05T18:02:47.363Z"
         },
         {
           "id": "crinacle::La Hire",
@@ -96747,7 +96849,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.608Z"
+          "lastSeen": "2026-05-05T18:02:45.961Z"
         },
         {
           "id": "hbb::TForce Yuan Li",
@@ -98285,7 +98387,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.678Z"
+          "lastSeen": "2026-05-05T18:02:47.532Z"
         },
         {
           "id": "crinacle::IE300",
@@ -99200,7 +99302,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.675Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "crinacle::RAH Blue-red",
@@ -100842,7 +100944,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.616Z"
+          "lastSeen": "2026-05-05T18:02:46.305Z"
         },
         {
           "id": "melatonin::Vento Conductor T-1000",
@@ -100993,7 +101095,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.703Z"
+          "lastSeen": "2026-05-05T18:02:48.224Z"
         },
         {
           "id": "therollo9::ND Earphone ND-X12 UUU",
@@ -101450,7 +101552,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.608Z"
+          "lastSeen": "2026-05-05T18:02:45.960Z"
         },
         {
           "id": "hbb::Tansio Mirai LAND",
@@ -105126,7 +105228,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.644Z"
+          "lastSeen": "2026-05-05T18:02:47.003Z"
         },
         {
           "id": "boizoff::HD620S (2025 sample, fresh stock pads, ideal seal)",
@@ -105715,7 +105817,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.708Z"
+          "lastSeen": "2026-05-05T18:02:48.395Z"
         },
         {
           "id": "crinacle::NT6 Pro",
@@ -112967,7 +113069,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.699Z"
+          "lastSeen": "2026-05-05T18:02:47.718Z"
         },
         {
           "id": "melatonin::AIDERLOT M5 Reference",
@@ -115369,7 +115471,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.604Z"
+          "lastSeen": "2026-05-05T18:02:45.957Z"
         },
         {
           "id": "crinacle::Sonata",
@@ -119619,7 +119721,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.604Z"
+          "lastSeen": "2026-05-05T18:02:45.956Z"
         },
         {
           "id": "yoshiultra::U-556-Triple Flange",
@@ -125340,7 +125442,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-04-14T06:18:04.375Z",
-          "lastSeen": "2026-04-17T03:51:11.699Z"
+          "lastSeen": "2026-05-05T18:02:47.718Z"
         },
         {
           "id": "therollo9::Hifiman RE800 Silver",
@@ -128521,7 +128623,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.658Z"
+          "lastSeen": "2026-05-05T18:02:47.017Z"
         },
         {
           "id": "therollo9::JH Audio Roxanne 1",
@@ -129724,7 +129826,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.645Z"
+          "lastSeen": "2026-05-05T18:02:47.004Z"
         },
         {
           "id": "aden::Miniso Blue 1DD",
@@ -131418,7 +131520,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "dhrme::Jabra Elite 10 2 ANC",
@@ -132127,7 +132229,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "crinacle::Cupid S3",
@@ -132750,7 +132852,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T04:59:00.062Z",
-          "lastSeen": "2026-04-17T03:51:11.599Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "dchpgall::DM008K S1 (by 냥냐냥)",
@@ -134324,7 +134426,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.662Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "boizoff::GSP-550 (stock pads)",
@@ -134811,7 +134913,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.596Z"
+          "lastSeen": "2026-05-05T18:02:45.947Z"
         },
         {
           "id": "iemworld::Hifiman Susvara [Bass Mod] ( OG Pads )",
@@ -135607,7 +135709,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.612Z"
+          "lastSeen": "2026-05-05T18:02:45.965Z"
         },
         {
           "id": "soundignity::Avara AV4",
@@ -135896,7 +135998,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:48.564Z"
         },
         {
           "id": "crinacle::EX800ST S2",
@@ -141785,7 +141887,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.691Z"
+          "lastSeen": "2026-05-05T18:02:47.543Z"
         },
         {
           "id": "sai::1266 Phi TC",
@@ -142954,7 +143056,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.616Z"
+          "lastSeen": "2026-05-05T18:02:46.306Z"
         },
         {
           "id": "kuulokenurkka::HD 560S **",
@@ -143494,7 +143596,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.670Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "theaudiostore::QKZ x HBB Hades",
@@ -144802,7 +144904,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.646Z"
+          "lastSeen": "2026-05-05T18:02:47.005Z"
         },
         {
           "id": "recode::er4sr",
@@ -145477,7 +145579,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.658Z"
+          "lastSeen": "2026-05-05T18:02:47.016Z"
         },
         {
           "id": "audioamigo::VE Monk Plus Foam",
@@ -145494,7 +145596,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.707Z"
+          "lastSeen": "2026-05-05T18:02:48.394Z"
         },
         {
           "id": "tgx78::Fatfreq Maestro SE",
@@ -147512,7 +147614,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.657Z"
+          "lastSeen": "2026-05-05T18:02:47.016Z"
         },
         {
           "id": "crinacle::LCD-i4",
@@ -147732,7 +147834,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.620Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "crinacle::223",
@@ -149852,7 +149954,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.944Z"
         },
         {
           "id": "dchpgall::mk5 S1 (by 냥냐냥) (Ety Clear Tri-Flange Tips)",
@@ -150378,7 +150480,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.703Z"
+          "lastSeen": "2026-05-05T18:02:48.224Z"
         },
         {
           "id": "kuulokenurkka::SR-L700 **",
@@ -150733,7 +150835,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.672Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "jaytiss::Volur empty",
@@ -151503,7 +151605,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "superreview::Delta Studio S1",
@@ -151673,7 +151775,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.666Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "audioamigo::Tansio Mirai Armor DDD",
@@ -151690,7 +151792,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.697Z"
+          "lastSeen": "2026-05-05T18:02:47.549Z"
         },
         {
           "id": "audioamigo::VE Monk A1 Foam",
@@ -151707,7 +151809,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.707Z"
+          "lastSeen": "2026-05-05T18:02:48.394Z"
         },
         {
           "id": "aftersound::SG AIRLINE IEM",
@@ -153832,7 +153934,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-04-04T04:34:09.171Z",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "aden::Trew Audio Myna",
@@ -160123,7 +160225,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.649Z"
+          "lastSeen": "2026-05-05T18:02:47.010Z"
         },
         {
           "id": "hbb::Aful P Open",
@@ -162915,7 +163017,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.663Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "crinacle::17c38ab2e15fe8bc",
@@ -163050,6 +163152,23 @@
           "targetVariant": "711",
           "pinna": null,
           "lastSeen": "2026-01-26"
+        },
+        {
+          "id": "audioamigo::Thieaudio Hype 4 mk2",
+          "name": "Thieaudio Hype 4 mk2",
+          "similarity": 76.17200737273524,
+          "stdev": 2.0116723764136912,
+          "slope": 0.13490093205667292,
+          "avgError": 1.695393005321219,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:47.717Z",
+          "lastSeen": "2026-05-05T18:02:47.717Z"
         },
         {
           "id": "vsg::Westone MACH 40",
@@ -164335,7 +164454,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.607Z"
+          "lastSeen": "2026-05-05T18:02:45.960Z"
         },
         {
           "id": "obodio::cklvx",
@@ -164370,23 +164489,6 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:15.423Z"
-        },
-        {
-          "id": "aden::Thieaudio Hype4 Mk2",
-          "name": "Thieaudio Hype 4 Mk2",
-          "similarity": 75.71232315768859,
-          "stdev": 1.8932149150309021,
-          "slope": 0.42275230152304005,
-          "avgError": 1.5544821362296872,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "aden.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-02-19T00:03:11.885Z",
-          "lastSeen": "2026-04-13T03:33:17.039Z"
         },
         {
           "id": "hbb::Little Dot GYFU Raw",
@@ -168111,7 +168213,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.623Z"
+          "lastSeen": "2026-05-05T18:02:46.311Z"
         },
         {
           "id": "rg::Tin Hifi P1 Plus",
@@ -169634,7 +169736,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.701Z"
+          "lastSeen": "2026-05-05T18:02:48.223Z"
         },
         {
           "id": "animagus::Lime Ears Incognita",
@@ -170753,7 +170855,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.689Z"
+          "lastSeen": "2026-05-05T18:02:47.541Z"
         },
         {
           "id": "crinacle::Hibiki SE",
@@ -171434,6 +171536,23 @@
           "lastSeen": "2026-04-13T03:33:17.032Z"
         },
         {
+          "id": "audioamigo::Kefine Arnar Blk",
+          "name": "Kefine Arnar",
+          "similarity": 74.00628598153511,
+          "stdev": 2.264946026235794,
+          "slope": -0.058606444411337014,
+          "avgError": 1.848311769565811,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:46.648Z",
+          "lastSeen": "2026-05-05T18:02:46.648Z"
+        },
+        {
           "id": "hbb::Ovidius RX100",
           "name": "Ovidius RX 100",
           "similarity": 73.99886763859769,
@@ -171650,7 +171769,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.603Z"
+          "lastSeen": "2026-05-05T18:02:45.956Z"
         },
         {
           "id": "vortexreviews::Hidizs MK12 Rose Gold",
@@ -173124,7 +173243,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.598Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "crinacle::Sage",
@@ -173362,7 +173481,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.673Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "iemocean::Hisenior T4 00",
@@ -174079,6 +174198,23 @@
           "lastSeen": "2026-04-11T19:10:16.606Z"
         },
         {
+          "id": "audioamigo::TinHiFi P2 Ultra",
+          "name": "TinHiFi P2 Ultra",
+          "similarity": 73.47013058589278,
+          "stdev": 1.9415425504741783,
+          "slope": 0.6100767057988962,
+          "avgError": 1.715158688479828,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.054Z",
+          "lastSeen": "2026-05-05T18:02:48.054Z"
+        },
+        {
           "id": "ianfann::CCA CRA+ (STOCK TIPS)",
           "name": "CCA CRA+ (STOCK TIPS)",
           "similarity": 73.46582462777167,
@@ -174094,23 +174230,6 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:18.803Z"
-        },
-        {
-          "id": "jaytiss::Arnar SVSilver",
-          "name": "Kefine Arnar",
-          "similarity": 73.45879026896702,
-          "stdev": 2.1919628242958824,
-          "slope": 0.14924298210380205,
-          "avgError": 2.007128177882167,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "jaytiss.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-02-17T05:25:10.141Z",
-          "lastSeen": "2026-05-01T05:30:48.560Z"
         },
         {
           "id": "dchpgall::Scarlet Beast (by 왈왈)",
@@ -177193,7 +177312,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.666Z"
+          "lastSeen": "2026-05-05T18:02:47.357Z"
         },
         {
           "id": "bakkwatan::TangZu Shimin Li Encounter",
@@ -177719,7 +177838,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.696Z"
+          "lastSeen": "2026-05-05T18:02:47.548Z"
         },
         {
           "id": "joshtbvo::Truthear Zero Red (10R)",
@@ -177787,7 +177906,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.645Z"
+          "lastSeen": "2026-05-05T18:02:47.004Z"
         },
         {
           "id": "sai::x Z Reviews Serene",
@@ -178090,7 +178209,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.643Z"
+          "lastSeen": "2026-05-05T18:02:47.001Z"
         },
         {
           "id": "practiphile::HM OB MOD",
@@ -179716,7 +179835,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.644Z"
+          "lastSeen": "2026-05-05T18:02:47.003Z"
         },
         {
           "id": "tedthepraimortis::Kinera Skuld Show",
@@ -182093,7 +182212,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.674Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "soundignity::Roseselsa Quietsea II",
@@ -183535,6 +183654,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-14T04:23:52.674Z"
+        },
+        {
+          "id": "audioamigo::ZiSin 340",
+          "name": "ZiSin 340",
+          "similarity": 71.53692141193369,
+          "stdev": 2.3764509727190024,
+          "slope": -0.1252033972363068,
+          "avgError": 2.155931807866718,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.731Z",
+          "lastSeen": "2026-05-05T18:02:48.731Z"
         },
         {
           "id": "ankramutt::KiwiEars Cadenza S2",
@@ -185909,7 +186045,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.696Z"
+          "lastSeen": "2026-05-05T18:02:47.547Z"
         },
         {
           "id": "crinacle::Voyager 3 (10)",
@@ -186113,6 +186249,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:19.469Z"
+        },
+        {
+          "id": "audioamigo::GYZIISINE 340",
+          "name": "ZiSin GYZIISINE 340",
+          "similarity": 71.08393471920358,
+          "stdev": 2.4742090317079657,
+          "slope": 0.026828514447207897,
+          "avgError": 2.2395573890922247,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.897Z",
+          "lastSeen": "2026-05-05T18:02:48.897Z"
         },
         {
           "id": "ianfann::NICEHCK NX7 MK4 BLACK",
@@ -186675,23 +186828,6 @@
           "lastSeen": "2026-04-13T03:33:15.773Z"
         },
         {
-          "id": "jaytiss::zsin340",
-          "name": "ZiSin 340",
-          "similarity": 70.9500049976164,
-          "stdev": 2.41089891107329,
-          "slope": 0.12955176549474146,
-          "avgError": 2.232063441714637,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "jaytiss.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-03-11T04:49:21.974Z",
-          "lastSeen": "2026-05-01T05:30:49.019Z"
-        },
-        {
           "id": "enemyspider::QKZHBB WT",
           "name": "QKZ QKZxHBB",
           "similarity": 70.94010533143701,
@@ -186943,7 +187079,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.613Z"
+          "lastSeen": "2026-05-05T18:02:45.966Z"
         },
         {
           "id": "soundcheck39::Blon BL-03 II",
@@ -187420,6 +187556,23 @@
           "lastSeen": "2026-04-22T08:01:33.892Z"
         },
         {
+          "id": "audioamigo::Twistura Delta",
+          "name": "Twistura Delta",
+          "similarity": 70.8325906635206,
+          "stdev": 2.530375373961177,
+          "slope": 0.039697025645529384,
+          "avgError": 2.1493345817330556,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.393Z",
+          "lastSeen": "2026-05-05T18:02:48.393Z"
+        },
+        {
           "id": "seanwee::Prestige",
           "name": "Thieaudio Prestige",
           "similarity": 70.83215084032321,
@@ -187805,7 +187958,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.599Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "mmagtech::Oriolus Isabellae Foam",
@@ -188772,7 +188925,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.589Z"
+          "lastSeen": "2026-05-05T18:02:45.627Z"
         },
         {
           "id": "enemyspider::Wyvern Qing BT",
@@ -189095,7 +189248,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.596Z"
+          "lastSeen": "2026-05-05T18:02:45.948Z"
         },
         {
           "id": "crinacle::DN2000",
@@ -189687,7 +189840,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T04:59:01.323Z",
-          "lastSeen": "2026-04-17T03:51:11.695Z"
+          "lastSeen": "2026-05-05T18:02:47.546Z"
         },
         {
           "id": "vsg::Tanchjim New HANA 2021 Bass",
@@ -190044,23 +190197,6 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-22T08:01:34.636Z"
-        },
-        {
-          "id": "tonedeafmonk::Twistura Delta",
-          "name": "Twistura Delta",
-          "similarity": 70.36336199410735,
-          "stdev": 2.4186739863108295,
-          "slope": 0.2882036332980083,
-          "avgError": 2.0715905698870025,
-          "price": 50,
-          "quality": "low",
-          "sourceDomain": "tonedeafmonk.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-04-14T18:42:44.388Z",
-          "lastSeen": "2026-05-04T04:17:10.367Z"
         },
         {
           "id": "eliseaudio::Elysian Diva Bass Light",
@@ -190655,7 +190791,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "awsmdanny::GS Audio GD3C",
@@ -192200,7 +192336,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "audioamigo::Penon Fan 3S BC Off",
@@ -192217,7 +192353,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.665Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "precog::LETSHUOER Cadenza 12",
@@ -193271,7 +193407,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.708Z"
+          "lastSeen": "2026-05-05T18:02:48.395Z"
         },
         {
           "id": "hbb::Thieaudio V14",
@@ -194778,7 +194914,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.677Z"
+          "lastSeen": "2026-05-05T18:02:47.531Z"
         },
         {
           "id": "ianfann::7HZ TIMELESS OG",
@@ -196353,7 +196489,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:49.063Z"
         },
         {
           "id": "audioamigo::Kiwi Ears Airioso",
@@ -196370,7 +196506,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.628Z"
+          "lastSeen": "2026-05-05T18:02:46.820Z"
         },
         {
           "id": "arn::TA4",
@@ -196421,7 +196557,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.683Z"
+          "lastSeen": "2026-05-05T18:02:47.535Z"
         },
         {
           "id": "hbb::SeeAudio X Crinacle Midnight",
@@ -197762,7 +197898,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.658Z"
+          "lastSeen": "2026-05-05T18:02:47.017Z"
         },
         {
           "id": "hbb::Noble Audio Kublai Khan",
@@ -198169,7 +198305,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.691Z"
+          "lastSeen": "2026-05-05T18:02:47.543Z"
         },
         {
           "id": "crinacle::A4 Pro Red-Black",
@@ -200628,7 +200764,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.609Z"
+          "lastSeen": "2026-05-05T18:02:45.962Z"
         },
         {
           "id": "crinacle::ED16",
@@ -201576,7 +201712,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.643Z"
+          "lastSeen": "2026-05-05T18:02:47.001Z"
         },
         {
           "id": "bassaudio::Tangzu Jade Dragon",
@@ -202933,7 +203069,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.665Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "awsmdanny::Shortbus Glamdring",
@@ -205926,6 +206062,23 @@
           "targetVariant": "711",
           "pinna": null,
           "lastSeen": "2026-01-26"
+        },
+        {
+          "id": "audioamigo::Kinera Phoenixcall 2",
+          "name": "Kinera Celest Phoenixcall 2",
+          "similarity": 67.70769172519186,
+          "stdev": 2.8637657724554764,
+          "slope": -0.07794045865535539,
+          "avgError": 2.158306719975478,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:46.816Z",
+          "lastSeen": "2026-05-05T18:02:46.816Z"
         },
         {
           "id": "enemyspider::Polaris 0000",
@@ -209261,7 +209414,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "aftersound::TRUTHEAR X CRINACLE ZERO RED",
@@ -210072,7 +210225,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.670Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "crinacle::Holocene",
@@ -210293,7 +210446,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.632Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "achoreviews::Tin T2 DLC",
@@ -213734,7 +213887,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-22T23:39:59.145Z",
-          "lastSeen": "2026-04-17T03:51:11.690Z"
+          "lastSeen": "2026-05-05T18:02:47.542Z"
         },
         {
           "id": "soundignity::Audio Infinite Gem",
@@ -214462,7 +214615,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.589Z"
+          "lastSeen": "2026-05-05T18:02:45.626Z"
         },
         {
           "id": "arn::Panda",
@@ -214530,7 +214683,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.652Z"
+          "lastSeen": "2026-05-05T18:02:47.013Z"
         },
         {
           "id": "bassyalexander::AKG Samsung",
@@ -214870,7 +215023,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.617Z"
+          "lastSeen": "2026-05-05T18:02:46.307Z"
         },
         {
           "id": "mmagtech::Kinera Imperial Loki Foam",
@@ -215039,7 +215192,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:48.564Z"
         },
         {
           "id": "aftersound::TIN HIFI T6 GREEN",
@@ -216598,6 +216751,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:30.030Z"
+        },
+        {
+          "id": "audioamigo::ZiSin 336",
+          "name": "ZiSin 336 Peach Heart Poker",
+          "similarity": 66.01959486452728,
+          "stdev": 2.807976422669899,
+          "slope": 0.2509280821775626,
+          "avgError": 2.442244114043128,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:49.063Z",
+          "lastSeen": "2026-05-05T18:02:49.063Z"
         },
         {
           "id": "soundcheck39::Dunu Kima2",
@@ -219700,7 +219870,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:14.147Z",
-          "lastSeen": "2026-04-17T03:51:11.584Z"
+          "lastSeen": "2026-05-05T18:02:45.620Z"
         },
         {
           "id": "enemyspider::USFH07",
@@ -220348,6 +220518,23 @@
           "lastSeen": "2026-04-11T19:10:16.566Z"
         },
         {
+          "id": "audioamigo::Tipsy M3",
+          "name": "Tipsy Audio M3",
+          "similarity": 65.49146826056923,
+          "stdev": 2.9515538533421233,
+          "slope": 0.15061051593589264,
+          "avgError": 2.439215804236652,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:48.220Z",
+          "lastSeen": "2026-05-05T18:02:48.220Z"
+        },
+        {
           "id": "dl::Halcyon",
           "name": "Kiwi Ears Halcyon",
           "similarity": 65.48817519927312,
@@ -220939,6 +221126,23 @@
           "targetVariant": "711",
           "pinna": null,
           "lastSeen": "2026-01-26"
+        },
+        {
+          "id": "audioamigo::Hidizs My Lin Red",
+          "name": "Hidizs My Lin",
+          "similarity": 65.37266209169292,
+          "stdev": 3.046023145270166,
+          "slope": -0.021119051783281165,
+          "avgError": 2.49557297772417,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:46.303Z",
+          "lastSeen": "2026-05-05T18:02:46.303Z"
         },
         {
           "id": "aftersound::FIIO FD5 LARGE NOZZLE",
@@ -223239,7 +223443,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.619Z"
+          "lastSeen": "2026-05-05T18:02:46.308Z"
         },
         {
           "id": "hu-fi::Fitear MH334",
@@ -223729,7 +223933,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.662Z"
+          "lastSeen": "2026-05-05T18:02:47.355Z"
         },
         {
           "id": "soundignity::BLON Shu",
@@ -224897,7 +225101,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.676Z"
+          "lastSeen": "2026-05-05T18:02:47.363Z"
         },
         {
           "id": "sl0the::Unique Melody - MEST Jet Black",
@@ -226304,6 +226508,23 @@
           "pinna": null,
           "firstSeen": "2026-02-01",
           "lastSeen": "2026-05-01T22:12:02.151Z"
+        },
+        {
+          "id": "audioamigo::AKG N5005 Bass",
+          "name": "Secret Omar's Secret Weapon",
+          "similarity": 64.48443063763739,
+          "stdev": 2.74739180753656,
+          "slope": -0.5996879463157688,
+          "avgError": 2.35014668061579,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "audioamigo.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-05T18:02:47.531Z",
+          "lastSeen": "2026-05-05T18:02:47.531Z"
         },
         {
           "id": "crinacle::Viento Mids",
@@ -227863,23 +228084,6 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-14T04:23:51.405Z"
-        },
-        {
-          "id": "jaytiss::My Linblack",
-          "name": "HIDIZS My LIN",
-          "similarity": 64.24586477984086,
-          "stdev": 2.96052657373091,
-          "slope": 0.33175008113167004,
-          "avgError": 2.4214635372879334,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "jaytiss.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-05-01T05:30:48.555Z",
-          "lastSeen": "2026-05-01T05:30:48.555Z"
         },
         {
           "id": "dhrme::JBL EndPeak 4 Def ANC",
@@ -230284,7 +230488,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.686Z"
+          "lastSeen": "2026-05-05T18:02:47.537Z"
         },
         {
           "id": "ducbloke::Roseselsa CJ20 x AndyAudioVault",
@@ -230437,7 +230641,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.678Z"
+          "lastSeen": "2026-05-05T18:02:47.532Z"
         },
         {
           "id": "paulwasabii::Yinyoo V2",
@@ -230555,7 +230759,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.631Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "hu-fi::Tanchjim Origin LM",
@@ -231707,7 +231911,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.695Z"
+          "lastSeen": "2026-05-05T18:02:47.545Z"
         },
         {
           "id": "kazi::IOAudio Volare",
@@ -232724,7 +232928,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.616Z"
+          "lastSeen": "2026-05-05T18:02:46.306Z"
         },
         {
           "id": "tonedeafmonk::Kataear EVORX 300",
@@ -233097,7 +233301,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.601Z"
+          "lastSeen": "2026-05-05T18:02:45.952Z"
         },
         {
           "id": "obodio::as24pro DDDD",
@@ -233334,7 +233538,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.631Z"
+          "lastSeen": "2026-05-05T18:02:46.824Z"
         },
         {
           "id": "kuulokenurkka::Moondrop Space Travel 2 (ANC ON & Reference EQ)",
@@ -234012,7 +234216,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.616Z"
+          "lastSeen": "2026-05-05T18:02:46.305Z"
         },
         {
           "id": "crinacle::Silver",
@@ -234656,7 +234860,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.653Z"
+          "lastSeen": "2026-05-05T18:02:47.013Z"
         },
         {
           "id": "soundignity::Avara AV2",
@@ -234825,7 +235029,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.622Z"
+          "lastSeen": "2026-05-05T18:02:46.311Z"
         },
         {
           "id": "obodio::trio dddd",
@@ -235674,7 +235878,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.612Z"
+          "lastSeen": "2026-05-05T18:02:45.965Z"
         },
         {
           "id": "hbb::Heart Ele",
@@ -236318,7 +236522,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.636Z"
+          "lastSeen": "2026-05-05T18:02:46.828Z"
         },
         {
           "id": "enemyspider::SB SC07",
@@ -237149,7 +237353,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.714Z"
+          "lastSeen": "2026-05-05T18:02:49.234Z"
         },
         {
           "id": "ducbloke::SLIIVO SLA3",
@@ -237641,7 +237845,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-17T07:14:08.703Z",
-          "lastSeen": "2026-04-17T03:51:11.675Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "aden::Volk x AK Stella",
@@ -239097,7 +239301,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.674Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "bedrock::Kinera Wyvern Pro",
@@ -239924,7 +240128,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.600Z"
+          "lastSeen": "2026-05-05T18:02:45.952Z"
         },
         {
           "id": "riz::Aliexpress Trifacta",
@@ -240111,7 +240315,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.700Z"
+          "lastSeen": "2026-05-05T18:02:47.719Z"
         },
         {
           "id": "aftersound::CCA HM20",
@@ -240552,7 +240756,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.681Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "atechreviews::Tangzu Waner S.G 2",
@@ -240756,7 +240960,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.681Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "vortexreviews::Moondrop Ultrasonic 336XX",
@@ -241231,7 +241435,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.682Z"
+          "lastSeen": "2026-05-05T18:02:47.534Z"
         },
         {
           "id": "arn::EA2000 Foam",
@@ -241908,7 +242112,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.677Z"
+          "lastSeen": "2026-05-05T18:02:47.532Z"
         },
         {
           "id": "tgx78::Butastur12",
@@ -244701,7 +244905,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.645Z"
+          "lastSeen": "2026-05-05T18:02:47.005Z"
         },
         {
           "id": "enemyspider::H0000",
@@ -245974,7 +246178,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.660Z",
-          "lastSeen": "2026-04-17T03:51:11.580Z"
+          "lastSeen": "2026-05-05T18:02:45.618Z"
         },
         {
           "id": "jaytiss::Beast",
@@ -247280,7 +247484,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.614Z"
+          "lastSeen": "2026-05-05T18:02:45.968Z"
         },
         {
           "id": "aden::Intaura Splendor II",
@@ -247518,7 +247722,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.611Z"
+          "lastSeen": "2026-05-05T18:02:45.963Z"
         },
         {
           "id": "breampike::UE 900",
@@ -248263,7 +248467,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.646Z"
+          "lastSeen": "2026-05-05T18:02:47.006Z"
         },
         {
           "id": "paulwasabii::GK GST",
@@ -248738,7 +248942,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.633Z"
+          "lastSeen": "2026-05-05T18:02:46.826Z"
         },
         {
           "id": "crinacle::6ba814ca45a61563",
@@ -249127,7 +249331,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.685Z"
+          "lastSeen": "2026-05-05T18:02:47.536Z"
         },
         {
           "id": "arn::QT9",
@@ -249786,7 +249990,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.824Z",
-          "lastSeen": "2026-04-17T03:51:11.581Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "recode::bucktick",
@@ -250650,7 +250854,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.600Z"
+          "lastSeen": "2026-05-05T18:02:45.951Z"
         },
         {
           "id": "vsg::AceZone A-Rise Gaming + Music ANC on",
@@ -250853,7 +251057,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.697Z"
+          "lastSeen": "2026-05-05T18:02:47.548Z"
         },
         {
           "id": "dchpgall::Direm Pro SL S1 (by 냥냐냥)",
@@ -250887,7 +251091,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.673Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "theaudiostore::Tanchjim Tanya Type C",
@@ -256602,7 +256806,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-03-17T07:14:08.506Z",
-          "lastSeen": "2026-04-17T03:51:11.615Z"
+          "lastSeen": "2026-05-05T18:02:46.305Z"
         },
         {
           "id": "arn::Castor UUDD",
@@ -256720,7 +256924,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.615Z"
+          "lastSeen": "2026-05-05T18:02:45.969Z"
         },
         {
           "id": "eliseaudio::oBravo Ra 21 C-Cu",
@@ -257415,7 +257619,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.632Z"
+          "lastSeen": "2026-05-05T18:02:46.825Z"
         },
         {
           "id": "hbb::Moondrop Stellaris Fo",
@@ -258175,7 +258379,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T06:01:13.986Z",
-          "lastSeen": "2026-04-17T03:51:11.582Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "tgx78::Fir KR5 Black",
@@ -260447,7 +260651,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.618Z"
+          "lastSeen": "2026-05-05T18:02:46.308Z"
         },
         {
           "id": "sai::Sony MH750",
@@ -261023,7 +261227,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.581Z"
+          "lastSeen": "2026-05-05T18:02:45.619Z"
         },
         {
           "id": "smirk::Oriolus Monachaa",
@@ -261142,7 +261346,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.675Z"
+          "lastSeen": "2026-05-05T18:02:47.362Z"
         },
         {
           "id": "aftersound::TRUTHEAR ZERO II",
@@ -264034,7 +264238,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.672Z"
+          "lastSeen": "2026-05-05T18:02:47.359Z"
         },
         {
           "id": "eplv::TFZ EXCLUSIVE_5",
@@ -267137,7 +267341,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.711Z"
+          "lastSeen": "2026-05-05T18:02:48.564Z"
         },
         {
           "id": "hbb::No Du",
@@ -268032,7 +268236,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.669Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "yoshiultra::FIIO FA9",
@@ -268742,7 +268946,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "boizoff::MEZE Advar",
@@ -273984,7 +274188,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.608Z"
+          "lastSeen": "2026-05-05T18:02:45.961Z"
         },
         {
           "id": "eliseaudio::QDC 8Pro (S)",
@@ -275187,7 +275391,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.710Z"
+          "lastSeen": "2026-05-05T18:02:48.563Z"
         },
         {
           "id": "ducbloke::EarAcoustic Audio SPA Limited Edition",
@@ -275238,7 +275442,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.658Z"
+          "lastSeen": "2026-05-05T18:02:47.016Z"
         },
         {
           "id": "audioamigo::VE Monk Plus Foam",
@@ -275255,7 +275459,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.707Z"
+          "lastSeen": "2026-05-05T18:02:48.394Z"
         },
         {
           "id": "kazi::Soundpeats Opera05",
@@ -276659,7 +276863,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.608Z"
+          "lastSeen": "2026-05-05T18:02:45.960Z"
         },
         {
           "id": "ianfann::MOONDROP CHU (SF 145)",
@@ -276846,7 +277050,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.633Z"
+          "lastSeen": "2026-05-05T18:02:46.826Z"
         },
         {
           "id": "precog::Nightjar Duality (off)",
@@ -279950,7 +280154,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.637Z"
+          "lastSeen": "2026-05-05T18:02:46.996Z"
         },
         {
           "id": "jaytiss::Rentless",
@@ -283411,7 +283615,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-04-14T06:18:04.375Z",
-          "lastSeen": "2026-04-17T03:51:11.699Z"
+          "lastSeen": "2026-05-05T18:02:47.718Z"
         },
         {
           "id": "auricularesargentina::ath m40x",
@@ -283800,7 +284004,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.644Z"
+          "lastSeen": "2026-05-05T18:02:47.003Z"
         },
         {
           "id": "dchpgall::Dirac mk2 S1 (by 냥냐냥)",
@@ -285579,7 +285783,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.611Z"
+          "lastSeen": "2026-05-05T18:02:45.963Z"
         },
         {
           "id": "superreview::Empire Ears Bravado mkII",
@@ -286831,7 +287035,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.604Z"
+          "lastSeen": "2026-05-05T18:02:45.956Z"
         },
         {
           "id": "yoshiultra::PIONEER SE-CH9T",
@@ -289152,7 +289356,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.699Z"
+          "lastSeen": "2026-05-05T18:02:47.718Z"
         },
         {
           "id": "boizoff::Noir X (sample 3) (2025 sample, fresh stock pads, lite pressure)",
@@ -289186,7 +289390,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.657Z"
+          "lastSeen": "2026-05-05T18:02:47.016Z"
         },
         {
           "id": "soundignity::DIY Dika W",
@@ -290691,7 +290895,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-02-27T04:59:00.062Z",
-          "lastSeen": "2026-04-17T03:51:11.599Z"
+          "lastSeen": "2026-05-05T18:02:45.950Z"
         },
         {
           "id": "kuulokenurkka::Tres (45 ohm) **",
@@ -293084,7 +293288,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.698Z"
+          "lastSeen": "2026-05-05T18:02:47.549Z"
         },
         {
           "id": "audioamigo::Denon C425",
@@ -293101,7 +293305,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.604Z"
+          "lastSeen": "2026-05-05T18:02:45.957Z"
         },
         {
           "id": "bassyalexander::Hades no burnin",
@@ -294371,7 +294575,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.620Z"
+          "lastSeen": "2026-05-05T18:02:46.309Z"
         },
         {
           "id": "crinacle::Bravado",
@@ -294742,7 +294946,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "crinacle::EX1000 S3",
@@ -294911,7 +295115,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.670Z"
+          "lastSeen": "2026-05-05T18:02:47.358Z"
         },
         {
           "id": "kazi::Acefast Crystal T8",
@@ -295522,7 +295726,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.944Z"
         },
         {
           "id": "eplv::Seeaudio AnouJp",
@@ -296284,7 +296488,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.596Z"
+          "lastSeen": "2026-05-05T18:02:45.947Z"
         },
         {
           "id": "aftersound::JOYODIO VZ10 UDDD DDDD",
@@ -296522,7 +296726,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.691Z"
+          "lastSeen": "2026-05-05T18:02:47.543Z"
         },
         {
           "id": "boizoff::DT-770 (250 Ω)",
@@ -299135,7 +299339,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.646Z"
+          "lastSeen": "2026-05-05T18:02:47.005Z"
         },
         {
           "id": "jaytiss::NM2+",
@@ -300646,7 +300850,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.703Z"
+          "lastSeen": "2026-05-05T18:02:48.224Z"
         },
         {
           "id": "crinacle::Deuce (Wide bore) (15ohm)",
@@ -303799,7 +304003,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.672Z"
+          "lastSeen": "2026-05-05T18:02:47.361Z"
         },
         {
           "id": "sai::Carbon 3",
@@ -304816,7 +305020,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.707Z"
+          "lastSeen": "2026-05-05T18:02:48.394Z"
         },
         {
           "id": "sai::MDR-MA900",
@@ -305536,7 +305740,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "superreview::Delta Studio S1",
@@ -305706,7 +305910,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.666Z"
+          "lastSeen": "2026-05-05T18:02:47.356Z"
         },
         {
           "id": "audioamigo::Tansio Mirai Armor DDD",
@@ -305723,7 +305927,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-17T03:51:11.697Z"
+          "lastSeen": "2026-05-05T18:02:47.549Z"
         },
         {
           "id": "aftersound::SG AIRLINE IEM",
@@ -307729,7 +307933,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-04-04T04:34:09.171Z",
-          "lastSeen": "2026-04-17T03:51:11.592Z"
+          "lastSeen": "2026-05-05T18:02:45.943Z"
         },
         {
           "id": "aden::Trew Audio Myna",
