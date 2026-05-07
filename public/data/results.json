@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-06T23:13:54.476Z",
-  "totalIEMs": 20694,
+  "generatedAt": "2026-05-07T00:12:26.520Z",
+  "totalIEMs": 20734,
   "domainsScanned": 104,
   "results": [
     {
@@ -4565,6 +4565,23 @@
           "pinna": null,
           "firstSeen": "2026-01-31",
           "lastSeen": "2026-05-02T00:12:36.999Z"
+        },
+        {
+          "id": "isaiahse::Pula PA01",
+          "name": "Pula PA01",
+          "similarity": 86.09737702229563,
+          "stdev": 1.250708955810998,
+          "slope": 0.05496322918285918,
+          "avgError": 0.8568537403695463,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.148Z",
+          "lastSeen": "2026-05-07T00:11:47.148Z"
         },
         {
           "id": "ragnarok::Olina SE",
@@ -12251,7 +12268,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:47.364Z"
         },
         {
           "id": "soundcheck39::KZ EDA Balanced",
@@ -21777,6 +21794,23 @@
           "lastSeen": "2026-05-06T04:13:00.746Z"
         },
         {
+          "id": "isaiahse::Hi-Fri Audio Aphex 2nd unit",
+          "name": "Hi-Fri Audio Aphex 2nd unit",
+          "similarity": 80.78170598778192,
+          "stdev": 1.7187691600296537,
+          "slope": -0.006064679634725352,
+          "avgError": 1.337277867386598,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.327Z",
+          "lastSeen": "2026-05-07T00:11:44.327Z"
+        },
+        {
           "id": "ducbloke::Penon Archangel DU",
           "name": "Penon Archangel DU",
           "similarity": 80.77794821371278,
@@ -22080,7 +22114,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.406Z"
+          "lastSeen": "2026-05-07T00:11:48.666Z"
         },
         {
           "id": "soundcheck39::Blon XZ JOJO",
@@ -29929,7 +29963,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.111Z"
         },
         {
           "id": "practiphile::Ziigaat Lush",
@@ -31473,23 +31507,6 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-30T01:28:29.273Z"
-        },
-        {
-          "id": "tonedeafmonk::PULA PA001",
-          "name": "PULA PA01",
-          "similarity": 78.55008999412743,
-          "stdev": 1.8159692329197743,
-          "slope": -0.0835656100136505,
-          "avgError": 1.5901466591084068,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "tonedeafmonk.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-02-03",
-          "lastSeen": "2026-05-04T04:17:10.312Z"
         },
         {
           "id": "tonedeafmonk::TRN WHITE TIGER RED",
@@ -42950,7 +42967,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.549Z"
         },
         {
           "id": "jacstone::QKZ VK4 Revised",
@@ -49041,7 +49058,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:48.230Z"
         },
         {
           "id": "eliseaudio::AuR Audio Neon",
@@ -55271,7 +55288,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.403Z"
+          "lastSeen": "2026-05-07T00:11:46.934Z"
         },
         {
           "id": "arn::ew300 DSP B",
@@ -63187,6 +63204,23 @@
           "lastSeen": "2026-04-28T19:52:14.371Z"
         },
         {
+          "id": "isaiahse::Simgot EA500 (Black)",
+          "name": "Simgot EA500 (Black)",
+          "similarity": 72.67957578364765,
+          "stdev": 1.995123369895688,
+          "slope": 0.7885213052442208,
+          "avgError": 1.4626143256976305,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.363Z",
+          "lastSeen": "2026-05-07T00:11:47.363Z"
+        },
+        {
           "id": "hbb::Yanyin Canon 010",
           "name": "Yanyin Canon 010",
           "similarity": 72.67736994894416,
@@ -65287,7 +65321,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:47.363Z"
         },
         {
           "id": "yoshiultra::ZhuLinNiao XiangSi",
@@ -65541,7 +65575,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:47.149Z"
         },
         {
           "id": "rg::GS Audio ST1",
@@ -71399,7 +71433,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:46.935Z"
         },
         {
           "id": "aftersound::QDC ANOLE VX ALL ON",
@@ -72750,7 +72784,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.403Z"
+          "lastSeen": "2026-05-07T00:11:46.935Z"
         },
         {
           "id": "aden::AZLA Orta",
@@ -75423,7 +75457,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:40.395Z"
         },
         {
           "id": "kr0mka::SJ01",
@@ -79782,7 +79816,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.406Z"
+          "lastSeen": "2026-05-07T00:11:48.666Z"
         },
         {
           "id": "harpo::Tiandir TD19",
@@ -81278,6 +81312,23 @@
           "lastSeen": "2026-05-01T05:30:49.002Z"
         },
         {
+          "id": "isaiahse::TRI Star River UD",
+          "name": "TRI Star River (UD)",
+          "similarity": 69.00961972359647,
+          "stdev": 2.156811305657024,
+          "slope": 0.7517709210931411,
+          "avgError": 2.195093236998515,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.794Z",
+          "lastSeen": "2026-05-07T00:11:47.794Z"
+        },
+        {
           "id": "vsg::Dan Clark Audio E3",
           "name": "Dan Clark Audio E3",
           "similarity": 69.00769369341592,
@@ -81986,6 +82037,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:18.450Z"
+        },
+        {
+          "id": "isaiahse::CVJ Mei UU",
+          "name": "CVJ Mei (UU)",
+          "similarity": 68.8604437074324,
+          "stdev": 2.568836486984478,
+          "slope": 0.37937127577095975,
+          "avgError": 1.9584860325352775,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.224Z",
+          "lastSeen": "2026-05-07T00:11:43.224Z"
         },
         {
           "id": "boizoff::M12 Titan Meister (sample 01) (2025 sample, fresh stock leather pads)",
@@ -84140,6 +84208,23 @@
           "lastSeen": "2026-05-02T16:00:16.378Z"
         },
         {
+          "id": "isaiahse::CVJ Mei DU",
+          "name": "CVJ Mei (DU)",
+          "similarity": 68.38321236050741,
+          "stdev": 2.6028499497266897,
+          "slope": 0.38585353179169535,
+          "avgError": 1.9999431553264342,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.004Z",
+          "lastSeen": "2026-05-07T00:11:43.004Z"
+        },
+        {
           "id": "vortexreviews::Hidizs MK12 Silver",
           "name": "Hidizs MK12 Silver Filter",
           "similarity": 68.38066435308842,
@@ -84969,6 +85054,23 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:14.192Z"
+        },
+        {
+          "id": "isaiahse::TRI Star River DD",
+          "name": "TRI Star River (DD)",
+          "similarity": 68.20410555566625,
+          "stdev": 2.197572455329451,
+          "slope": 0.7807170680458555,
+          "avgError": 2.2705828430485737,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.579Z",
+          "lastSeen": "2026-05-07T00:11:47.579Z"
         },
         {
           "id": "jaytiss::Aure",
@@ -86052,7 +86154,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.769Z"
         },
         {
           "id": "crinacle::M14 02",
@@ -90190,6 +90292,23 @@
           "lastSeen": "2026-01-26"
         },
         {
+          "id": "isaiahse::TRI Star River UU",
+          "name": "TRI Star River (UU)",
+          "similarity": 66.82436234835241,
+          "stdev": 2.2226724128055793,
+          "slope": 0.8225072019666382,
+          "avgError": 2.524507395175506,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:48.229Z",
+          "lastSeen": "2026-05-07T00:11:48.229Z"
+        },
+        {
           "id": "eplv::QKZ AKX",
           "name": "QKZ AKX",
           "similarity": 66.81598394123618,
@@ -91119,7 +91238,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:48.230Z"
         },
         {
           "id": "crinacle::T4",
@@ -92004,6 +92123,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-23T16:16:37.360Z"
+        },
+        {
+          "id": "isaiahse::CVJ Nami DU",
+          "name": "CVJ Nami (DU)",
+          "similarity": 66.42615575939689,
+          "stdev": 3.0505898011509696,
+          "slope": -0.047242584922293926,
+          "avgError": 2.130149733435378,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.887Z",
+          "lastSeen": "2026-05-07T00:11:43.887Z"
         },
         {
           "id": "eplv::TRN ST1Pro_010",
@@ -93291,7 +93427,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:40.395Z"
         },
         {
           "id": "regancipher::ME ANC",
@@ -94616,6 +94752,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-05-05T23:18:25.189Z"
+        },
+        {
+          "id": "isaiahse::TRI Star River DU",
+          "name": "TRI Star River (DU)",
+          "similarity": 65.70446438534456,
+          "stdev": 2.2594076539533203,
+          "slope": 0.854955535988606,
+          "avgError": 2.693465534812559,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:48.011Z",
+          "lastSeen": "2026-05-07T00:11:48.011Z"
         },
         {
           "id": "dchpgall::True S1 (by 냥냐냥) (LG G8 APT-X Codec)",
@@ -96952,6 +97105,23 @@
           "lastSeen": "2026-02-05T22:02:18.854Z"
         },
         {
+          "id": "isaiahse::CVJ Nami DD",
+          "name": "CVJ Nami (DD)",
+          "similarity": 65.0764965499498,
+          "stdev": 3.086497506864555,
+          "slope": -0.20486175637550422,
+          "avgError": 2.122455869172244,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.442Z",
+          "lastSeen": "2026-05-07T00:11:43.442Z"
+        },
+        {
           "id": "yoshiultra::Final MAKE3",
           "name": "final MAKE3",
           "similarity": 65.07560632704426,
@@ -98882,6 +99052,23 @@
           "lastSeen": "2026-04-28T19:52:13.599Z"
         },
         {
+          "id": "isaiahse::CVJ Freedom DU",
+          "name": "CVJ Freedom (DU)",
+          "similarity": 64.44443985162056,
+          "stdev": 3.007637691292259,
+          "slope": 0.20935077530525148,
+          "avgError": 2.488458101703813,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.129Z",
+          "lastSeen": "2026-05-07T00:11:42.129Z"
+        },
+        {
           "id": "aftersound::KZ CASTOR PRO BLACK DDDU",
           "name": "KZ CASTOR PRO BLACK DDDU",
           "similarity": 64.44310763283484,
@@ -99235,6 +99422,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-05-06T04:13:04.253Z"
+        },
+        {
+          "id": "isaiahse::CVJ Freedom DD",
+          "name": "CVJ Freedom (DD)",
+          "similarity": 64.36307980268039,
+          "stdev": 3.018572645522829,
+          "slope": 0.2116994235083809,
+          "avgError": 2.4805304829388786,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.697Z",
+          "lastSeen": "2026-05-07T00:11:41.697Z"
         },
         {
           "id": "aftersound::SKALD S11",
@@ -101861,6 +102065,23 @@
           "lastSeen": "2026-05-01T12:13:04.566Z"
         },
         {
+          "id": "isaiahse::CVJ Nami UD",
+          "name": "CVJ Nami (UD)",
+          "similarity": 63.74085682282917,
+          "stdev": 3.191968638315969,
+          "slope": 0.20269775669538212,
+          "avgError": 2.253057783304538,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.668Z",
+          "lastSeen": "2026-05-07T00:11:43.668Z"
+        },
+        {
           "id": "ankramutt::Fengru A6S",
           "name": "FENGRU A6S",
           "similarity": 63.737235851378145,
@@ -104194,6 +104415,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:30.058Z"
+        },
+        {
+          "id": "isaiahse::KZ AS24 DDDD DDDD",
+          "name": "KZ AS24 (DDDD DDDD)",
+          "similarity": 63.019021804760406,
+          "stdev": 2.70393202643407,
+          "slope": 1.0803781428212693,
+          "avgError": 1.938073701276736,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.988Z",
+          "lastSeen": "2026-05-07T00:11:44.988Z"
         },
         {
           "id": "hadoe::KBEar KW1",
@@ -110078,6 +110316,23 @@
           "lastSeen": "2026-04-04T08:57:23.706Z"
         },
         {
+          "id": "isaiahse::CVJ Nami UU",
+          "name": "CVJ Nami (UU)",
+          "similarity": 61.0512146720453,
+          "stdev": 3.293648150130206,
+          "slope": 0.40260854579568667,
+          "avgError": 2.3873808272289105,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.110Z",
+          "lastSeen": "2026-05-07T00:11:44.110Z"
+        },
+        {
           "id": "harpo::Canpur Joyfull 1",
           "name": "Canpur Joyfull 1",
           "similarity": 61.04915890687333,
@@ -114218,6 +114473,23 @@
           "lastSeen": "2026-04-28T19:52:14.367Z"
         },
         {
+          "id": "isaiahse::Hi-Fri Audio Barcelona",
+          "name": "Hi-Fri Audio Barcelona",
+          "similarity": 59.65098268311068,
+          "stdev": 2.931899919689645,
+          "slope": 1.1651546542926885,
+          "avgError": 2.18387826444726,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.548Z",
+          "lastSeen": "2026-05-07T00:11:44.548Z"
+        },
+        {
           "id": "dchpgall::Infinity Plus S1 (by Halc6on)",
           "name": "Rhapsodio Infinity Plus",
           "similarity": 59.64934797753139,
@@ -117742,7 +118014,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:44.110Z"
         },
         {
           "id": "ianfann::CVJ KONOKA DU",
@@ -118893,7 +119165,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:47.364Z"
         },
         {
           "id": "crinacle::UCD-3",
@@ -122481,7 +122753,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.111Z"
         },
         {
           "id": "hbb::Shanling ME800 Clear",
@@ -123583,6 +123855,23 @@
           "lastSeen": "2026-04-11T19:10:16.634Z"
         },
         {
+          "id": "isaiahse::CVJ Freedom UU",
+          "name": "CVJ Freedom (UU)",
+          "similarity": 55.70083063268146,
+          "stdev": 3.461279425055168,
+          "slope": 0.6826110977263655,
+          "avgError": 2.969429995453591,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.352Z",
+          "lastSeen": "2026-05-07T00:11:42.352Z"
+        },
+        {
           "id": "crinacle::New Primacy",
           "name": "Oriveti New Primacy",
           "similarity": 55.69216586629294,
@@ -123632,6 +123921,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-25T22:01:32.847Z"
+        },
+        {
+          "id": "isaiahse::CVJ Freedom UD",
+          "name": "CVJ Freedom (UD)",
+          "similarity": 55.66738315132217,
+          "stdev": 3.462634027438588,
+          "slope": 0.6880009494767321,
+          "avgError": 2.965200910159988,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.914Z",
+          "lastSeen": "2026-05-07T00:11:41.914Z"
         },
         {
           "id": "regancipher::Tronsmart Onyx Pure",
@@ -136084,6 +136390,23 @@
           "lastSeen": "2026-04-11T19:10:16.593Z"
         },
         {
+          "id": "isaiahse::CVJ Mei UD",
+          "name": "CVJ Mei (UD)",
+          "similarity": 47.43241124912174,
+          "stdev": 4.4111699246308635,
+          "slope": -0.7133704417256219,
+          "avgError": 2.9652025523880816,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.790Z",
+          "lastSeen": "2026-05-07T00:11:42.790Z"
+        },
+        {
           "id": "crinacle::Baldr",
           "name": "Kinera Baldr",
           "similarity": 47.43029999684141,
@@ -144975,6 +145298,23 @@
           "lastSeen": "2026-05-01T12:13:04.541Z"
         },
         {
+          "id": "isaiahse::CVJ Mei DD",
+          "name": "CVJ Mei (DD)",
+          "similarity": 36.09084451595213,
+          "stdev": 5.10450962774924,
+          "slope": -1.2637006057291553,
+          "avgError": 3.4567523256529467,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.572Z",
+          "lastSeen": "2026-05-07T00:11:42.572Z"
+        },
+        {
           "id": "sai::Gold 1 Pro",
           "name": "Tanglaoshi Gold 1 Pro",
           "similarity": 36.089529787720195,
@@ -151257,6 +151597,23 @@
           "lastSeen": "2026-04-29T23:45:57.977Z"
         },
         {
+          "id": "isaiahse::CVJ CSB",
+          "name": "CVJ CSB",
+          "similarity": 1.0953497787181838,
+          "stdev": 6.698302533619454,
+          "slope": 3.3663688449638083,
+          "avgError": 5.5167585655086055,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.265Z",
+          "lastSeen": "2026-05-07T00:11:41.265Z"
+        },
+        {
           "id": "auricularesargentina::srh 1840 oh",
           "name": "Shure srh1840",
           "similarity": 1.0537075963011553,
@@ -157362,7 +157719,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:48.230Z"
         },
         {
           "id": "theaudiostore::Dunu DaVinci",
@@ -173906,7 +174263,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:46.935Z"
         },
         {
           "id": "atechreviews::NiceHCK Himalaya (Blue)",
@@ -176836,7 +177193,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.406Z"
+          "lastSeen": "2026-05-07T00:11:48.666Z"
         },
         {
           "id": "eliseaudio::PMG Apx SE",
@@ -177210,7 +177567,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.403Z"
+          "lastSeen": "2026-05-07T00:11:46.935Z"
         },
         {
           "id": "treblewellxtended::MK12 Turis Bronze",
@@ -178176,6 +178533,23 @@
           "pinna": null,
           "firstSeen": "2026-02-04",
           "lastSeen": "2026-04-28T19:52:14.369Z"
+        },
+        {
+          "id": "isaiahse::Artti T10",
+          "name": "Artti T10",
+          "similarity": 72.61458490252822,
+          "stdev": 2.3939345858803263,
+          "slope": 0.019586167107575204,
+          "avgError": 2.0096010146261634,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:40.394Z",
+          "lastSeen": "2026-05-07T00:11:40.394Z"
         },
         {
           "id": "soundcheck39::Letshuoer DX1",
@@ -180463,7 +180837,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:48.230Z"
         },
         {
           "id": "crinacle::Argentum",
@@ -182804,6 +183178,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-16T05:53:57.471Z"
+        },
+        {
+          "id": "isaiahse::CVJ Nami DD",
+          "name": "CVJ Nami (DD)",
+          "similarity": 71.70047632006643,
+          "stdev": 2.4599069549832864,
+          "slope": -0.09107653034631638,
+          "avgError": 1.9714700611056324,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.442Z",
+          "lastSeen": "2026-05-07T00:11:43.442Z"
         },
         {
           "id": "enemyspider::ps0000",
@@ -185963,6 +186354,23 @@
           "lastSeen": "2026-04-11T19:10:16.545Z"
         },
         {
+          "id": "isaiahse::CVJ Nami DU",
+          "name": "CVJ Nami (DU)",
+          "similarity": 71.13106733550947,
+          "stdev": 2.5212951836000355,
+          "slope": 0.0665426411068939,
+          "avgError": 2.0331510258784933,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.887Z",
+          "lastSeen": "2026-05-07T00:11:43.887Z"
+        },
+        {
           "id": "mmagtech::MiM Audio OG Dark Magician Foam",
           "name": "MiM Audio Dark Magician (OG)",
           "similarity": 71.12954949858282,
@@ -186028,7 +186436,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:47.149Z"
         },
         {
           "id": "audioamigo::Tangzu x HBB Xuan Nv",
@@ -190777,6 +191185,23 @@
           "lastSeen": "2026-05-06T04:13:04.253Z"
         },
         {
+          "id": "isaiahse::Hi-Fri Audio Aphex 2nd unit",
+          "name": "Hi-Fri Audio Aphex 2nd unit",
+          "similarity": 70.25055106649157,
+          "stdev": 2.5256759244251072,
+          "slope": 0.10772054639446275,
+          "avgError": 2.1952905734095673,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.327Z",
+          "lastSeen": "2026-05-07T00:11:44.327Z"
+        },
+        {
           "id": "audioamigo::Juzear Harrier",
           "name": "Juzear x Squig.Link Harrier",
           "similarity": 70.24531612234945,
@@ -194356,7 +194781,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.405Z"
+          "lastSeen": "2026-05-07T00:11:47.364Z"
         },
         {
           "id": "hbb::Sim 3 B",
@@ -197240,6 +197665,23 @@
           "lastSeen": "2026-04-22T08:01:33.898Z"
         },
         {
+          "id": "isaiahse::KZ ZS10",
+          "name": "KZ ZS10",
+          "similarity": 69.16553895137274,
+          "stdev": 2.571443382778967,
+          "slope": 0.23571225889198982,
+          "avgError": 2.1452638226118212,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:45.642Z",
+          "lastSeen": "2026-05-07T00:11:45.642Z"
+        },
+        {
           "id": "crinacle::MT4",
           "name": "Mangird MT4",
           "similarity": 69.16467547213809,
@@ -197272,23 +197714,6 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-11T19:10:16.634Z"
-        },
-        {
-          "id": "superreview::KZ ZS10",
-          "name": "KZ ZS10",
-          "similarity": 69.15492204616008,
-          "stdev": 2.564610374802038,
-          "slope": 0.3052364872337906,
-          "avgError": 2.0290654966278447,
-          "price": 50,
-          "quality": "low",
-          "sourceDomain": "superreview.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-02-01",
-          "lastSeen": "2026-05-01T22:12:02.164Z"
         },
         {
           "id": "crinacle::Samba",
@@ -198427,7 +198852,7 @@
         },
         {
           "id": "tonedeafmonk::PULA PA001",
-          "name": "PULA PA01",
+          "name": "Pula PA01",
           "similarity": 68.94329333065119,
           "stdev": 2.7435193683750185,
           "slope": 0.030219616015537284,
@@ -200101,7 +200526,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.111Z"
         },
         {
           "id": "crinacle::XBA-A3",
@@ -203461,6 +203886,23 @@
           "lastSeen": "2026-01-26"
         },
         {
+          "id": "isaiahse::CVJ Freedom DU",
+          "name": "CVJ Freedom (DU)",
+          "similarity": 68.15658406343121,
+          "stdev": 2.574338910117662,
+          "slope": 0.3231360013344391,
+          "avgError": 2.257554801582676,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.129Z",
+          "lastSeen": "2026-05-07T00:11:42.129Z"
+        },
+        {
           "id": "crinacle::M14 00",
           "name": "Mofasest M14",
           "similarity": 68.15595049384343,
@@ -203561,6 +204003,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-11T19:10:16.522Z"
+        },
+        {
+          "id": "isaiahse::CVJ Freedom DD",
+          "name": "CVJ Freedom (DD)",
+          "similarity": 68.13040812465789,
+          "stdev": 2.578451035123977,
+          "slope": 0.3254846495375686,
+          "avgError": 2.2504357981384167,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.697Z",
+          "lastSeen": "2026-05-07T00:11:41.697Z"
         },
         {
           "id": "vortexreviews::Leisurely Audio L6",
@@ -214822,6 +215281,23 @@
           "lastSeen": "2026-02-05T22:02:19.898Z"
         },
         {
+          "id": "isaiahse::CVJ Nami UD",
+          "name": "CVJ Nami (UD)",
+          "similarity": 66.31923880412712,
+          "stdev": 2.854875054389916,
+          "slope": 0.31648298272456993,
+          "avgError": 2.1130949303488924,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.668Z",
+          "lastSeen": "2026-05-07T00:11:43.668Z"
+        },
+        {
           "id": "hbb::Canpur Dsp Bass",
           "name": "Sample Canpur Bass+",
           "similarity": 66.3188900867189,
@@ -215261,6 +215737,23 @@
           "pinna": null,
           "firstSeen": "2026-01-27",
           "lastSeen": "2026-03-01T11:52:49.266Z"
+        },
+        {
+          "id": "isaiahse::CVJ Mei DU",
+          "name": "CVJ Mei (DU)",
+          "similarity": 66.2405755684505,
+          "stdev": 2.713575121766447,
+          "slope": 0.4996387578208833,
+          "avgError": 2.123162848455817,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.004Z",
+          "lastSeen": "2026-05-07T00:11:43.004Z"
         },
         {
           "id": "loomynarty::Zero Red (CP145)",
@@ -218293,7 +218786,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.404Z"
+          "lastSeen": "2026-05-07T00:11:47.363Z"
         },
         {
           "id": "crinacle::Cora V2",
@@ -219567,6 +220060,23 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:12.679Z"
+        },
+        {
+          "id": "isaiahse::CVJ Mei UU",
+          "name": "CVJ Mei (UU)",
+          "similarity": 65.60497614321007,
+          "stdev": 2.7595171859842034,
+          "slope": 0.49315650180014753,
+          "avgError": 2.20637012652961,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:43.224Z",
+          "lastSeen": "2026-05-07T00:11:43.224Z"
         },
         {
           "id": "eplv::Soundpeats T3Off",
@@ -220855,23 +221365,6 @@
           "pinna": null,
           "firstSeen": "2026-01-30",
           "lastSeen": "2026-05-02T16:00:15.740Z"
-        },
-        {
-          "id": "soundignity::ARTTI T10",
-          "name": "Artti T10",
-          "similarity": 65.43269784596477,
-          "stdev": 3.0104863375307644,
-          "slope": -0.07102374682618053,
-          "avgError": 2.467623281033957,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "soundignity.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-01-26",
-          "lastSeen": "2026-04-28T06:50:40.215Z"
         },
         {
           "id": "crinacle::Eden Fatfreq",
@@ -239591,6 +240084,23 @@
           "lastSeen": "2026-03-01T11:52:48.196Z"
         },
         {
+          "id": "isaiahse::CVJ Nami UU",
+          "name": "CVJ Nami (UU)",
+          "similarity": 62.13012627238821,
+          "stdev": 3.139618298518833,
+          "slope": 0.5163937718248744,
+          "avgError": 2.23113845090068,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.110Z",
+          "lastSeen": "2026-05-07T00:11:44.110Z"
+        },
+        {
           "id": "kr0mka::G1",
           "name": "GK G1",
           "similarity": 62.12348575974878,
@@ -246555,6 +247065,23 @@
           "lastSeen": "2026-05-01T22:12:02.113Z"
         },
         {
+          "id": "isaiahse::KZ AS24 DDDD DDDD",
+          "name": "KZ AS24 (DDDD DDDD)",
+          "similarity": 60.77147511045221,
+          "stdev": 2.680598564450837,
+          "slope": 1.1941633688504576,
+          "avgError": 2.4193964998584057,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.988Z",
+          "lastSeen": "2026-05-07T00:11:44.988Z"
+        },
+        {
           "id": "kuulokenurkka::HA-SW02 **",
           "name": "JVC HA-SW02",
           "similarity": 60.76773232239304,
@@ -246891,7 +247418,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.403Z"
+          "lastSeen": "2026-05-07T00:11:46.934Z"
         },
         {
           "id": "crinacle::UERR",
@@ -247825,6 +248352,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-05-06T04:13:00.717Z"
+        },
+        {
+          "id": "isaiahse::Simgot EA500 (Black)",
+          "name": "Simgot EA500 (Black)",
+          "similarity": 60.52683336249298,
+          "stdev": 2.965783505599639,
+          "slope": 0.902306531273409,
+          "avgError": 2.3630019146405785,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.363Z",
+          "lastSeen": "2026-05-07T00:11:47.363Z"
         },
         {
           "id": "crinacle::RAH Blue-red",
@@ -252007,6 +252551,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:19.931Z"
+        },
+        {
+          "id": "isaiahse::CVJ Mei UD",
+          "name": "CVJ Mei (UD)",
+          "similarity": 59.6422005300455,
+          "stdev": 3.224022105355378,
+          "slope": -0.599585215696434,
+          "avgError": 2.57793681972973,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.790Z",
+          "lastSeen": "2026-05-07T00:11:42.790Z"
         },
         {
           "id": "soundignity::SoundRhyme SR5",
@@ -256605,6 +257166,23 @@
           "lastSeen": "2026-05-04T04:17:09.223Z"
         },
         {
+          "id": "isaiahse::TRI Star River UD",
+          "name": "TRI Star River (UD)",
+          "similarity": 58.404080455953874,
+          "stdev": 3.0922894013314073,
+          "slope": 0.865556147122329,
+          "avgError": 2.7362992969455564,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.794Z",
+          "lastSeen": "2026-05-07T00:11:47.794Z"
+        },
+        {
           "id": "enemyspider::DFI 0000",
           "name": "KZ D-FI 2025 Stock Tip",
           "similarity": 58.39747742230827,
@@ -259464,6 +260042,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-11T19:10:16.570Z"
+        },
+        {
+          "id": "isaiahse::TRI Star River DD",
+          "name": "TRI Star River (DD)",
+          "similarity": 57.75359164194819,
+          "stdev": 3.121122018970388,
+          "slope": 0.8945022940750433,
+          "avgError": 2.7963549946099295,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:47.579Z",
+          "lastSeen": "2026-05-07T00:11:47.579Z"
         },
         {
           "id": "ducbloke::TRN BA15 Silver",
@@ -264479,6 +265074,23 @@
           "lastSeen": "2026-04-18T13:17:03.034Z"
         },
         {
+          "id": "isaiahse::TRI Star River UU",
+          "name": "TRI Star River (UU)",
+          "similarity": 56.479283018140016,
+          "stdev": 3.1599809407198913,
+          "slope": 0.936292427995826,
+          "avgError": 2.986283638872311,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:48.229Z",
+          "lastSeen": "2026-05-07T00:11:48.229Z"
+        },
+        {
           "id": "enemyspider::Sonata 0000",
           "name": "KZ Sonata Stock Tip",
           "similarity": 56.476565621609986,
@@ -268340,6 +268952,23 @@
           "lastSeen": "2026-01-26"
         },
         {
+          "id": "isaiahse::CVJ Freedom UU",
+          "name": "CVJ Freedom (UU)",
+          "similarity": 55.43423724019191,
+          "stdev": 3.4534446424613487,
+          "slope": 0.7963963237555536,
+          "avgError": 2.8427838511205437,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.352Z",
+          "lastSeen": "2026-05-07T00:11:42.352Z"
+        },
+        {
           "id": "ianfann::ND ZR",
           "name": "ND ZR",
           "similarity": 55.42321490477796,
@@ -268746,6 +269375,23 @@
           "lastSeen": "2026-02-05T22:02:19.210Z"
         },
         {
+          "id": "isaiahse::CVJ Freedom UD",
+          "name": "CVJ Freedom (UD)",
+          "similarity": 55.31385880484635,
+          "stdev": 3.460815597128795,
+          "slope": 0.8017861755059197,
+          "avgError": 2.8488546103081007,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.914Z",
+          "lastSeen": "2026-05-07T00:11:41.914Z"
+        },
+        {
           "id": "harpo::Sony MDR-XB41EX",
           "name": "Sony MDR-XB41EX",
           "similarity": 55.31149907994558,
@@ -268997,7 +269643,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.549Z"
         },
         {
           "id": "jacstone::QKZ AK6 Pro",
@@ -269032,6 +269678,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-02-05T22:02:29.231Z"
+        },
+        {
+          "id": "isaiahse::TRI Star River DU",
+          "name": "TRI Star River (DU)",
+          "similarity": 55.23414513564294,
+          "stdev": 3.2214635435883237,
+          "slope": 0.9687407620177935,
+          "avgError": 3.130748928110327,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:48.011Z",
+          "lastSeen": "2026-05-07T00:11:48.011Z"
         },
         {
           "id": "crinacle::Roxanne 2 Min",
@@ -270334,7 +270997,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.406Z"
+          "lastSeen": "2026-05-07T00:11:48.666Z"
         },
         {
           "id": "enemyspider::ZSN PROX",
@@ -271688,7 +272351,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.769Z"
         },
         {
           "id": "kuulokenurkka::NTH100 **",
@@ -275137,7 +275800,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.402Z"
+          "lastSeen": "2026-05-07T00:11:44.111Z"
         },
         {
           "id": "crinacle::MDR7550",
@@ -278851,6 +279514,23 @@
           "lastSeen": "2026-05-01T22:12:02.516Z"
         },
         {
+          "id": "isaiahse::Aiderlot M5",
+          "name": "Aiderlot M5",
+          "similarity": 51.72619163608417,
+          "stdev": 3.341207766639194,
+          "slope": 1.3964923987639037,
+          "avgError": 3.0107856130886876,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:40.171Z",
+          "lastSeen": "2026-05-07T00:11:40.171Z"
+        },
+        {
           "id": "gadgetrytech::Topping ArpegEar Hane",
           "name": "Topping ArpegEar Hane",
           "similarity": 51.71668794093888,
@@ -280800,6 +281480,23 @@
           "pinna": null,
           "firstSeen": "2026-01-26",
           "lastSeen": "2026-04-16T05:53:57.894Z"
+        },
+        {
+          "id": "isaiahse::Hi-Fri Audio Barcelona",
+          "name": "Hi-Fri Audio Barcelona",
+          "similarity": 50.67707051820534,
+          "stdev": 3.6047539601333547,
+          "slope": 1.2789398803218768,
+          "avgError": 2.8979411205737193,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:44.548Z",
+          "lastSeen": "2026-05-07T00:11:44.548Z"
         },
         {
           "id": "bassyalexander::M1221",
@@ -283241,7 +283938,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:40.395Z"
         },
         {
           "id": "iemworld::ModHouse Tungsten DS : CU Grill (ZMF Caldera Hybrid)",
@@ -283905,6 +284602,23 @@
           "lastSeen": "2026-04-01T11:19:19.524Z"
         },
         {
+          "id": "isaiahse::CVJ Mei DD",
+          "name": "CVJ Mei (DD)",
+          "similarity": 49.0797631313371,
+          "stdev": 3.876685173361277,
+          "slope": -1.149915379699967,
+          "avgError": 2.944773517885197,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:42.572Z",
+          "lastSeen": "2026-05-07T00:11:42.572Z"
+        },
+        {
           "id": "crinacle::Single Driver",
           "name": "1MORE Single Driver",
           "similarity": 49.06123253941652,
@@ -284494,7 +285208,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:40.395Z"
         },
         {
           "id": "atechreviews::Open Audio OA112",
@@ -288781,23 +289495,6 @@
           "lastSeen": "2026-03-01T20:57:42.512Z"
         },
         {
-          "id": "rg::Aiderlot M5 (Treble)",
-          "name": "Aiderlot M5",
-          "similarity": 45.9759735326484,
-          "stdev": 3.601872569269692,
-          "slope": 1.7006124030715322,
-          "avgError": 3.433164816484913,
-          "price": null,
-          "quality": "low",
-          "sourceDomain": "rg.squig.link",
-          "type": "iem",
-          "rig": "711",
-          "targetVariant": "711",
-          "pinna": null,
-          "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:01:38.682Z"
-        },
-        {
           "id": "hu-fi::A6000 (Type E)",
           "name": "Final A6000",
           "similarity": 45.9699685193474,
@@ -292626,7 +293323,7 @@
           "targetVariant": "711",
           "pinna": null,
           "firstSeen": "2026-01-26",
-          "lastSeen": "2026-02-05T22:02:18.401Z"
+          "lastSeen": "2026-05-07T00:11:44.110Z"
         },
         {
           "id": "vortexreviews::Rose Technics Ceramics ROCK",
@@ -305494,6 +306191,23 @@
           "pinna": null,
           "firstSeen": "2026-02-05",
           "lastSeen": "2026-04-11T19:10:16.621Z"
+        },
+        {
+          "id": "isaiahse::CVJ CSB",
+          "name": "CVJ CSB",
+          "similarity": 0.18887734821934643,
+          "stdev": 6.563487664667156,
+          "slope": 3.480154070992996,
+          "avgError": 5.884849046227748,
+          "price": null,
+          "quality": "low",
+          "sourceDomain": "isaiahse.squig.link",
+          "type": "iem",
+          "rig": "711",
+          "targetVariant": "711",
+          "pinna": null,
+          "firstSeen": "2026-05-07T00:11:41.265Z",
+          "lastSeen": "2026-05-07T00:11:41.265Z"
         },
         {
           "id": "crinacle::Big Bus",
