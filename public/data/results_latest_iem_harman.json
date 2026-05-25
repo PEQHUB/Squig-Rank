@@ -1,9 +1,85 @@
 {
-  "generatedAt": "2026-05-25T10:57:31.995Z",
-  "totalDevices": 9165,
+  "generatedAt": "2026-05-25T14:17:29.107Z",
+  "totalDevices": 9169,
   "category": "iem",
   "categoryLabel": "IEMs",
   "devices": [
+    {
+      "id": "lown-fi::TangZu Wukong Retail",
+      "name": "TANGZU Wukong (Retail)",
+      "similarity": 76.54149695621174,
+      "stdev": 2.1848592325164677,
+      "slope": 0.1268951061557125,
+      "avgError": 1.1810994031551263,
+      "price": 1949,
+      "quality": "low",
+      "sourceDomain": "lown-fi.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-05-25T14:16:28.036Z",
+      "lastSeen": "2026-05-25T14:16:28.036Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
+    {
+      "id": "lown-fi::TangZu Wukong Demo",
+      "name": "TANGZU Wukong (Demo)",
+      "similarity": 78.61135956889879,
+      "stdev": 1.9722725517682493,
+      "slope": -0.04175540408393749,
+      "avgError": 1.2719579899040698,
+      "price": null,
+      "quality": "low",
+      "sourceDomain": "lown-fi.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-05-25T14:16:27.818Z",
+      "lastSeen": "2026-05-25T14:16:27.818Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
+    {
+      "id": "lown-fi::TANGZU NOIR BLANC",
+      "name": "TANGZU x AZLA NOIR BLANC",
+      "similarity": 67.57789545423681,
+      "stdev": 2.2054854015370613,
+      "slope": 0.9544813363584517,
+      "avgError": 2.0916038764909746,
+      "price": 199,
+      "quality": "low",
+      "sourceDomain": "lown-fi.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-05-25T14:16:27.606Z",
+      "lastSeen": "2026-05-25T14:16:27.606Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
+    {
+      "id": "lown-fi::Shiro Audio Ame V2",
+      "name": "Shiro Audio Ame V2",
+      "similarity": 30.50650984524253,
+      "stdev": 4.9953929156077965,
+      "slope": 2.4373472140944648,
+      "avgError": 3.035378044634594,
+      "price": 299,
+      "quality": "low",
+      "sourceDomain": "lown-fi.squig.link",
+      "type": "iem",
+      "rig": "711",
+      "targetVariant": "711",
+      "pinna": null,
+      "firstSeen": "2026-05-25T14:16:26.958Z",
+      "lastSeen": "2026-05-25T14:16:26.958Z",
+      "category": "iem",
+      "categoryLabel": "IEMs"
+    },
     {
       "id": "superreview::Moondrop Armature Art 12",
       "name": "Moondrop Armature Art 12",
@@ -95646,7 +95722,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.287Z",
+      "lastSeen": "2026-05-25T14:16:28.039Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -97166,7 +97242,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.279Z",
+      "lastSeen": "2026-05-25T14:16:27.178Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -100966,7 +101042,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.282Z",
+      "lastSeen": "2026-05-25T14:16:28.036Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -101821,7 +101897,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.264Z",
+      "lastSeen": "2026-05-25T14:16:26.331Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -104595,7 +104671,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.289Z",
+      "lastSeen": "2026-05-25T14:16:28.041Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -105792,7 +105868,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.273Z",
+      "lastSeen": "2026-05-25T14:16:26.742Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -113050,7 +113126,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.281Z",
+      "lastSeen": "2026-05-25T14:16:27.180Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -125229,7 +125305,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.259Z",
+      "lastSeen": "2026-05-25T14:16:25.238Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -126540,7 +126616,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.261Z",
+      "lastSeen": "2026-05-25T14:16:25.241Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -129010,7 +129086,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.256Z",
+      "lastSeen": "2026-05-25T14:16:25.231Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -129979,7 +130055,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.259Z",
+      "lastSeen": "2026-05-25T14:16:25.238Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -130207,7 +130283,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.268Z",
+      "lastSeen": "2026-05-25T14:16:26.334Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -130378,7 +130454,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.264Z",
+      "lastSeen": "2026-05-25T14:16:26.330Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -132677,7 +132753,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.272Z",
+      "lastSeen": "2026-05-25T14:16:26.741Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -134691,7 +134767,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.274Z",
+      "lastSeen": "2026-05-25T14:16:26.743Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -134729,7 +134805,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.287Z",
+      "lastSeen": "2026-05-25T14:16:28.040Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -139973,7 +140049,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.290Z",
+      "lastSeen": "2026-05-25T14:16:28.042Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -141664,7 +141740,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.291Z",
+      "lastSeen": "2026-05-25T14:16:28.042Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -147402,7 +147478,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.262Z",
+      "lastSeen": "2026-05-25T14:16:25.241Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -147421,7 +147497,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.260Z",
+      "lastSeen": "2026-05-25T14:16:25.240Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -150157,7 +150233,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.271Z",
+      "lastSeen": "2026-05-25T14:16:26.740Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -157111,7 +157187,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.264Z",
+      "lastSeen": "2026-05-25T14:16:26.330Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -157149,7 +157225,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.261Z",
+      "lastSeen": "2026-05-25T14:16:25.240Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -160284,7 +160360,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.293Z",
+      "lastSeen": "2026-05-25T14:16:28.043Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -161937,7 +162013,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.288Z",
+      "lastSeen": "2026-05-25T14:16:28.040Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
@@ -163628,7 +163704,7 @@
       "targetVariant": "711",
       "pinna": null,
       "firstSeen": "2026-01-26",
-      "lastSeen": "2026-04-30T01:28:29.293Z",
+      "lastSeen": "2026-05-25T14:16:28.044Z",
       "category": "iem",
       "categoryLabel": "IEMs"
     },
