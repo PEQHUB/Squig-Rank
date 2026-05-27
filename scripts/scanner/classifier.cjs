@@ -12,6 +12,12 @@ const config = require('./config.cjs');
 function isHeadphone(name, subdomain) {
   const upperName = name.toUpperCase();
   const lowerSub = subdomain.toLowerCase();
+
+  // These virtual domains point at explicit over-ear databases. Treat the
+  // source path as authoritative so model/brand heuristics cannot tie it away.
+  if (lowerSub === 'crinaclehp' || lowerSub === 'earphonesarchivehp') {
+    return true;
+  }
   
   let score = 0;
 
@@ -55,10 +61,6 @@ function isHeadphone(name, subdomain) {
   }
 
   // 6. Domain-specific hints
-  // crinacleHP and earphonesarchiveHP are exclusively headphone databases
-  if (lowerSub === 'crinaclehp' || lowerSub === 'earphonesarchivehp') {
-    score += 200;
-  }
   // Other headphone-hinted domains (but NOT rig-name domains like crinacle5128)
   if (lowerSub.includes('headphone')) {
     score += 30;

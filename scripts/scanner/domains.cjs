@@ -121,6 +121,55 @@ function extractPhones(phoneBook, subdomain) {
   return phones;
 }
 
+/**
+ * Remove cached entries for this domain that are no longer in the current
+ * phone book. Measurement blobs are content-addressed and may be shared, so
+ * only the index entries are pruned here.
+ */
+function pruneStaleDomainEntries(cacheIndex, subdomain, phones) {
+  const currentKeys = new Set(
+    phones.map(phone => cache.getEntryKey(subdomain, phone.fileName))
+  );
+  let pruned = 0;
+
+  for (const key of Object.keys(cacheIndex.entries)) {
+    if (!key.startsWith(`${subdomain}::`)) continue;
+    if (currentKeys.has(key)) continue;
+    delete cacheIndex.entries[key];
+    pruned++;
+  }
+
+  return pruned;
+}
+
+/**
+ * Refresh cached metadata when the phone book content is unchanged. This lets
+ * classifier and domain policy fixes repair old cache entries without forcing
+ * measurement downloads.
+ */
+function refreshCachedDomainMetadata(cacheIndex, subdomain, phones) {
+  let refreshed = 0;
+
+  for (const phone of phones) {
+    const key = cache.getEntryKey(subdomain, phone.fileName);
+    const existingEntry = cacheIndex.entries[key];
+    if (!existingEntry) continue;
+
+    cache.updateCacheEntry(cacheIndex, key, {
+      hash: existingEntry.hash,
+      name: phone.displayName,
+      price: phone.price,
+      quality: phone.quality,
+      type: phone.type,
+      rig: phone.rig,
+      pinna: phone.pinna
+    });
+    refreshed++;
+  }
+
+  return refreshed;
+}
+
 // ============================================================================
 // MEASUREMENT FETCHING
 // ============================================================================
@@ -327,6 +376,8 @@ async function scanDomain(subdomain, cacheIndex, domainHashes, options = {}) {
     newMeasurements: 0,
     cachedMeasurements: 0,
     failedMeasurements: 0,
+    prunedEntries: 0,
+    refreshedEntries: 0,
     phones: [],
     error: null
   };
@@ -340,12 +391,17 @@ async function scanDomain(subdomain, cacheIndex, domainHashes, options = {}) {
   
   const { phoneBook, baseUrl } = pbResult;
   
-  // 2. Check if phone book changed
+  // 2. Extract phones and check if phone book changed
+  const phones = extractPhones(phoneBook, subdomain);
+  result.phonesFound = phones.length;
+
   const newHash = cache.computePhoneBookHash(phoneBook);
   const oldHashInfo = domainHashes[subdomain];
   
   if (!forceRescan && oldHashInfo && oldHashInfo.hash === newHash) {
-    // Phone book unchanged - mark all existing entries as seen
+    result.prunedEntries = pruneStaleDomainEntries(cacheIndex, subdomain, phones);
+    result.refreshedEntries = refreshCachedDomainMetadata(cacheIndex, subdomain, phones);
+
     log(`  ${subdomain}: unchanged (hash: ${newHash.substring(0, 8)})`);
     result.success = true;
     result.phoneBookChanged = false;
@@ -361,10 +417,7 @@ async function scanDomain(subdomain, cacheIndex, domainHashes, options = {}) {
   
   log(`  ${subdomain}: scanning (hash: ${newHash.substring(0, 8)})`);
   result.phoneBookChanged = true;
-  
-  // 3. Extract phones
-  const phones = extractPhones(phoneBook, subdomain);
-  result.phonesFound = phones.length;
+  result.prunedEntries = pruneStaleDomainEntries(cacheIndex, subdomain, phones);
   
   // 4. Fetch measurements for new/changed entries
   for (const phone of phones) {
