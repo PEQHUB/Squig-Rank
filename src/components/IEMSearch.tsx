@@ -174,7 +174,12 @@ export function IEMSearch({ onCalculate, isRanking, category, measurementMode, e
   };
 
   // Get display info
-  const getSourceDomain = (id: string) => id.split('::')[0];
+  const getSourceDomain = (id: string) => {
+    const subdomain = id.split('::')[0];
+    if (subdomain === 'earphonesarchiveHP') return 'earphonesarchive/headphones';
+    if (subdomain === 'crinacle5128' || subdomain === 'crinacleHP') return 'graph.hangout.audio';
+    return subdomain;
+  };
   const getRigLabel = (entry: { rig: string; pinna: string | null }) => {
     if (entry.pinna === 'kb5') return 'KB5';
     if (entry.pinna === '5128' || entry.rig === '5128') return '5128';

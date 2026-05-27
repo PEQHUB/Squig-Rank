@@ -50,7 +50,9 @@ const HIGH_QUALITY_DOMAINS = ["crinacle", "earphonesarchive", "earphonesarchiveH
 const DISPLAY_DOMAINS = {
   "crinacle": "graph.hangout.audio",
   "crinacle5128": "graph.hangout.audio",
-  "crinacleHP": "graph.hangout.audio"
+  "crinacleHP": "graph.hangout.audio",
+  "earphonesarchive": "earphonesarchive.squig.link",
+  "earphonesarchiveHP": "earphonesarchive.squig.link/headphones"
 };
 
 // Domains that require encrypted fetch via d-c.php proxy on graph.hangout.audio

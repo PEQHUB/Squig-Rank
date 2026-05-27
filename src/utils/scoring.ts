@@ -74,6 +74,19 @@ export interface LoadedCurveData {
 
 const RIG_5128_DOMAINS = ["earphonesarchive", "crinacle5128", "listener5128"];
 
+const SOURCE_DOMAIN_OVERRIDES: Record<string, string> = {
+  crinacle: 'graph.hangout.audio',
+  crinacle5128: 'graph.hangout.audio',
+  crinacleHP: 'graph.hangout.audio',
+  earphonesarchive: 'earphonesarchive.squig.link',
+  earphonesarchiveHP: 'earphonesarchive.squig.link/headphones'
+};
+
+function getSourceDomain(id: string): string {
+  const subdomain = id.split('::')[0];
+  return SOURCE_DOMAIN_OVERRIDES[subdomain] || `${subdomain}.squig.link`;
+}
+
 function getIEMRig(id: string): '711' | '5128' {
   const [subdomain, filename] = id.split('::');
   if (RIG_5128_DOMAINS.includes(subdomain)) return '5128';
@@ -241,7 +254,7 @@ export async function scoreAllDevices(
       price: entry.price,
       quality: entry.quality,
       type: entry.type,
-      sourceDomain: `${entry.id.split('::')[0]}.squig.link`,
+      sourceDomain: getSourceDomain(entry.id),
       rig: iemRig,
       pinna: entry.pinna as any,
       frequencyData: iemCurve
@@ -308,7 +321,7 @@ export async function scoreAllDevicesCombined(
       price: entry.price,
       quality: entry.quality,
       type: entry.type,
-      sourceDomain: `${entry.id.split('::')[0]}.squig.link`,
+      sourceDomain: getSourceDomain(entry.id),
       rig: iemRig,
       pinna: entry.pinna as any,
       frequencyData: iemCurve
