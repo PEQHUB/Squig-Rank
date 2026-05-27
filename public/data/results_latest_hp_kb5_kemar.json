@@ -1,12 +1,31 @@
 {
-  "generatedAt": "2026-05-27T14:34:39.259Z",
-  "totalDevices": 553,
+  "generatedAt": "2026-05-27T17:49:59.063Z",
+  "totalDevices": 554,
   "category": "hp_kb5",
   "categoryLabel": "KEMAR (711) OE",
   "devices": [
     {
+      "id": "kuulokenurkka::ATH-ADX7000 (Velvet Pads) **",
+      "name": "Audio-Technica ATH-ADX7000",
+      "similarity": 69.98306940886673,
+      "stdev": 2.6653867748587228,
+      "slope": 0.07375628231151307,
+      "avgError": 1.9969482907180092,
+      "price": null,
+      "quality": "low",
+      "sourceDomain": "kuulokenurkka.squig.link",
+      "type": "headphone",
+      "rig": "711",
+      "targetVariant": "kb5",
+      "pinna": "kb5",
+      "firstSeen": "2026-05-27T17:48:51.216Z",
+      "lastSeen": "2026-05-27T17:48:51.216Z",
+      "category": "hp_kb5",
+      "categoryLabel": "KEMAR (711) OE"
+    },
+    {
       "id": "sai::DT990 (250 ohms)",
-      "name": "Beyerdynamic DT990 Premium 250 ohms",
+      "name": "Beyerdynamic DT990 250 ohms",
       "similarity": 61.82962378798766,
       "stdev": 3.10086026271231,
       "slope": 0.5371173139096348,
@@ -19,7 +38,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-05-27T14:33:35.888Z",
-      "lastSeen": "2026-05-27T14:33:35.888Z",
+      "lastSeen": "2026-05-27T17:48:50.814Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -38,7 +57,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-05-09T17:19:53.193Z",
-      "lastSeen": "2026-05-27T14:33:35.906Z",
+      "lastSeen": "2026-05-27T17:48:50.832Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -551,7 +570,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-03-24T15:07:16.488Z",
-      "lastSeen": "2026-05-27T14:33:35.919Z",
+      "lastSeen": "2026-05-27T17:48:50.845Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -589,7 +608,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-14T07:25:27.870Z",
-      "lastSeen": "2026-05-27T14:33:35.970Z",
+      "lastSeen": "2026-05-27T17:48:50.895Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4199,7 +4218,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.584Z",
+      "lastSeen": "2026-05-27T17:48:51.228Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4218,7 +4237,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.581Z",
+      "lastSeen": "2026-05-27T17:48:51.226Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4237,7 +4256,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.582Z",
+      "lastSeen": "2026-05-27T17:48:51.227Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4256,7 +4275,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.569Z",
+      "lastSeen": "2026-05-27T17:48:50.548Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4275,7 +4294,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.588Z",
+      "lastSeen": "2026-05-27T17:48:51.232Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4294,7 +4313,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.583Z",
+      "lastSeen": "2026-05-27T17:48:51.228Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4313,7 +4332,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.590Z",
+      "lastSeen": "2026-05-27T17:48:51.234Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4332,7 +4351,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.586Z",
+      "lastSeen": "2026-05-27T17:48:51.230Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4351,7 +4370,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.567Z",
+      "lastSeen": "2026-05-27T17:48:50.547Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4370,7 +4389,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.571Z",
+      "lastSeen": "2026-05-27T17:48:51.217Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4389,7 +4408,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.570Z",
+      "lastSeen": "2026-05-27T17:48:50.548Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4408,7 +4427,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.590Z",
+      "lastSeen": "2026-05-27T17:48:51.234Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4427,7 +4446,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.590Z",
+      "lastSeen": "2026-05-27T17:48:51.234Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4446,7 +4465,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.563Z",
+      "lastSeen": "2026-05-27T17:48:50.546Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4465,7 +4484,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.587Z",
+      "lastSeen": "2026-05-27T17:48:51.231Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4484,7 +4503,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.605Z",
+      "lastSeen": "2026-05-27T17:48:51.248Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4503,7 +4522,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.562Z",
+      "lastSeen": "2026-05-27T17:48:50.546Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4522,7 +4541,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.583Z",
+      "lastSeen": "2026-05-27T17:48:51.228Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4541,7 +4560,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.580Z",
+      "lastSeen": "2026-05-27T17:48:51.225Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4560,7 +4579,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-02-03",
-      "lastSeen": "2026-04-17T18:12:43.605Z",
+      "lastSeen": "2026-05-27T17:48:51.247Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4655,7 +4674,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.902Z",
+      "lastSeen": "2026-05-27T17:48:50.828Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4674,7 +4693,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.948Z",
+      "lastSeen": "2026-05-27T17:48:50.872Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4693,7 +4712,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.919Z",
+      "lastSeen": "2026-05-27T17:48:50.844Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4712,7 +4731,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.920Z",
+      "lastSeen": "2026-05-27T17:48:50.845Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4731,7 +4750,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.905Z",
+      "lastSeen": "2026-05-27T17:48:50.830Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4769,7 +4788,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.930Z",
+      "lastSeen": "2026-05-27T17:48:50.856Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4788,7 +4807,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.921Z",
+      "lastSeen": "2026-05-27T17:48:50.846Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4807,7 +4826,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.922Z",
+      "lastSeen": "2026-05-27T17:48:50.847Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4826,7 +4845,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.904Z",
+      "lastSeen": "2026-05-27T17:48:50.830Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4845,7 +4864,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.922Z",
+      "lastSeen": "2026-05-27T17:48:50.847Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4864,7 +4883,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.482Z",
+      "lastSeen": "2026-05-27T17:48:50.810Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4883,7 +4902,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.940Z",
+      "lastSeen": "2026-05-27T17:48:50.865Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4902,7 +4921,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.928Z",
+      "lastSeen": "2026-05-27T17:48:50.853Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4921,7 +4940,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.904Z",
+      "lastSeen": "2026-05-27T17:48:50.830Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4940,7 +4959,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.906Z",
+      "lastSeen": "2026-05-27T17:48:50.832Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4959,7 +4978,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.481Z",
+      "lastSeen": "2026-05-27T17:48:50.809Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4978,7 +4997,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.889Z",
+      "lastSeen": "2026-05-27T17:48:50.815Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -4997,7 +5016,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.902Z",
+      "lastSeen": "2026-05-27T17:48:50.828Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5016,7 +5035,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.921Z",
+      "lastSeen": "2026-05-27T17:48:50.846Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5035,7 +5054,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.903Z",
+      "lastSeen": "2026-05-27T17:48:50.829Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5054,7 +5073,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.943Z",
+      "lastSeen": "2026-05-27T17:48:50.868Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5073,7 +5092,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.487Z",
+      "lastSeen": "2026-05-27T17:48:50.814Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5092,7 +5111,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.930Z",
+      "lastSeen": "2026-05-27T17:48:50.855Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5111,7 +5130,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.487Z",
+      "lastSeen": "2026-05-27T17:48:50.814Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5130,7 +5149,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.929Z",
+      "lastSeen": "2026-05-27T17:48:50.854Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5149,7 +5168,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.943Z",
+      "lastSeen": "2026-05-27T17:48:50.868Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5168,7 +5187,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.482Z",
+      "lastSeen": "2026-05-27T17:48:50.810Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5187,7 +5206,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.471Z",
+      "lastSeen": "2026-05-27T17:48:50.802Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5206,7 +5225,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.899Z",
+      "lastSeen": "2026-05-27T17:48:50.826Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5225,7 +5244,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.913Z",
+      "lastSeen": "2026-05-27T17:48:50.839Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5244,7 +5263,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.970Z",
+      "lastSeen": "2026-05-27T17:48:50.894Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5263,7 +5282,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.930Z",
+      "lastSeen": "2026-05-27T17:48:50.855Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5282,7 +5301,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.487Z",
+      "lastSeen": "2026-05-27T17:48:50.813Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5301,7 +5320,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.949Z",
+      "lastSeen": "2026-05-27T17:48:50.873Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5320,7 +5339,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.482Z",
+      "lastSeen": "2026-05-27T17:48:50.811Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5339,7 +5358,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.478Z",
+      "lastSeen": "2026-05-27T17:48:50.806Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5358,7 +5377,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.477Z",
+      "lastSeen": "2026-05-27T17:48:50.805Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5377,7 +5396,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.918Z",
+      "lastSeen": "2026-05-27T17:48:50.844Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5396,7 +5415,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.942Z",
+      "lastSeen": "2026-05-27T17:48:50.867Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5415,7 +5434,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.890Z",
+      "lastSeen": "2026-05-27T17:48:50.816Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5434,7 +5453,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.944Z",
+      "lastSeen": "2026-05-27T17:48:50.869Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5453,7 +5472,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.944Z",
+      "lastSeen": "2026-05-27T17:48:50.869Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5472,7 +5491,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.941Z",
+      "lastSeen": "2026-05-27T17:48:50.866Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5491,7 +5510,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.966Z",
+      "lastSeen": "2026-05-27T17:48:50.892Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5510,7 +5529,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.889Z",
+      "lastSeen": "2026-05-27T17:48:50.815Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5529,7 +5548,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.484Z",
+      "lastSeen": "2026-05-27T17:48:50.811Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5548,7 +5567,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.944Z",
+      "lastSeen": "2026-05-27T17:48:50.869Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5567,7 +5586,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.484Z",
+      "lastSeen": "2026-05-27T17:48:50.811Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5586,7 +5605,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.482Z",
+      "lastSeen": "2026-05-27T17:48:50.810Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5605,7 +5624,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.901Z",
+      "lastSeen": "2026-05-27T17:48:50.827Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5624,7 +5643,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.890Z",
+      "lastSeen": "2026-05-27T17:48:50.816Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5643,7 +5662,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.935Z",
+      "lastSeen": "2026-05-27T17:48:50.860Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5662,7 +5681,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.914Z",
+      "lastSeen": "2026-05-27T17:48:50.840Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5681,7 +5700,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.889Z",
+      "lastSeen": "2026-05-27T17:48:50.815Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5700,7 +5719,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.942Z",
+      "lastSeen": "2026-05-27T17:48:50.866Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
@@ -5719,7 +5738,7 @@
       "targetVariant": "kb5",
       "pinna": "kb5",
       "firstSeen": "2026-01-29",
-      "lastSeen": "2026-05-27T14:33:35.924Z",
+      "lastSeen": "2026-05-27T17:48:50.850Z",
       "category": "hp_kb5",
       "categoryLabel": "KEMAR (711) OE"
     },
