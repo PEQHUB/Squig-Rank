@@ -225,6 +225,8 @@ export default function Home() {
 
   const handleModeChange = async (mode: MeasurementMode) => {
     setMeasurementMode(mode);
+    setCustomResult(null);
+    setFindSimilarDevice(null);
 
     // Reset mobile category filter if invalid for new mode
     if (mode === 'ie' && (categoryFilter === 'hp_kb5' || categoryFilter === 'hp_5128')) {
